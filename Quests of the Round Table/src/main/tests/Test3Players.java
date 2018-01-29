@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import model.AdventureDeck;
 import model.StoryDeck;
-
+import model.Player;
 public class Test3Players {
 
 	@Test
