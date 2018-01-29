@@ -22,7 +22,7 @@ public class Test2Players {
 		Player players = new Player(); // model contains all the players in it
 		players.add();
 		players.add();
-		
+		System.out.print("test\n");
 		//Player player1 = new Player();
 		//Player player2 = new Player();
 		
@@ -32,7 +32,8 @@ public class Test2Players {
 		//player1.dealer = true; //player1 is assigned the dealer position
 		//player2.dealer = false; //ensure that player2 is not the dealer
 		
-		
+		System.out.print(players.getPlayers().get(0).getDealer() + "\n");
+		System.out.print(players.getPlayers().get(1).getDealer() + "\n");
 		
 		
 		//Create adventureDeck and a copy for testing, also need to test if deck was setup correctly on initialization
@@ -56,6 +57,8 @@ public class Test2Players {
 		for (Person person : players.getPlayers()){
 			person.drawRank("squire");
 		} 
+		
+		
 		
 		//players 1 and 2 draw 12 adventure cards
 		/*for(int i = 0; i < 12; i++) {
