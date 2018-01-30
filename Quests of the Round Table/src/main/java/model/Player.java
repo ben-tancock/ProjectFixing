@@ -63,8 +63,12 @@ public class Player {
 			return hand.get(i);
 		}
 		
+		public boolean getDealer() {
+			return dealer;
+		}
+		
 		public void setDealer(boolean b) {
-			dealer = false;
+			dealer = b;
 		}
 		// Getters and Setters --------------------------------
 		
