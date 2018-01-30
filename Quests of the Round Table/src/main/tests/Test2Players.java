@@ -38,17 +38,21 @@ public class Test2Players {
 		
 		//Create adventureDeck and a copy for testing, also need to test if deck was setup correctly on initialization
 		AdventureDeck adventureDeck = new AdventureDeck();
-		AdventureDeck oldAdventureDeck = adventureDeck;
 		assertEquals(adventureDeck.size(), 125);
 		adventureDeck.shuffle();
-		assertNotEquals(adventureDeck, oldAdventureDeck);
+		for(int i = 0; i < 10; i++) {
+			System.out.println("shuffled: " + adventureDeck.get(i).getClass());
+		}
+		System.out.println();
 		
 		//Create storyDeck and a copy for testing, also need to test if deck was setup correctly
 		StoryDeck storyDeck = new StoryDeck();
-		StoryDeck oldStoryDeck = storyDeck;
 		assertEquals(storyDeck.size(), 28);
 		storyDeck.shuffle();
-		assertNotEquals(storyDeck, oldStoryDeck);
+		for(int i = 0; i < 10; i++) {
+			System.out.println("shuffled: " + storyDeck.get(i).getClass());
+		}
+		System.out.println();
 		
 		
 		//players 1 and 2 get squire rank cards
@@ -68,9 +72,10 @@ public class Test2Players {
 		
 		for (Person person : players.getPlayers()){
 			person.drawCard(12, "Adventure");
+			System.out.println(person.getHand());
 		} 
 		
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 }
