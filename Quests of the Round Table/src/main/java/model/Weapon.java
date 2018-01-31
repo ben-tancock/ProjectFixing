@@ -9,4 +9,8 @@ public class Weapon extends Adventure{
 			battlepoints = bp;
 			
 		}
+		
+		public String getName() {
+			return name;
+		}
 }

@@ -8,4 +8,8 @@ public class Amour extends Adventure{
 		name = n;
 		bp = b;
 	}
+	
+	public String getName() {
+		return name;
+	}
 }

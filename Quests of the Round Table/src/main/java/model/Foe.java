@@ -14,5 +14,9 @@ public class Foe extends Adventure{
 	public void mordred() {
 		// do mordred ability if name = "mordred"?
 	}
+	
+	public String getName() {
+		return name;
+	}
 
 }

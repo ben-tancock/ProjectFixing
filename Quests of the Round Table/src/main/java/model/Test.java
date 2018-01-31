@@ -7,4 +7,8 @@ public class Test extends Adventure{
 		name = n;
 		minbid = mb;
 	}
+	
+	public String getName() {
+		return name;
+	}
 }
