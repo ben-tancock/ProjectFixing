@@ -4,10 +4,11 @@ import java.util.Collections;
 
 import org.junit.Test;
 
+import model.Adventure;
 import model.AdventureDeck;
+import model.Card;
 import model.Player;
 import model.StoryDeck;
-import model.Player;
 import model.Player.Person;
 public class Test2Players {
 
@@ -23,15 +24,11 @@ public class Test2Players {
 		players.add();
 		players.add();
 		System.out.print("test\n");
-		//Player player1 = new Player();
-		//Player player2 = new Player();
+		
 		
 		players.getPlayers().get(0).setDealer(true); // player 1 (index 0) is set to dealer
 		
-		
-		//player1.dealer = true; //player1 is assigned the dealer position
-		//player2.dealer = false; //ensure that player2 is not the dealer
-		
+	
 		System.out.print(players.getPlayers().get(0).getDealer() + "\n");
 		System.out.print(players.getPlayers().get(1).getDealer() + "\n");
 		
@@ -40,6 +37,10 @@ public class Test2Players {
 		AdventureDeck adventureDeck = new AdventureDeck();
 		assertEquals(adventureDeck.size(), 125);
 		adventureDeck.shuffle();
+		
+		
+		
+		
 		for(int i = 0; i < 10; i++) {
 			System.out.println("shuffled: " + adventureDeck.get(i).getClass());
 		}
@@ -54,25 +55,13 @@ public class Test2Players {
 		}
 		System.out.println();
 		
-		
-		//players 1 and 2 get squire rank cards
-		//player1.drawRank("squire");
-		//player2.drawRank("squire");
 		for (Person person : players.getPlayers()){
 			person.drawRank("squire");
 		} 
 		
-		
-		
-		//players 1 and 2 draw 12 adventure cards
-		/*for(int i = 0; i < 12; i++) {
-			player1.drawAdventure(); // player1 draws 12 cards
-			player2.drawAdventure(); // player2 draws 12 cards
-		}*/
-		
 		for (Person person : players.getPlayers()){
-			person.drawCard(12, "Adventure");
-			System.out.println(person.getHand());
+			person.drawCard(12, adventureDeck);
+			person.displayHand();
 		} 
 		
 		//fail("Not yet implemented");

@@ -60,6 +60,13 @@ public class AdventureDeck extends ArrayList<Adventure>{
 		addCard(8, (new Amour("amour", 10)));
 	}
 	
+	public Adventure top() {
+		Adventure t = this.get(0);
+		this.remove(0);
+		//System.out.println(t.getName());
+		return t;
+	}
+	
 	public void shuffle() {
 		Collections.shuffle(this);
 	}

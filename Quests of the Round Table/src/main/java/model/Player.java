@@ -7,14 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Card;
 import model.Adventure;
+import model.AdventureDeck;
 
 public class Player {
 	public static String NAME = "name";
 	public static int SHIELDS = 0;
 	public static String RANK = "squire";
 	public static boolean dealer = false;
-	private List<Card> HAND = new ArrayList<Card>(); 
-	private List<Card> ALLIES = new ArrayList<Card>();
+	private List<Adventure> HAND = new ArrayList<Adventure>(); 
+	private List<Ally> ALLIES = new ArrayList<Ally>();
+	//AdventureDeck advDeck = new AdventureDeck(); decks kept separate for now
 	
 	public List<Person> persons = new ArrayList<Person>();
 	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
@@ -33,8 +35,8 @@ public class Player {
 		private String rank;
 		private boolean dealer = false;
 		private int shields;
-		private List<Card> hand = new ArrayList<Card>();
-		private List<Card> allies = new ArrayList<Card>();
+		private List<Adventure> hand = new ArrayList<Adventure>();
+		private List<Ally> allies = new ArrayList<Ally>();
 		
 		// Getters and Setters --------------------------------
 		public String getName() {
@@ -53,13 +55,11 @@ public class Player {
 			return shields;
 		}
 		
-		public List<Card> getHand(){
-			
+		public List<Adventure> getHand(){	
 			return this.hand;
 		}
 		
-		public Card getCard(int i) {
-			
+		public Adventure getCard(int i) {
 			return hand.get(i);
 		}
 		
@@ -69,6 +69,10 @@ public class Player {
 		
 		public void setDealer(boolean b) {
 			dealer = b;
+		}
+		
+		public void displayHand() {
+			System.out.println(this.getHand().toString());	
 		}
 		// Getters and Setters --------------------------------
 		
@@ -81,10 +85,15 @@ public class Player {
 			
 		}
 		
-		public void drawCard(int j, String type) {
-			if(type == "Adventure") {
+		public void drawCard(int j, AdventureDeck deck) { // to do: when player receives card from AD, remove card from AD
+			
+			for(int i = 0; i < j; i++) {
+				hand.add(deck.top());
+			}
+			
+			/*if(type == "Adventure") {
 				for(int i = 0; i < j; i++) {
-					//hand.add(new Adventure());
+					hand.add(advDeck.top());
 				}
 			}
 			
@@ -98,7 +107,7 @@ public class Player {
 				for(int i = 0; i < j; i++) {
 					//hand.add(new Adventure());
 				}
-			}
+			}*/
 			
 		}
 		
