@@ -111,6 +111,20 @@ public class Player {
 			
 		}
 		
+		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
+			storyDiscard.add(storyDeck.top());
+			int current = storyDiscard.size() - 1;
+			if (storyDiscard.get(current) instanceof Quest) {
+				System.out.println("Quest card drawn: " + storyDiscard.get(current).getName());
+			}
+			else if (storyDiscard.get(current) instanceof Event) {
+				System.out.println("Event card drawn: " + storyDiscard.get(current).getName());
+			}
+			else if (storyDiscard.get(current) instanceof Tournament) {
+				System.out.println("Tournament card drawn: " + storyDiscard.get(current).getName());
+			}
+		}
+		
 		public void drawRank(String r) {
 			setRank(r);
 		}

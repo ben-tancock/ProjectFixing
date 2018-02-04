@@ -49,6 +49,13 @@ public class StoryDeck extends ArrayList<Story>{
 		addCard(1, (new Event("king's_call_to_arms")));
 	}
 	
+	public Story top() {
+		Story t = this.get(0);
+		this.remove(0);
+		//System.out.println(t.getName());
+		return t;
+	}
+	
 	public void shuffle() {
 		Collections.shuffle(this);
 	}

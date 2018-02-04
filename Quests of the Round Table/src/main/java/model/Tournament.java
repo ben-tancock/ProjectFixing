@@ -8,4 +8,8 @@ public class Tournament extends Story{
 		name = n;
 		bonus = b;
 	}
+	
+	public String getName() {
+		return name;
+	}
 }

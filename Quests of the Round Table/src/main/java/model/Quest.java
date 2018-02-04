@@ -8,4 +8,8 @@ public class Quest extends Story {
 		name = n;
 		stages = s;
 	}
+	
+	public String getName() {
+		return name;
+	}
 }

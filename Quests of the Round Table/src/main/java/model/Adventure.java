@@ -1,6 +1,7 @@
 package model;
 
 public abstract class Adventure implements Card{
+	
 	private String name;
 	public String getName() {
 		return name;
@@ -18,4 +19,4 @@ public abstract class Adventure implements Card{
 		return this.getName();
 	}
 	
-	}
+}

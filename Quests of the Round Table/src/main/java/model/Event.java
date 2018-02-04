@@ -6,4 +6,8 @@ public class Event extends Story{
 	public Event(String n) {
 		name = n;
 	}
+	
+	public String getName() {
+		return name;
+	}
 }

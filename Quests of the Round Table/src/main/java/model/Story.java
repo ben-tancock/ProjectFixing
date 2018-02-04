@@ -2,16 +2,21 @@ package model;
 
 public class Story implements Card{
 
-	@Override
+	private String name;
+	public String getName() {
+		return name;
+	}
+	
 	public void displayAttributes() {
-		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
+	
 	public void displayName() {
-		// TODO Auto-generated method stub
-		
+		System.out.println("Name:" + name + "\n");
+	}
+	
+	public String toString() {
+		return this.getName();
 	}
 
 }
