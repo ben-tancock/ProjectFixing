@@ -36,12 +36,12 @@ public class View extends Application {
 		BorderPane border = new BorderPane();
 		HBox hbox1 = deckView.playerRank();
 		HBox hbox2 = deckView.addHbox();
+		HBox playerCards = new HBox(5);
+		playerCards.getChildren().addAll(hbox1, hbox2);
 		//VBox vbox = verticalView.addVBox();
 		//border.setRight(vbox);
 		//border.setLeft(vbox);
-		border.setAlignment(hbox2, Pos.TOP_RIGHT);
-		border.getChildren().addAll(hbox1, hbox2);
-		//border.setAlignment(hbox2, Pos.TOP_RIGHT);
+		border.setBottom(playerCards);
 		//border.setBottom(hbox);
 		//border.setTop(hbox);
 		Scene scene = new Scene(border, 1120, 700,Color.GRAY);
