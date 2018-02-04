@@ -69,7 +69,7 @@ public class Test2Players {
 		players.getPlayers().get(1).drawCard(storyDeck, storyDiscard);
 		assertEquals(27, storyDeck.size());
 		assertEquals(1, storyDiscard.size());
-		
+		//Drawn card event is handled and something happens.
 		
 		//fail("Not yet implemented");
 	}
