@@ -21,16 +21,7 @@ public class DeckView extends HBox {
 	public HBox addHbox() {
 		HBox hbox = new HBox();
 		//hbox.setPadding(new Insets(20, 15, 20, 15));
-		hbox.setSpacing(-25);
-		hbox.setOnMouseClicked(new EventHandler <MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				// TODO Auto-generated method stub
-				System.out.println("this is the hbox");
-			}
-			
-		});
+		hbox.setSpacing(-50);
 		//hbox.setStyle("-fx-background-color : #336699;");
 		adventureDeck.shuffle();
 		player.drawCard(12, adventureDeck);
