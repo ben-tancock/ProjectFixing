@@ -26,7 +26,7 @@ public class Player {
 	}
 	
 	
-	public class Person { // not entirely sure if this should be static...
+	public static class Person { // not entirely sure if this should be static...
 		
 		public Person() {
 			
@@ -116,6 +116,13 @@ public class Player {
 		}
 		
 	}
+	//adding adventure cards to each player
+/*	public void addPlayerCard() {
+		int twelveCards = 12;
+		for (int i = 0; i < twelveCards ; i++) {
+			hand.add()
+		}
+	}*/
 	
 	public void add() {
 		persons.add(new Person());

@@ -3,6 +3,7 @@ package view;
 import java.util.ArrayList;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,11 +34,15 @@ public class View extends Application {
 		// TODO Auto-generated method stub
 		adventureDeck.shuffle();
 		BorderPane border = new BorderPane();
-		HBox hbox = deckView.addHbox();
-		VBox vbox = verticalView.addVBox();
+		HBox hbox1 = deckView.playerRank();
+		HBox hbox2 = deckView.addHbox();
+		//VBox vbox = verticalView.addVBox();
 		//border.setRight(vbox);
-		border.setLeft(vbox);
-		border.setBottom(hbox);
+		//border.setLeft(vbox);
+		border.setAlignment(hbox2, Pos.TOP_RIGHT);
+		border.getChildren().addAll(hbox1, hbox2);
+		//border.setAlignment(hbox2, Pos.TOP_RIGHT);
+		//border.setBottom(hbox);
 		//border.setTop(hbox);
 		Scene scene = new Scene(border, 1120, 700,Color.GRAY);
 		primaryStage.setScene(scene);
