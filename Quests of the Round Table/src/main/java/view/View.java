@@ -23,11 +23,11 @@ public class View extends Application {
 	DeckView deckView = new DeckView();
 	verticalView verticalView = new verticalView();
 	ArrayList<Adventure> adventureCards = new ArrayList<>();
-	public static void main(String[] args) {
+	// static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Application.launch(args);
+	//	Application.launch(args);
 		
-	}
+	//}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {

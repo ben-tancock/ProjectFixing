@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Adventure;
 import model.AdventureDeck;
-import model.Player.Person;
+import model.Player;
 
 public class verticalView extends VBox {
 	AdventureDeck adventureDeck = new AdventureDeck();
@@ -21,10 +21,11 @@ public class verticalView extends VBox {
 		vBox.setSpacing(-80);
 		//vBox.setStyle("-fx-background-color : #336699;");
 		adventureDeck.shuffle();
-		Person player = new Person();
-		player.drawCard(12, adventureDeck);
+		Player players = new Player();
+		players.add();
+		players.persons.get(0).drawCard(12, adventureDeck);
 		
-		for(Adventure a : player.getHand()) {
+		for(Adventure a : players.persons.get(0).getHand()) {
 			System.out.println(a.getName());
 			Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
 			vBox.getChildren().add(new ImageView(card));

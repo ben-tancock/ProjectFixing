@@ -12,7 +12,7 @@ import model.Player;
 import model.Player.Person;
 
 public class DeckView extends HBox {
-	Person player = new Person();
+	Player player = new Player();
 	AdventureDeck adventureDeck;
 	public DeckView() {
 		adventureDeck  = new AdventureDeck();
@@ -24,9 +24,10 @@ public class DeckView extends HBox {
 		hbox.setSpacing(-50);
 		//hbox.setStyle("-fx-background-color : #336699;");
 		adventureDeck.shuffle();
-		player.drawCard(12, adventureDeck);
+		player.add();
+		player.persons.get(0).drawCard(12, adventureDeck);
 		
-		for(Adventure a : player.getHand()) {
+		for(Adventure a : player.persons.get(0).getHand()) {
 			System.out.println(a.getName());
 			Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
 			ImageView theCard = new ImageView(card);

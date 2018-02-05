@@ -26,7 +26,7 @@ public class Player {
 	}
 	
 	
-	public static class Person { // not entirely sure if this should be static...
+	public class Person { // not entirely sure if this should be static...
 		
 		public Person() {
 			
@@ -150,6 +150,8 @@ public class Player {
         for (PropertyChangeListener name : listener) {
             name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
         }
+        
+        
     }
 
     public void addChangeListener(PropertyChangeListener newListener) {
