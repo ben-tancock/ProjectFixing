@@ -20,15 +20,15 @@ public class DeckView extends HBox {
 	
 	public HBox addHbox() {
 		HBox hbox = new HBox();
-		//hbox.setPadding(new Insets(20, 15, 20, 15));
+		
 		hbox.setSpacing(-50);
-		//hbox.setStyle("-fx-background-color : #336699;");
+
 		adventureDeck.shuffle();
 		player.add();
 		player.persons.get(0).drawCard(12, adventureDeck);
 		
 		for(Adventure a : player.persons.get(0).getHand()) {
-			System.out.println(a.getName());
+			//System.out.println(a.getName());
 			Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
