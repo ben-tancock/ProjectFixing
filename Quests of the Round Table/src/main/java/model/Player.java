@@ -16,6 +16,7 @@ public class Player {
 	public static boolean dealer = false;
 	private List<Adventure> HAND = new ArrayList<Adventure>(); 
 	private List<Ally> ALLIES = new ArrayList<Ally>();
+	private List<Adventure> PLAYING_SURFACE = new ArrayList<Adventure>();
 	//AdventureDeck advDeck = new AdventureDeck(); decks kept separate for now
 	
 	public List<Person> persons = new ArrayList<Person>();
@@ -37,6 +38,7 @@ public class Player {
 		private int shields;
 		private List<Adventure> hand = new ArrayList<Adventure>();
 		private List<Ally> allies = new ArrayList<Ally>();
+		private List<Adventure> playingSurface = new ArrayList<Adventure>();
 		
 		// Getters and Setters --------------------------------
 		public String getName() {
