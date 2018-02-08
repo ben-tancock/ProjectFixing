@@ -41,16 +41,16 @@ public class AdventureDeck extends ArrayList<Adventure>{
 		addCard(2, (new Foe("giant", 40, 40)));
 		addCard(4, (new Foe("mordred", 30, 30)));
 		
-		addCard(1, (new Ally("sir_gawain", 10)));
-		addCard(1, (new Ally("king_pellinore", 10)));
-		addCard(1, (new Ally("sir_percival", 5)));
-		addCard(1, (new Ally("sir_tristan", 10)));
-		addCard(1, (new Ally("king_arthur", 10)));
-		addCard(1, (new Ally("queen_guinevere", 0)));
-		addCard(1, (new Ally("merlin", 0)));
-		addCard(1, (new Ally("sir_galahad", 15)));
-		addCard(1, (new Ally("sir_lancelot", 15)));
-		addCard(1, (new Ally("queen_iseult", 0)));
+		addCard(1, (new Ally("sir_gawain", 10, 0)));
+		addCard(1, (new Ally("king_pellinore", 10, 0)));
+		addCard(1, (new Ally("sir_percival", 5, 0)));
+		addCard(1, (new Ally("sir_tristan", 10, 0)));
+		addCard(1, (new Ally("king_arthur", 10, 2)));
+		addCard(1, (new Ally("queen_guinevere", 0, 3)));
+		addCard(1, (new Ally("merlin", 0, 0)));
+		addCard(1, (new Ally("sir_galahad", 15, 0)));
+		addCard(1, (new Ally("sir_lancelot", 15, 0)));
+		addCard(1, (new Ally("queen_iseult", 0, 2)));
 		
 		addCard(2, (new Test("test_of_the_questing_beast", 4)));
 		addCard(2, (new Test("test_of_temptation", 0)));
