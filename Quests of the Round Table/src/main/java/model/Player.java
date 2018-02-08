@@ -115,6 +115,11 @@ public class Player {
 			}
 		}
 		
+		public void discard(int i) { // discard either from hand or allies in play, implement allies later
+			notifyListeners("discard", hand.get(i));
+			hand.remove(i);
+		}
+		
 		public void drawRank(String r) {
 			notifyListeners("rankset", this.rank, r);
 			setRank(r);
