@@ -16,8 +16,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
@@ -62,53 +65,19 @@ public class View extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				twoPlayerSetUp();
-				HBox hBox1 = new HBox();
-				HBox hBox2 = new HBox();
-				HBox hbox3 = new HBox();
-				HBox secondPlayerCards = new HBox();
+				HBox player1Cards = new HBox();
+				HBox player2Cards = new HBox();
 				
-				players.persons.get(0).drawCard(12, adventureDeck);
+				PlayerSetup(2);
+				player1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
 				
-				for(Adventure a : players.persons.get(0).getHand()) {
-					Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
-					ImageView theCard = new ImageView(card);
-					theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-						@Override
-						public void handle(MouseEvent event) {
-							// TODO Auto-generated method stub
-							System.out.println( "This is a " + a.getName());
-						}
-						
-					});
-					hBox1.getChildren().add(theCard);
-				
-				}
-				hBox2.getChildren().addAll(deckView.playerRank(), hBox1);
-				
-				players.persons.get(1).drawCard(12, adventureDeck);
-				for(Adventure a : players.persons.get(1).getHand()) {
-					System.out.println(a.getName());
-					Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
-					ImageView theCard = new ImageView(card);
-					theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-						@Override
-						public void handle(MouseEvent event) {
-							// TODO Auto-generated method stub
-							System.out.println( "This is a " + a.getName());
-						}
-						
-					});
-					secondPlayerCards.getChildren().add(theCard);
-					
-				}
-				hbox3.getChildren().addAll(deckView.playerRank(),secondPlayerCards);
+				//player2Cards
+				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				
 				BorderPane border = new BorderPane();
-				border.setBottom(hBox2);
-				border.setTop(hbox3);
+				border.setBottom(player1Cards);
+				border.setTop(player2Cards);
+				border.setCenter(storyDeck());
 				
 				Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 				Stage twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -136,16 +105,20 @@ public class View extends Application {
 				PlayerSetup(3);
 				
 				//player1cards
-				allPlayer1Cards.getChildren().addAll(playerRank, playerCards(0));			
-				border.setTop(allPlayer1Cards);
+				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
+				
 				//player2Cards
-				player2Cards.getChildren().addAll(playerRank, playerCards(1));
-				border.setBottom(player2Cards);
+				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
+				
 				//player3Cards
 				player3Cards.getChildren().addAll(playerRank, verticalPlayerCards(2));
-				border.setRight(player3Cards);
+			
 				
 				//setting the scene and window
+				border.setTop(allPlayer1Cards);
+				border.setBottom(player2Cards);
+				border.setRight(player3Cards);
+				border.setCenter(storyDeck());
 				Scene threePlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 				Stage threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				threePlayerStage.setScene(threePlayerScene);
@@ -169,25 +142,25 @@ public class View extends Application {
 				HBox player2Cards = new HBox();
 				HBox player3Cards = new HBox();
 				HBox player4Cards = new HBox();
-				HBox playerRank = deckView.playerRank();
-				
-				//adding 3 players
+
+				//adding 4 players
 				PlayerSetup(4);
 				
 				//player1 cards
-				allPlayer1Cards.getChildren().addAll(playerRank, playerCards(0));			
+				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
 				border.setTop(allPlayer1Cards);
 				//player2 Cards
-				player2Cards.getChildren().addAll(playerRank, playerCards(1));
+				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				border.setBottom(player2Cards);
 				//player3 Cards
-				player3Cards.getChildren().addAll(playerRank, verticalPlayerCards(2));
+				player3Cards.getChildren().addAll(deckView.playerRank(), verticalPlayerCards(2));
 				border.setRight(player3Cards);
 				//player4 Cards
-				player4Cards.getChildren().addAll(playerRank, verticalPlayerCards(3));
+				player4Cards.getChildren().addAll(deckView.playerRank(), verticalPlayerCards(3));
 				border.setLeft(player4Cards);
 				
 				//setting the scene and window
+				border.setCenter(storyDeck());
 				Scene fourPlayerScene = new Scene(border, 1120, 800,Color.AQUA);
 				Stage fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				fourPlayerStage.setScene(fourPlayerScene);
@@ -205,21 +178,22 @@ public class View extends Application {
 		primaryStage.show();
 	}
 	
-	public void twoPlayerSetUp() {
-		numberOfPlayers = 2;
-		HBox hbox = new HBox();
-		hbox.setSpacing(-50);
-		adventureDeck.shuffle();
-		for (int i = 0; i < numberOfPlayers ; i++) {
-			players.add();
-		}
-			
-	}
-	
+	//setting up the number of players
 	public void PlayerSetup(int playerNumber) {
 		for(int i = 0; i< playerNumber ; i++) {
 			players.add();
 		}
+	}
+	
+	public StackPane storyDeck() {
+		Rectangle storyDeck = new Rectangle(50, 50);
+		Text text = new Text ("THIS IS THE STORY DECK....WE NEED TO FILL UP WITH STORY CARDS");
+		//rect.widthProperty().bind(text.widthProperty().add(10));
+		storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
+		storyDeck.setFill(Color.TRANSPARENT);
+		StackPane storyDeckPane = new StackPane();
+		storyDeckPane.getChildren().addAll(storyDeck, text);
+		return storyDeckPane;
 	}
 	
 	public HBox playerCards(int playerPosition) {

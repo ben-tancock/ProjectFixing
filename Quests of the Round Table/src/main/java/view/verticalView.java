@@ -18,9 +18,8 @@ public class verticalView extends VBox {
 	
 	public VBox addVBox() {
 		VBox vBox = new VBox();
-		//vBox.setPadding(new Insets(20, 15, 20, 15));
+		
 		vBox.setSpacing(-80);
-		//vBox.setStyle("-fx-background-color : #336699;");
 		adventureDeck.shuffle();
 		Player players = new Player();
 		players.add();
