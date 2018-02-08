@@ -57,6 +57,11 @@ public class Player {
 			return shields;
 		}
 		
+		public void setShields(int s) {
+			notifyListeners("shieldset", this.getShields(), s);
+			shields = s;
+		}
+		
 		public List<Adventure> getHand(){	
 			return this.hand;
 		}
@@ -88,34 +93,17 @@ public class Player {
 		}
 		
 		public void drawCard(int j, AdventureDeck deck) { // to do: when player receives card from AD, remove card from AD
-			
 			for(int i = 0; i < j; i++) {
 				hand.add(deck.top());
+				notifyListeners("draw", this.getCard(this.hand.size()-1)); // element in the hand at the end of the list is what was added
 			}
-			
-			/*if(type == "Adventure") {
-				for(int i = 0; i < j; i++) {
-					hand.add(advDeck.top());
-				}
-			}
-			
-			else if(type == "Quest") {
-				for(int i = 0; i < j; i++) {
-					//hand.add(new Adventure());
-				}
-			}
-			
-			if(type == "Event") {
-				for(int i = 0; i < j; i++) {
-					//hand.add(new Adventure());
-				}
-			}*/
-			
 		}
 		
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
 			storyDiscard.add(storyDeck.top());
 			int current = storyDiscard.size() - 1;
+			notifyListeners("draw", storyDiscard.get(current));
+			
 			if (storyDiscard.get(current) instanceof Quest) {
 				System.out.println("Quest card drawn: " + storyDiscard.get(current).getName());
 			}
@@ -128,6 +116,7 @@ public class Player {
 		}
 		
 		public void drawRank(String r) {
+			notifyListeners("rankset", this.rank, r);
 			setRank(r);
 		}
 		
@@ -148,12 +137,34 @@ public class Player {
         return persons;
     }
 	
+	// notify listeners: send event message (e.g. drawCard, discard), old value(s), new value(s)
+	// possible changes: card drawn/discarded, rank up/down, shields up/down, 
+	
+	// card drawn notify: what card was drawn, and from where (to determine animation to execute)
+	private void notifyListeners(String event, Card card) { // not 100% sure Card type will work for this, 
+        for (PropertyChangeListener name : listener) {      // might need two functions, one for adventure and one for story (use instanceof ?)
+            name.propertyChange(new PropertyChangeEvent(this, event, null, card));
+        } 
+    }
+	
+	// rank change notify
+	private void notifyListeners(String event, String oldval, String newval) { 
+        for (PropertyChangeListener name : listener) {      
+            name.propertyChange(new PropertyChangeEvent(this, event, oldval, newval));
+        } 
+    }
+	
+	// shield change notify
+		private void notifyListeners(String event, int oldval, int newval) { 
+	        for (PropertyChangeListener name : listener) {      
+	            name.propertyChange(new PropertyChangeEvent(this, event, oldval, newval));
+	        } 
+	    }
+	
 	private void notifyListeners(Object object, String property, String oldValue, String newValue) {
         for (PropertyChangeListener name : listener) {
             name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
-        }
-        
-        
+        } 
     }
 
     public void addChangeListener(PropertyChangeListener newListener) {
