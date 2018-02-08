@@ -1,14 +1,18 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Quest extends Story {
 	private String name;
-	private int stages;
+	private ArrayList<Stage> stages;
+	private final int numStages;
 	private int state;
 	
-	public Quest(String n, int s) {
+	public Quest(String n, int numStgs) {
 		name = n;
-		stages = s;
 		state = CardStates.FACE_DOWN;
+		numStages = numStgs;
+		stages = new ArrayList<Stage>();
 	}
 	
 	public String getName() {
@@ -16,11 +20,19 @@ public class Quest extends Story {
 	}
 	
 	public int getNumStages() {
-		return stages;
+		return numStages;
 	}
 	
 	public int getState() {
 		return state;
+	}
+	
+	public void addStage(Stage s) throws Exception {
+		if(stages.size() < numStages) {
+			stages.add(s);
+		} else {
+			throw new Exception("Trying to add too many stages.");
+		}
 	}
 	
 	public void setState(int s) throws Exception {
