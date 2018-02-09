@@ -57,6 +57,12 @@ public class Player {
 			return shields;
 		}
 		
+		public void setHandState(int state) throws Exception {
+			for(Adventure card : hand) {
+				card.setState(state);
+			}
+		}
+		
 		public void setShields(int s) {
 			notifyListeners("shieldset", this.getShields(), s);
 			shields = s;
