@@ -105,6 +105,16 @@ public class Player {
 			}
 		}
 		
+		//draws a specific card from the AD
+		public void drawCard(AdventureDeck deck, String name) {
+			hand.add(deck.findAndDraw(name));
+		}
+		
+		//draws a specific card from the SD
+		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard, String name) {
+			storyDiscard.add(storyDeck.get(0));
+		}
+		
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
 			storyDiscard.add(storyDeck.top());
 			int current = storyDiscard.size() - 1;

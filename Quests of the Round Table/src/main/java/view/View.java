@@ -25,6 +25,11 @@ public class View extends Application {
 	int numberOfPlayers = 0;
 	public List<Person> persons = new ArrayList<Person>();
 	Player players = new Player();
+	
+	//declare it outside the start method to be called in Update()
+	private Stage primaryStage;
+	
+	//Declare buttons on starting page
 	public Button rulesButton;
 	public Button twoPlayerButton;
 	public Button threePlayerButton;
@@ -41,6 +46,7 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
+		this.primaryStage = primaryStage;
 		HBox startPane = new HBox(50);
 		
 		//rules button
@@ -70,6 +76,11 @@ public class View extends Application {
 		StackPane storyDeckPane = new StackPane();
 		storyDeckPane.getChildren().addAll(storyDeck, text);
 		return storyDeckPane;
+	}
+	
+	//need multiple of these for supporting different situations
+	public void update() {
+		
 	}
 
 }

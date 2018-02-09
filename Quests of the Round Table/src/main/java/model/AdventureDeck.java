@@ -67,6 +67,17 @@ public class AdventureDeck extends ArrayList<Adventure>{
 		return t;
 	}
 	
+	// for testing purposes of retrieving certain cards
+	public Adventure findAndDraw(String name) {
+		for(Adventure card : this) {
+			if(card.getName().equals(name)) {
+				this.remove(card);
+				return card;
+			}
+		}
+		return null;
+	}
+	
 	public void shuffle() {
 		Collections.shuffle(this);
 	}

@@ -56,6 +56,16 @@ public class StoryDeck extends ArrayList<Story>{
 		return t;
 	}
 	
+	public Story findAndDraw(String name) {
+		for(Story card : this) {
+			if(card.getName().equals(name)) {
+				this.remove(card);
+				return card;
+			}
+		}
+		return null;
+	}
+	
 	public void shuffle() {
 		Collections.shuffle(this);
 	}
