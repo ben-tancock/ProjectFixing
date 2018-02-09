@@ -20,6 +20,7 @@ public class PlayGame extends Application{
 	public void start(Stage arg0) throws Exception {
 		// TODO Auto-generated method stub
 		View view = new View();
-		view.start(arg0);
+		ViewController viewController = new ViewController();
+		viewController.start(arg0);
 	}
 }
