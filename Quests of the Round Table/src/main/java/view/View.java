@@ -60,12 +60,6 @@ public class View extends Application {
 		primaryStage.show();
 	}
 	
-	//setting up the number of players
-	public void PlayerSetup(int playerNumber) {
-		for(int i = 0; i< playerNumber ; i++) {
-			players.add();
-		}
-	}
 	
 	public StackPane storyDeck() {
 		Rectangle storyDeck = new Rectangle(50, 50);
