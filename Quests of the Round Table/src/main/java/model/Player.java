@@ -114,7 +114,7 @@ public class Player {
 				System.out.println("Tournament card drawn: " + storyDiscard.get(current).getName());
 			}
 		}
-		
+		// ...
 		public void discard(int i) { // discard either from hand or allies in play, implement allies later
 			notifyListeners("discard", hand.get(i));
 			hand.remove(i);
