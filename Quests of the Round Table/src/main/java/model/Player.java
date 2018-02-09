@@ -112,7 +112,7 @@ public class Player {
 		
 		//draws a specific card from the SD
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard, String name) {
-			storyDiscard.add(storyDeck.get(0));
+			storyDiscard.add(storyDeck.findAndDraw(name));
 		}
 		
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
