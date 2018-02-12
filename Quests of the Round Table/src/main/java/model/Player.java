@@ -45,6 +45,10 @@ public class Player {
 			return name;
 		}
 		
+		public void setName(String n) {
+			name = n;
+		}
+		
 		public String getRank() {
 			return rank;
 		}
@@ -90,8 +94,34 @@ public class Player {
 		// Getters and Setters --------------------------------
 		
 		
-		public void playCard() {
-			
+		public Adventure playCard(String name, boolean toPlayingSurface) {
+			Adventure a = null;
+			if(toPlayingSurface == true) {
+				for(int i = 0; i < hand.size(); i++) {
+					if(hand.get(i).getName().equals(name)) {
+						a = hand.remove(i);
+						playingSurface.add(a);
+						return a;
+					}
+				}
+				
+			} else {
+				for(int i = 0; i < hand.size(); i++) {
+					if(hand.get(i).getName().equals(name)) {
+						a = hand.remove(i);
+						return a;
+					}
+				}
+			}
+			return null;
+		}
+		
+		public List<Adventure> getPlayingSurface() {
+			return playingSurface;
+		}
+		
+		public void displaySurface() {
+			System.out.println(this.getPlayingSurface().toString());
 		}
 		
 		public void bid(int b) {
@@ -106,7 +136,7 @@ public class Player {
 		}
 		
 		//draws a specific card from the AD
-		public void drawCard(AdventureDeck deck, String name) {
+		public void drawCard(AdventureDeck deck, String name) throws Exception {
 			hand.add(deck.findAndDraw(name));
 		}
 		

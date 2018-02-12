@@ -68,14 +68,14 @@ public class AdventureDeck extends ArrayList<Adventure>{
 	}
 	
 	// for testing purposes of retrieving certain cards
-	public Adventure findAndDraw(String name) {
+	public Adventure findAndDraw(String name) throws Exception {
 		for(Adventure card : this) {
 			if(card.getName().equals(name)) {
 				this.remove(card);
 				return card;
 			}
 		}
-		return null;
+		throw new Exception("Could not find card.");
 	}
 	
 	public void shuffle() {

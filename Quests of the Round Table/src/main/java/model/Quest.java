@@ -1,10 +1,13 @@
 package model;
 
 import java.util.ArrayList;
+import model.Player.Person;
 
 public class Quest extends Story {
 	private String name;
 	private ArrayList<Stage> stages;
+	private Person sponsor;
+	private ArrayList<Person> participants;
 	private final int numStages;
 	private int state;
 	
@@ -12,7 +15,9 @@ public class Quest extends Story {
 		name = n;
 		state = CardStates.FACE_DOWN;
 		numStages = numStgs;
+		sponsor = null;
 		stages = new ArrayList<Stage>();
+		participants = new ArrayList<Person>();
 	}
 	
 	public String getName() {
@@ -21,6 +26,10 @@ public class Quest extends Story {
 	
 	public int getNumStages() {
 		return numStages;
+	}
+	
+	public ArrayList<Stage> getStages() {
+		return stages;
 	}
 	
 	public int getState() {
@@ -41,5 +50,22 @@ public class Quest extends Story {
 		} else {
 			state = s;
 		}
+	}
+	
+	public void setSponsor(Person s) {
+		sponsor = s;
+	}
+	
+	public void addParticipant(Person p) {
+		participants.add(p);
+	}
+	
+	public String toString() {
+		String s = "";
+		s += getName() + ": " + System.getProperty("line.separator");
+		for(int i = 1; i <= numStages; i++) {
+			s += "Stage: " + i + " " + stages.get(i-1).toString() + System.getProperty("line.separator");
+		}
+		return s;
 	}
 }
