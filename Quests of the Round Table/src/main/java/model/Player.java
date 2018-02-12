@@ -94,26 +94,19 @@ public class Player {
 		// Getters and Setters --------------------------------
 		
 		
-		public Adventure playCard(String name, boolean toPlayingSurface) {
-			Adventure a = null;
+		public Adventure playCard(Adventure card, boolean toPlayingSurface) {
+			boolean success;
 			if(toPlayingSurface == true) {
-				for(int i = 0; i < hand.size(); i++) {
-					if(hand.get(i).getName().equals(name)) {
-						a = hand.remove(i);
-						playingSurface.add(a);
-						return a;
-					}
-				}
-				
+				success = hand.remove(card);
+				playingSurface.add(card);
 			} else {
-				for(int i = 0; i < hand.size(); i++) {
-					if(hand.get(i).getName().equals(name)) {
-						a = hand.remove(i);
-						return a;
-					}
-				}
+				success = hand.remove(card);	
 			}
-			return null;
+			if(success) {
+				return card;
+			} else {
+				return null;
+			}
 		}
 		
 		public List<Adventure> getPlayingSurface() {
@@ -161,9 +154,19 @@ public class Player {
 			}
 		}
 		
-		public void discard(int i) { // discard either from hand or allies in play, implement allies later
-			notifyListeners("discard", hand.get(i));
-			hand.remove(i);
+		public void discard(Adventure card, AdventureDiscard discardPile, boolean onPlaySurface) throws Exception { // discard either from hand or allies in play, implement allies later
+			notifyListeners("discard", card);
+			boolean success;
+			if(onPlaySurface) {
+				success = playingSurface.remove(card);
+			} else {
+				success = hand.remove(card);
+			}
+			if(success) {
+				discardPile.add(card);
+			} else {
+				throw new Exception("Discard Failed.");
+			}
 		}
 		
 		public void drawRank(String r) {

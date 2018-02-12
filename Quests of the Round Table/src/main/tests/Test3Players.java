@@ -58,7 +58,6 @@ public class Test3Players {
 		//Player B gets Mordred, Sir Tristan, and Queen Iseult... and all the rest of the allies
 		playerB.drawCard(adventureDeck, "sir_tristan");
 		playerB.drawCard(adventureDeck, "queen_iseult");
-		playerB.drawCard(adventureDeck, "mordred");
 		playerB.drawCard(adventureDeck, "king_arthur");
 		playerB.drawCard(adventureDeck, "king_pellinore");
 		playerB.drawCard(adventureDeck, "merlin");
@@ -67,14 +66,15 @@ public class Test3Players {
 		playerB.drawCard(adventureDeck, "sir_lancelot");
 		playerB.drawCard(adventureDeck, "sir_percival");
 		playerB.drawCard(adventureDeck, "amour");
+		playerB.drawCard(adventureDeck, "mordred");
 		
 		//Player A gets Queen Guinevere
 		playerA.drawCard(adventureDeck, "queen_guinevere");
 		playerA.drawCard(adventureDeck, "sword");
 		
 		//Player C gets Boar, Dagger, Test of Morgan Le Fey, Black Knight
-		playerC.drawCard(adventureDeck, "boar");
 		playerC.drawCard(adventureDeck, "dagger");
+		playerC.drawCard(adventureDeck, "boar");
 		playerC.drawCard(adventureDeck, "test_of_morgan_le_fey");
 		playerC.drawCard(adventureDeck, "black_knight");
 		
@@ -108,13 +108,14 @@ public class Test3Players {
 		//Player C then sets up stages 1, 2, and 3.
 		//Stage 1
 		ArrayList<Weapon> stage1Weapons = new ArrayList<>();
-		stage1Weapons.add((Weapon)playerC.playCard("dagger", false));
-		((Quest)storyDiscard.get(1)).addStage(new Stage((Foe)playerC.playCard("boar", false), stage1Weapons));
+		stage1Weapons.add((Weapon)playerC.playCard(playerC.getCard(0), false));
+		((Quest)storyDiscard.get(1)).addStage(new Stage((Foe)playerC.playCard(playerC.getCard(0), false), stage1Weapons));
 		//Stage 2
-		((Quest)storyDiscard.get(1)).addStage(new Stage((model.Test)playerC.playCard("test_of_morgan_le_fey", false)));
+		((Quest)storyDiscard.get(1)).addStage(new Stage((model.Test)playerC.playCard(playerC.getCard(0), false)));
 		//Stage 3
-		((Quest)storyDiscard.get(1)).addStage(new Stage((Foe)playerC.playCard("black_knight", false), new ArrayList<Weapon>()));
+		((Quest)storyDiscard.get(1)).addStage(new Stage((Foe)playerC.playCard(playerC.getCard(0), false), new ArrayList<Weapon>()));
 		System.out.println();
+		System.out.println("Player C's hand: ");
 		playerC.displayHand();
 		assertEquals(playerC.getHand().size(), 8);
 		//display the stages.
@@ -128,29 +129,32 @@ public class Test3Players {
 		playerB.drawCard(1, adventureDeck);
 		playerA.displayHand();
 		playerB.displayHand();
-		assertEquals(playerA.getHand().size(), 13);
-		assertEquals(playerB.getHand().size(), 13);
+		//to check discarding functionality
+		playerA.discard(playerA.getCard(12), adventureDiscard, false);
+		playerB.discard(playerB.getCard(12), adventureDiscard, false);
+		assertEquals(playerA.getHand().size(), 12);
+		assertEquals(playerB.getHand().size(), 12);
 		
 		//Player B decides to play all his allies to defeat the boar
-		playerB.playCard("sir_tristan", true);
-		playerB.playCard("queen_iseult", true);
-		playerB.playCard("king_arthur", true);
-		playerB.playCard("king_pellinore", true);
-		playerB.playCard("merlin", true);
-		playerB.playCard("sir_galahad", true);
-		playerB.playCard("sir_gawain", true);
-		playerB.playCard("sir_lancelot", true);
-		playerB.playCard("sir_percival", true);
-		playerB.playCard("amour", true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
+		playerB.playCard(playerB.getCard(0), true);
 		
-		assertEquals(playerB.getHand().size(), 3);
+		assertEquals(playerB.getHand().size(), 2);
 		assertEquals(playerB.getPlayingSurface().size(), 10);
 		
 		//Player B decides to play Queen Guinevere and a Sword
-		playerA.playCard("queen_guinevere", true);
-		playerA.playCard("sword", true);
+		playerA.playCard(playerA.getCard(0), true);
+		playerA.playCard(playerA.getCard(0), true);
 		
-		assertEquals(playerA.getHand().size(), 11);
+		assertEquals(playerA.getHand().size(), 10);
 		assertEquals(playerA.getPlayingSurface().size(), 2);
 		System.out.println();
 		playerB.displayHand();
