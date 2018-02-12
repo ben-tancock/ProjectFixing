@@ -49,8 +49,16 @@ public class Player {
 			name = n;
 		}
 		
-		public String getRank() {
-			return rank;
+		public int getRank() {
+			if(rank.equals("squire")) {
+				return 0;
+			}
+			else if(rank.equals("knight")) {
+				return 5;
+			}
+			else {
+				return 12;
+			}
 		}
 		
 		public void setRank(String s) {
