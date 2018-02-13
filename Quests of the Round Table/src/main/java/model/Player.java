@@ -192,7 +192,7 @@ public class Player {
 			}
 		}
 		
-		public void Remove(List<? extends Card> from, List<? extends Card> to, Card c) {
+		public void remove(List<? extends Card> from, List<? extends Card> to, Card c) {
 			((List<Card>)to).add(c);
 			from.remove(c);
 			

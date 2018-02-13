@@ -24,21 +24,21 @@ public class EventHandler {
 		event = e;
 	}
 	
-	public void Prosperity(Player p, AdventureDeck d) { // all players must draw two cards
+	public void prosperity(Player p, AdventureDeck d) { // all players must draw two cards
 		for(Person pr : p.getPlayers()) {
 			pr.drawCard(2, d);
 		}
 	}
 	
-	public void ChivalrousDeed(Player p) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
+	public void chivalrousDeed(Player p) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
 		boolean lower = false; 
 		
 		List<Person> per = new ArrayList<Person>();
-		Integer pshields[] =  p.getPlayers().stream().map(Person::getShields).toArray(Integer[]::new);
-		int minS = Collections.min(Arrays.asList(pshields));
+		Integer pShields[] =  p.getPlayers().stream().map(Person::getShields).toArray(Integer[]::new);
+		int minS = Collections.min(Arrays.asList(pShields));
 		
-		Integer pranks[] =  p.getPlayers().stream().map(Person::getRank).toArray(Integer[]::new);
-		int minR = Collections.min(Arrays.asList(pranks));
+		Integer pRanks[] =  p.getPlayers().stream().map(Person::getRank).toArray(Integer[]::new);
+		int minR = Collections.min(Arrays.asList(pRanks));
 		
 		int min = minR + minS;
 		
@@ -49,7 +49,7 @@ public class EventHandler {
 		}
 	}
 	
-	public void QueensFavor(Player p, AdventureDeck d) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
+	public void queensFavor(Player p, AdventureDeck d) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
 		boolean lower = false; 
 		
 		List<Person> per = new ArrayList<Person>();
@@ -63,7 +63,7 @@ public class EventHandler {
 		}
 	}
 	
-	public void Plague(Person p) { // drawer loses 2 shields if possible
+	public void plague(Person p) { // drawer loses 2 shields if possible
 		if(p.getShields() > 2) {
 			p.setShields(p.getShields() -2);
 		}
@@ -72,7 +72,7 @@ public class EventHandler {
 		}
 	}
 	
-	public void Pox(Player p, Person pr) { // all players except drawer lose a shield
+	public void pox(Player p, Person pr) { // all players except drawer lose a shield
 		for (Person ele : p.getPlayers()) {
 			if(!ele.equals(pr)) {
 				if(ele.getShields() > 0) {
@@ -85,12 +85,12 @@ public class EventHandler {
 		}
 	}
 	
-	public void CourtCalled(Player p, AdventureDiscard d) { // all allies in play must be discarded
+	public void courtCalled(Player p, AdventureDiscard d) { // all allies in play must be discarded
 		for (Person pr : p.getPlayers()) {
 			for(Ally a : pr.getAllies()) {
 				//new ArrayList<Card>()
 				new ArrayList<Foe>();
-				pr.Remove(pr.getAllies(), d, a );
+				pr.remove(pr.getAllies(), d, a );
 			}
 		}
 		

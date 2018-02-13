@@ -62,14 +62,14 @@ public class QuestHandler {
 					if(p.getBattlePoints() < card.getStages().get(i).getBattlePoints()) {
 						participants.remove(p);
 						for(Weapon w : p.getWeapons()) {
-							p.Remove(p.getWeapons(), discard, w);
+							p.remove(p.getWeapons(), discard, w);
 						}
 					}	
 				}
 				//remaining participants discard the weapons in their playing field
 				for(Person p : participants) {
 					for(Weapon w : p.getWeapons()) {
-						p.Remove(p.getWeapons(), discard, w);
+						p.remove(p.getWeapons(), discard, w);
 					}
 				}
 			} else if (card.getStages().get(i).getTest() != null){
@@ -85,7 +85,7 @@ public class QuestHandler {
 		// Quest is over, Amours are all discarded.
 		for(Person p : players.getPlayers()) {
 			for(Amour a : p.getAmour()) {
-				p.Remove(p.getAmour(), discard, a);
+				p.remove(p.getAmour(), discard, a);
 			}
 		}
 		
@@ -110,7 +110,7 @@ public class QuestHandler {
 		//players discard all bided cards.
 		for(Person player : players.getPlayers()) {
 			for(Adventure a : player.getBidCards()) {
-				player.Remove(player.getBidCards(), discard, a);
+				player.remove(player.getBidCards(), discard, a);
 			}
 		}
 	}
