@@ -41,18 +41,16 @@ public class Quest extends Story {
 	public void addStage(Stage s) throws Exception {
 		for(Stage stage : stages) {
 			//Check if the Quest already has a test in it.
-			if(stage.getTest() != null) {
+			if(stage.getTest() != null && s.getTest() != null) {
 				throw new Exception("Only one test is allowed.");
 			}
 			
 		}
-		//Check if foe's name matches quest's foe
+		//set battle points for the stage
+		if(s.getFoe() != null) 
+			setStageBP(s);
 		
-		if(stages.size() < numStages) {
-			stages.add(s);
-		} else {
-			throw new Exception("Trying to add too many stages.");
-		}
+		stages.add(s);
 	}
 	
 	public void setState(int s) throws Exception {
@@ -69,6 +67,22 @@ public class Quest extends Story {
 	
 	public void addParticipant(Person p) {
 		participants.add(p);
+	}
+	
+	public void setStageBP(Stage s) {
+		if(specialFoes.equals("all")) {
+			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
+		} else if(specialFoes.equals("saxons")) {
+			if(s.getFoe().getName().contains("all_saxons")) {
+				s.setBattlePoints(s.getFoe().getHigherBattlePoints());
+			} else {
+				s.setBattlePoints(s.getFoe().getLowerBattlePoints());
+			}
+		} else if(s.getFoe().getName().equals(specialFoes)) {
+			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
+		} else {
+			s.setBattlePoints(s.getFoe().getLowerBattlePoints());
+		}
 	}
 	
 	public String toString() {

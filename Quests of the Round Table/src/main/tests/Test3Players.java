@@ -73,6 +73,7 @@ public class Test3Players {
 		playerA.drawCard(adventureDeck, "sword");
 		
 		//Player C gets Boar, Dagger, Test of Morgan Le Fey, Black Knight
+		
 		playerC.drawCard(adventureDeck, "dagger");
 		playerC.drawCard(adventureDeck, "boar");
 		playerC.drawCard(adventureDeck, "test_of_morgan_le_fey");
@@ -107,13 +108,19 @@ public class Test3Players {
 		
 		//Player C then sets up stages 1, 2, and 3.
 		//Stage 1
+		Quest theQuest = (Quest)storyDiscard.get(1);
 		ArrayList<Weapon> stage1Weapons = new ArrayList<>();
 		stage1Weapons.add((Weapon)playerC.playCard(playerC.getCard(0), false));
-		((Quest)storyDiscard.get(1)).addStage(new Stage((Foe)playerC.playCard(playerC.getCard(0), false), stage1Weapons));
+		Stage stage1 = new Stage((Foe)playerC.playCard(playerC.getCard(0), false), stage1Weapons);
+		theQuest.addStage(stage1);
 		//Stage 2
-		((Quest)storyDiscard.get(1)).addStage(new Stage((model.Test)playerC.playCard(playerC.getCard(0), false)));
+		theQuest.addStage(new Stage((model.Test)playerC.playCard(playerC.getCard(0), false)));
 		//Stage 3
-		((Quest)storyDiscard.get(1)).addStage(new Stage((Foe)playerC.playCard(playerC.getCard(0), false), new ArrayList<Weapon>()));
+		theQuest.addStage(new Stage((Foe)playerC.playCard(playerC.getCard(0), false), new ArrayList<Weapon>()));
+		//Check bids and BP for each stage
+		assertEquals(theQuest.getStages().get(0).getBattlePoints(), 10);
+		assertEquals(theQuest.getStages().get(1).getBids(), 3);
+		assertEquals(theQuest.getStages().get(2).getBattlePoints(), 35);
 		System.out.println();
 		System.out.println("Player C's hand: ");
 		playerC.displayHand();

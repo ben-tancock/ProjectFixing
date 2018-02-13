@@ -10,14 +10,6 @@ import model.Adventure;
 import model.AdventureDeck;
 
 public class Player {
-	public static String NAME = "name";
-	public static int SHIELDS = 0;
-	public static String RANK = "squire";
-	public static boolean dealer = false;
-	private ArrayList<Adventure> HAND = new ArrayList<Adventure>(); 
-	private ArrayList<Adventure> ALLIES = new ArrayList<Adventure>();
-	private List<Adventure> PLAYING_SURFACE = new ArrayList<Adventure>();
-	//AdventureDeck advDeck = new AdventureDeck(); decks kept separate for now
 	
 	public List<Person> persons = new ArrayList<Person>();
 	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
@@ -40,7 +32,8 @@ public class Player {
 		private ArrayList<Ally> allies = new ArrayList<Ally>();
 		private List<Adventure> playingSurface = new ArrayList<Adventure>();
 		private List<Weapon> weapons = new ArrayList<Weapon>();
-		private Amour amour;
+		private List<Amour> amour = new ArrayList<Amour>();
+		private List<Adventure> bidCards = new ArrayList<Adventure> ();
 		
 		// Getters and Setters --------------------------------
 		public String getName() {
@@ -90,6 +83,18 @@ public class Player {
 			return this.allies;
 		}
 		
+		public List<Weapon> getWeapons() {
+			return this.weapons;
+		}
+		
+		public List<Amour> getAmour() {
+			return this.amour;
+		}
+		
+		public List<Adventure> getBidCards() {
+			return this.bidCards;
+		}
+		
 		public Adventure getCard(int i) {
 			return hand.get(i);
 		}
@@ -100,6 +105,10 @@ public class Player {
 		
 		public void setDealer(boolean b) {
 			dealer = b;
+		}
+		
+		public int getBattlePoints() {
+			return 0;
 		}
 		
 		public void displayHand() {

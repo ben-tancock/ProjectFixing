@@ -29,6 +29,14 @@ public class Stage {
 		return foe;
 	}
 	
+	public int getBattlePoints() {
+		return battlePoints;
+	}
+	
+	public int getBids() {
+		return bids;
+	}
+	
 	public void setBattlePoints(int b) {
 		battlePoints = b;
 	}
