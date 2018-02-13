@@ -33,6 +33,22 @@ public class Foe extends Adventure{
 		return weapons;
 	}
 	
+	public int getLowerBattlePoints() {
+		int weaponBp = 0;
+		for(Weapon weapon : weapons) {
+			weaponBp += weapon.getBattlePoints();
+		}
+		return bp1 + weaponBp;
+	}
+	
+	public int getHigherBattlePoints() {
+		int weaponBp = 0;
+		for(Weapon weapon : weapons) {
+			weaponBp += weapon.getBattlePoints();
+		}
+		return bp2 + weaponBp;
+	}
+	
 	public void addWeapon(Weapon w) throws Exception {
 		boolean distinct = true;
 		

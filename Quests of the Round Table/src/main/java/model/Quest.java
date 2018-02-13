@@ -8,16 +8,18 @@ public class Quest extends Story {
 	private ArrayList<Stage> stages;
 	private Person sponsor;
 	private ArrayList<Person> participants;
+	private String specialFoes;
 	private final int numStages;
 	private int state;
 	
-	public Quest(String n, int numStgs) {
+	public Quest(String n, int numStgs, String spFs) {
 		name = n;
 		state = CardStates.FACE_DOWN;
 		numStages = numStgs;
 		sponsor = null;
 		stages = new ArrayList<Stage>();
 		participants = new ArrayList<Person>();
+		specialFoes = spFs;
 	}
 	
 	public String getName() {
@@ -37,6 +39,15 @@ public class Quest extends Story {
 	}
 	
 	public void addStage(Stage s) throws Exception {
+		for(Stage stage : stages) {
+			//Check if the Quest already has a test in it.
+			if(stage.getTest() != null) {
+				throw new Exception("Only one test is allowed.");
+			}
+			
+		}
+		//Check if foe's name matches quest's foe
+		
 		if(stages.size() < numStages) {
 			stages.add(s);
 		} else {

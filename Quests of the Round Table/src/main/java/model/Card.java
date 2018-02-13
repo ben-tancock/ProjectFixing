@@ -1,6 +1,6 @@
 package model;
 
-public abstract class Card {
+public interface Card {
 	//private String name;
 	//void displayAttributes();
 	//void displayName();

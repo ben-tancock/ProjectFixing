@@ -1,6 +1,6 @@
 package model;
 
-public class Story extends Card{
+public class Story implements Card{
 
 	private String name;
 	private int state;

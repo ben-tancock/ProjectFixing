@@ -21,16 +21,16 @@ public class StoryDeck extends ArrayList<Story>{
 	
 	public StoryDeck() {
 		//add quests
-		addCard(1, (new Quest("search_for_the_holy_grail", 5)));
-		addCard(1, (new Quest("test_of_the_green_knight", 4)));
-		addCard(1, (new Quest("search_for_the_questing_beast", 4)));
-		addCard(1, (new Quest("defend_the_queen's_honor", 4)));
-		addCard(1, (new Quest("rescue_the_fair_maiden", 3)));
-		addCard(1, (new Quest("journey_through_the_enchanted_forest", 3)));
-		addCard(2, (new Quest("vanquish_king_arthur's_enemies", 3)));
-		addCard(1, (new Quest("slay_the_dragon", 3)));
-		addCard(2, (new Quest("boar_hunt", 2)));
-		addCard(2, (new Quest("repel_the_saxon_raiders", 2)));
+		addCard(1, (new Quest("search_for_the_holy_grail", 5, "all")));
+		addCard(1, (new Quest("test_of_the_green_knight", 4, "green_knight")));
+		addCard(1, (new Quest("search_for_the_questing_beast", 4, "")));
+		addCard(1, (new Quest("defend_the_queen's_honor", 4, "all")));
+		addCard(1, (new Quest("rescue_the_fair_maiden", 3, "black_knight")));
+		addCard(1, (new Quest("journey_through_the_enchanted_forest", 3, "evil_knight")));
+		addCard(2, (new Quest("vanquish_king_arthur's_enemies", 3, "")));
+		addCard(1, (new Quest("slay_the_dragon", 3, "dragon")));
+		addCard(2, (new Quest("boar_hunt", 2, "boar")));
+		addCard(2, (new Quest("repel_the_saxon_raiders", 2, "all_saxons")));
 		
 		//add tournaments
 		addCard(1, (new Tournament("camelot", 3)));

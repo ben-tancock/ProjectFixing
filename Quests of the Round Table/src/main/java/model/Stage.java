@@ -2,36 +2,54 @@ package model;
 
 import java.util.ArrayList;
 
-public class Stage extends ArrayList<Adventure> {
-
-	/**
-	 * added this to scare off warnings and to make it serial as well
-	 */
-	private static final long serialVersionUID = 1L;
+public class Stage {
+	
+	private Foe foe;
+	private Test test;
+	private int battlePoints;
+	private int bids;
 	
 	public Stage(Test t) {
-		add(t);
+		test = t;
+		bids = t.getMinbid();
 	}
 	
-	public Stage(Foe f, ArrayList<Weapon> weapons) {
-		f.getWeapons().addAll(weapons);
-		add(f);
+	public Stage(Foe f, ArrayList<Weapon> weapons) throws Exception {
+		for (Weapon w : weapons) {
+			f.addWeapon(w);
+		}
+		foe = f;
+	}
+	
+	public Test getTest() {
+		return test;
+	}
+	
+	public Foe getFoe() {
+		return foe;
+	}
+	
+	public void setBattlePoints(int b) {
+		battlePoints = b;
 	}
 	
 	public void displayStage() {
-		if(get(0) instanceof Foe) {
-			System.out.println(get(0).getName() + ": " + ((Foe)get(0)).getWeapons());
+		if(foe != null) {
+			System.out.println(foe.getName() + ": " + foe.getWeapons());
+		} else if (test != null) {
+			System.out.println(test.getName());
 		} else {
-			System.out.println(toString());
+			System.out.println("blank");
 		}
 	}
 	
 	public String toString() {
-		if(get(0) instanceof Foe) {
-			return get(0).getName() + ": " + ((Foe)get(0)).getWeapons();
-		} else {
-			return get(0).getName();
+		if(foe != null) {
+			return foe.getName() + ": " + foe.getWeapons();
+		} else if (test != null){
+			return test.getName();
 		}
+		else return "";
 	}
 
 }

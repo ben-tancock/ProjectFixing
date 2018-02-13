@@ -39,6 +39,8 @@ public class Player {
 		private ArrayList<Adventure> hand = new ArrayList<Adventure>();
 		private ArrayList<Ally> allies = new ArrayList<Ally>();
 		private List<Adventure> playingSurface = new ArrayList<Adventure>();
+		private List<Weapon> weapons = new ArrayList<Weapon>();
+		private Amour amour;
 		
 		// Getters and Setters --------------------------------
 		public String getName() {
