@@ -1,7 +1,7 @@
 package model;
 
-public interface Card {
+public abstract class Card {
 	//private String name;
-	void displayAttributes();
-	void displayName();
+	//void displayAttributes();
+	//void displayName();
 }

@@ -14,8 +14,8 @@ public class Player {
 	public static int SHIELDS = 0;
 	public static String RANK = "squire";
 	public static boolean dealer = false;
-	private List<Adventure> HAND = new ArrayList<Adventure>(); 
-	private List<Ally> ALLIES = new ArrayList<Ally>();
+	private ArrayList<Adventure> HAND = new ArrayList<Adventure>(); 
+	private ArrayList<Adventure> ALLIES = new ArrayList<Adventure>();
 	private List<Adventure> PLAYING_SURFACE = new ArrayList<Adventure>();
 	//AdventureDeck advDeck = new AdventureDeck(); decks kept separate for now
 	
@@ -36,8 +36,8 @@ public class Player {
 		private String rank;
 		private boolean dealer = false;
 		private int shields;
-		private List<Adventure> hand = new ArrayList<Adventure>();
-		private List<Ally> allies = new ArrayList<Ally>();
+		private ArrayList<Adventure> hand = new ArrayList<Adventure>();
+		private ArrayList<Ally> allies = new ArrayList<Ally>();
 		private List<Adventure> playingSurface = new ArrayList<Adventure>();
 		
 		// Getters and Setters --------------------------------
@@ -82,6 +82,10 @@ public class Player {
 		
 		public List<Adventure> getHand(){	
 			return this.hand;
+		}
+		
+		public List<Ally> getAllies(){	
+			return this.allies;
 		}
 		
 		public Adventure getCard(int i) {
@@ -175,6 +179,12 @@ public class Player {
 			} else {
 				throw new Exception("Discard Failed.");
 			}
+		}
+		
+		public void Remove(List<? extends Card> from, List<? extends Card> to, Card c) {
+			((List<Card>)to).add(c);
+			from.remove(c);
+			
 		}
 		
 		public void drawRank(String r) {

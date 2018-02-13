@@ -1,9 +1,15 @@
 package control;
 
 import model.Event;
+import model.Foe;
 import model.Player;
 import model.Player.Person;
+import model.Adventure;
 import model.AdventureDeck;
+import model.AdventureDiscard;
+import model.Ally;
+import model.Card;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +37,6 @@ public class EventHandler {
 		Integer pshields[] =  p.getPlayers().stream().map(Person::getShields).toArray(Integer[]::new);
 		int minS = Collections.min(Arrays.asList(pshields));
 		
-		//List<Person> per = new ArrayList<Person>();
 		Integer pranks[] =  p.getPlayers().stream().map(Person::getRank).toArray(Integer[]::new);
 		int minR = Collections.min(Arrays.asList(pranks));
 		
@@ -58,11 +63,53 @@ public class EventHandler {
 		}
 	}
 	
-	public void Plague(Person p) {
-		//p.discard(i);
+	public void Plague(Person p) { // drawer loses 2 shields if possible
+		if(p.getShields() > 2) {
+			p.setShields(p.getShields() -2);
+		}
+		else {
+			p.setShields(0);
+		}
+	}
+	
+	public void Pox(Player p, Person pr) { // all players except drawer lose a shield
+		for (Person ele : p.getPlayers()) {
+			if(!ele.equals(pr)) {
+				if(ele.getShields() > 0) {
+					ele.setShields(ele.getShields()-1);
+				}
+				else {
+					ele.setShields(0);
+				}
+			}
+		}
+	}
+	
+	public void CourtCalled(Player p, AdventureDiscard d) { // all allies in play must be discarded
+		for (Person pr : p.getPlayers()) {
+			for(Ally a : pr.getAllies()) {
+				//new ArrayList<Card>()
+				new ArrayList<Foe>();
+				pr.Remove(pr.getAllies(), d, a );
+			}
+		}
+		
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	// TO DO: INSTEAD OF DISCARD, PLAY, ETC, 
+	// MAKE A METHOD FOR CARD REMOVAL, 
+	// WHICH TAKES AS INPUT:
+	//1: THE CARD BEING REMOVED
+	//2: WHERE THE CARD IS BEING REMOVED FROM
+	//3: WHERE THE CARD IS BEING SENT TO
 	
 	
 	public static void main(String[] args) {

@@ -1,6 +1,6 @@
 package model;
 
-public abstract class Adventure implements Card{
+public abstract class Adventure extends Card{
 	
 	private String name;
 	private int state;
