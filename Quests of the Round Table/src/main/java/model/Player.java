@@ -2,20 +2,19 @@ package model;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import java.util.ArrayList;
 import java.util.List;
-import model.Card;
-import model.Adventure;
-import model.AdventureDeck;
+
+import control.PlayGame.PlayGameControlHandler;
 
 public class Player {
 	
 	public List<Person> persons = new ArrayList<Person>();
 	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
-
+	private PlayGameControlHandler playGameControlHandler;
+	
 	public Player() {
-		
+		playGameControlHandler = new PlayGameControlHandler();
 	}
 	
 	
@@ -149,16 +148,28 @@ public class Player {
 				hand.add(deck.top());
 				notifyListeners("draw", this.getCard(this.hand.size()-1)); // element in the hand at the end of the list is what was added
 			}
+			
+			if(hand.size() > 12) {
+				notifyCardOverflowListener("card overflow", this);
+			}
 		}
 		
 		//draws a specific card from the AD
 		public void drawCard(AdventureDeck deck, String name) throws Exception {
 			hand.add(deck.findAndDraw(name));
+			
+			if(hand.size() > 12) {
+				notifyCardOverflowListener("card overflow", this);
+			}
 		}
 		
 		//draws a specific card from the SD
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard, String name) {
 			storyDiscard.add(storyDeck.findAndDraw(name));
+			
+			if(hand.size() > 12) {
+				notifyCardOverflowListener("card overflow", this);
+			}
 		}
 		
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
@@ -175,6 +186,10 @@ public class Player {
 			else if (storyDiscard.get(current) instanceof Tournament) {
 				System.out.println("Tournament card drawn: " + storyDiscard.get(current).getName());
 			}
+			
+			if(hand.size() > 12) {
+				notifyCardOverflowListener("card overflow", this);
+			}
 		}
 		
 		public void discard(Adventure card, AdventureDiscard discardPile, boolean onPlaySurface) throws Exception { // discard either from hand or allies in play, implement allies later
@@ -187,8 +202,6 @@ public class Player {
 			}
 			if(success) {
 				discardPile.add(card);
-			} else {
-				throw new Exception("Discard Failed.");
 			}
 		}
 		
@@ -222,6 +235,11 @@ public class Player {
 	
 	// notify listeners: send event message (e.g. drawCard, discard), old value(s), new value(s)
 	// possible changes: card drawn/discarded, rank up/down, shields up/down, 
+	
+	//Possible card overflow notify?
+	private void notifyCardOverflowListener(String event, Person p) {
+		playGameControlHandler.onCardOverflow(p);
+	}
 	
 	// card drawn notify: what card was drawn, and from where (to determine animation to execute)
 	private void notifyListeners(String event, Card card) { // not 100% sure Card type will work for this, 

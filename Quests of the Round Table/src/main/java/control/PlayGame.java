@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Player.Person;
 import view.View;
 
 public class PlayGame extends Application{
@@ -22,5 +23,12 @@ public class PlayGame extends Application{
 		View view = new View();
 		ViewController viewController = new ViewController();
 		viewController.start(arg0);
+	}
+	
+	public static class PlayGameControlHandler extends ControlHandler {
+		@Override
+		public void onCardOverflow(Person p) {
+			
+		}
 	}
 }
