@@ -10,10 +10,10 @@ import view.View;
 
 public class PlayGame extends Application{
 	
-	private static final Logger logger = LogManager.getLogger(PlayGame.class);
+	//private static final Logger logger = LogManager.getLogger(PlayGame.class);
 
 	public static void main(String[] args) {
-		logger.info("Game Menu starting!");
+		//logger.info("Game Menu starting!");
 		Application.launch(args);
 	}
 

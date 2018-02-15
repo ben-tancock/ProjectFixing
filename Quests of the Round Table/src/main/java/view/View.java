@@ -3,10 +3,12 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -47,19 +49,19 @@ public class View extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		this.primaryStage = primaryStage;
-		HBox startPane = new HBox(50);
+		VBox startPane = new VBox(50);
 		
 		//rules button
-		rulesButton.setMaxSize(200, 100);
+		rulesButton.setMaxSize(500, 400);
 		//2 player button
-		twoPlayerButton.setMaxSize(200, 100);
+		twoPlayerButton.setMaxSize(500, 400);
 		//3 player button
-		threePlayerButton.setMaxSize(200, 100);
+		threePlayerButton.setMaxSize(500, 400);
 		//4 player button
-		fourPlayerButton.setMaxSize(200, 100);
+		fourPlayerButton.setMaxSize(500, 400);
 		
 		startPane.getChildren().addAll(rulesButton, twoPlayerButton, threePlayerButton, fourPlayerButton);
-		
+		startPane.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(startPane, 1120, 700,Color.GRAY);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Quest of the Round Table");
