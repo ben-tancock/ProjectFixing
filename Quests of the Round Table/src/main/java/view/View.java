@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -20,7 +21,13 @@ import model.Player.Person;
 
 public class View extends Application {
 	
+	private BorderPane border;
 	AdventureDeck adventureDeck = new AdventureDeck();
+	private HBox playerSpace;
+	private HBox secondPlayerSpace;
+	private VBox verticalPlayerSpace;
+	
+	private Scene gameTable;
 	DeckView deckView = new DeckView();
 	verticalView verticalView = new verticalView();
 	ArrayList<Adventure> adventureCards = new ArrayList<>();
@@ -36,12 +43,38 @@ public class View extends Application {
 	public Button twoPlayerButton;
 	public Button threePlayerButton;
 	public Button fourPlayerButton;
+	
 	public View() {
+		border = new BorderPane();
 		rulesButton = new Button("RULES OF THE GAME");
 		twoPlayerButton = new Button("TWO PLAYER QUEST");
 		threePlayerButton = new Button("THREE PLAYER QUEST");
 		fourPlayerButton  = new Button("FOUR PLAYER QUEST");
+		playerSpace = new HBox();
+		secondPlayerSpace = new HBox();
+		verticalPlayerSpace = new VBox();
 		
+		gameTable = new Scene(border, 1120, 700,Color.AQUA);
+	}
+	
+	public HBox getPlayerSpace() {
+		return playerSpace;
+	}
+	
+	public HBox getsecondPlayerSpace() {
+		return secondPlayerSpace;
+	}
+	
+	public VBox getVerticalOplayer() {
+		return verticalPlayerSpace;
+	}
+	
+	public Scene getGameTable() {
+		return gameTable;
+	}
+	
+	public BorderPane getGameBorders() {
+		return border;
 	}
 	
 
@@ -52,13 +85,13 @@ public class View extends Application {
 		VBox startPane = new VBox(50);
 		
 		//rules button
-		rulesButton.setMaxSize(500, 400);
+		rulesButton.setPrefSize(300, 100);
 		//2 player button
-		twoPlayerButton.setMaxSize(500, 400);
+		twoPlayerButton.setPrefSize(300, 100);
 		//3 player button
-		threePlayerButton.setMaxSize(500, 400);
+		threePlayerButton.setPrefSize(300, 100);
 		//4 player button
-		fourPlayerButton.setMaxSize(500, 400);
+		fourPlayerButton.setPrefSize(300, 100);
 		
 		startPane.getChildren().addAll(rulesButton, twoPlayerButton, threePlayerButton, fourPlayerButton);
 		startPane.setAlignment(Pos.CENTER);
@@ -67,16 +100,35 @@ public class View extends Application {
 		primaryStage.setTitle("Quest of the Round Table");
 		primaryStage.show();
 	}
+	public HBox storyCards() {
+		HBox storyCards = new HBox(-60);
+		
+		return storyCards;
+	}
 	
+	//story deck with both story cards and the discard pile
+	public VBox storyDeckCards() {
+		VBox storyDeck = new VBox();
+		
+		return storyDeck;
+	}
+	
+	public Rectangle rectangle() {
+		Rectangle storyDeckRectangle = new Rectangle(50, 50);
+		//storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
+		
+		storyDeckRectangle.setFill(Color.TRANSPARENT);
+		return storyDeckRectangle;
+	}
 	
 	public StackPane storyDeck() {
-		Rectangle storyDeck = new Rectangle(50, 50);
-		Text text = new Text ("THIS IS THE STORY DECK....WE NEED TO FILL UP WITH STORY CARDS");
-		//rect.widthProperty().bind(text.widthProperty().add(10));
-		storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
-		storyDeck.setFill(Color.TRANSPARENT);
 		StackPane storyDeckPane = new StackPane();
-		storyDeckPane.getChildren().addAll(storyDeck, text);
+		//Text text = new Text ("THIS IS THE STORY DECK....WE NEED TO FILL UP WITH STORY CARDS");
+		//rect.widthProperty().bind(text.widthProperty().add(10));
+		//storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
+		//storyDeck.setFill(Color.TRANSPARENT);
+		
+		//storyDeckPane.getChildren().addAll(storyDeck, text);
 		return storyDeckPane;
 	}
 	
