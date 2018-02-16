@@ -6,6 +6,7 @@ import java.beans.PropertyChangeListener;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -37,14 +38,20 @@ public class ViewController extends Application implements PropertyChangeListene
 		// TODO Auto-generated method stub
 		view.start(primaryStage);
 		
-		//setting up the story deck
-		//storyDeckRectangle.widthProperty().bind((ObservableValue<? extends Number>) storyDeckCards());
+		
 		view.rulesButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				System.out.println("THESE ARE THE RULES OF THE GAME");
+				BorderPane border = new BorderPane();//view.getGameBorders();
+				border.setCenter(view.rulesBox());
+				Stage rulesStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+				//rulesStage.setScene(view.rulesBox());
+				rulesStage.getScene().setRoot(border);
+				rulesStage.show();
+				
+				
 			}
 			
 		});
@@ -70,6 +77,9 @@ public class ViewController extends Application implements PropertyChangeListene
 				border.setTop(player2Cards);
 				//border.setCenter(view.storyDeck());
 				border.setCenter(storyDeckCards());
+		
+				BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
+				
 				//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 				Stage twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				twoPlayerStage.setScene(view.getGameTable());
@@ -84,13 +94,16 @@ public class ViewController extends Application implements PropertyChangeListene
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
 				BorderPane border = new BorderPane();
-				HBox allPlayer1Cards = new HBox();
-				HBox player2Cards = new HBox();
+				HBox allPlayer1Cards = view.getPlayerSpace();
+				HBox player2Cards = view.getsecondPlayerSpace();
 				HBox player3Cards = new HBox();
 				HBox playerRank = deckView.playerRank();
 				
 				//adding 3 players
 				PlayerSetup(3);
+				
+				//shuffle cards
+				adventureDeck.shuffle();
 				
 				//player1cards
 				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
@@ -106,10 +119,11 @@ public class ViewController extends Application implements PropertyChangeListene
 				border.setTop(allPlayer1Cards);
 				border.setBottom(player2Cards);
 				border.setRight(player3Cards);
-				border.setCenter(view.storyDeck());
-				Scene threePlayerScene = new Scene(border, 1120, 700,Color.AQUA);
+				border.setCenter(storyDeckCards());
+				
+				//Scene threePlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 				Stage threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-				threePlayerStage.setScene(threePlayerScene);
+				threePlayerStage.setScene(view.getGameTable());
 				threePlayerStage.getScene().setRoot(border);
 				threePlayerStage.show();
 			}
@@ -122,13 +136,16 @@ public class ViewController extends Application implements PropertyChangeListene
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
 				BorderPane border = new BorderPane();
-				HBox allPlayer1Cards = new HBox();
-				HBox player2Cards = new HBox();
-				HBox player3Cards = new HBox();
-				HBox player4Cards = new HBox();
+				HBox allPlayer1Cards = view.getPlayerSpace();
+				HBox player2Cards = view.getsecondPlayerSpace();
+				HBox player3Cards = view.getThirdPlayerSpace();
+				HBox player4Cards = view.getFourthPlayer();
 
 				//adding 4 players
 				PlayerSetup(4);
+				
+				//shuffling the cards
+				adventureDeck.shuffle();
 				
 				//player1 cards
 				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
@@ -144,10 +161,11 @@ public class ViewController extends Application implements PropertyChangeListene
 				border.setLeft(player4Cards);
 				
 				//setting the scene and window
-				border.setCenter(view.storyDeck());
-				Scene fourPlayerScene = new Scene(border, 1120, 800,Color.AQUA);
+				border.setCenter(storyDeckCards());
+				
+				//Scene fourPlayerScene = new Scene(border, 1120, 800,Color.AQUA);
 				Stage fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-				fourPlayerStage.setScene(fourPlayerScene);
+				fourPlayerStage.setScene(view.getGameTable());
 				fourPlayerStage.getScene().setRoot(border);
 				fourPlayerStage.show();
 			}
@@ -186,11 +204,13 @@ public class ViewController extends Application implements PropertyChangeListene
 		return playerCards;
 	}
 	
+	//story deck
 	public HBox storyDeckCards() {
 		HBox storyCards = view.storyCards();
+		storyDeck.shuffle();
 		for(Story s: storyDeck) {
-			//System.out.println(s.getName() + ".jpg");
-			/*Image card = new Image ("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			System.out.println(s.getName() + ".jpg");
+			Image card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
 			System.out.println(s.getName() + ".jpg");
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -202,7 +222,7 @@ public class ViewController extends Application implements PropertyChangeListene
 				}
 				
 			});
-			storyCards.getChildren().add(theCard);*/
+			storyCards.getChildren().add(theCard);
 		}
 		return storyCards;
 	}

@@ -12,6 +12,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Adventure;
@@ -25,6 +26,8 @@ public class View extends Application {
 	AdventureDeck adventureDeck = new AdventureDeck();
 	private HBox playerSpace;
 	private HBox secondPlayerSpace;
+	private HBox thirdPlayerSpace;
+	private HBox fourthPlayerSpace;
 	private VBox verticalPlayerSpace;
 	
 	private Scene gameTable;
@@ -36,7 +39,7 @@ public class View extends Application {
 	Player players = new Player();
 	
 	//declare it outside the start method to be called in Update()
-	private Stage primaryStage;
+	private Stage primaryStage; //y do we need this pls....
 	
 	//Declare buttons on starting page
 	public Button rulesButton;
@@ -53,16 +56,26 @@ public class View extends Application {
 		playerSpace = new HBox();
 		secondPlayerSpace = new HBox();
 		verticalPlayerSpace = new VBox();
+		thirdPlayerSpace = new HBox();
+		fourthPlayerSpace = new HBox();
 		
 		gameTable = new Scene(border, 1120, 700,Color.AQUA);
 	}
-	
+	//player1 
 	public HBox getPlayerSpace() {
 		return playerSpace;
 	}
-	
+	//player 2
 	public HBox getsecondPlayerSpace() {
 		return secondPlayerSpace;
+	}
+	//player 3
+	public HBox getThirdPlayerSpace() {
+		return thirdPlayerSpace;
+	}
+	//player 4
+	public HBox getFourthPlayer() {
+		return fourthPlayerSpace;
 	}
 	
 	public VBox getVerticalOplayer() {
@@ -95,13 +108,13 @@ public class View extends Application {
 		
 		startPane.getChildren().addAll(rulesButton, twoPlayerButton, threePlayerButton, fourPlayerButton);
 		startPane.setAlignment(Pos.CENTER);
-		Scene scene = new Scene(startPane, 1120, 700,Color.GRAY);
+		Scene scene = new Scene(startPane, 1220, 700,Color.BISQUE);
 		primaryStage.setScene(scene);
 		primaryStage.setTitle("Quest of the Round Table");
 		primaryStage.show();
 	}
 	public HBox storyCards() {
-		HBox storyCards = new HBox(-60);
+		HBox storyCards = new HBox(-50);
 		
 		return storyCards;
 	}
@@ -116,19 +129,25 @@ public class View extends Application {
 	public Rectangle rectangle() {
 		Rectangle storyDeckRectangle = new Rectangle(50, 50);
 		//storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
-		
 		storyDeckRectangle.setFill(Color.TRANSPARENT);
 		return storyDeckRectangle;
 	}
 	
+	public StackPane rulesBox() {
+		StackPane rulesPane = new StackPane();
+		Rectangle rulesRectangle = new Rectangle(50, 50);
+		Text rulesText = new Text ("THIS APPLICATION IS DEVELOPED BY BEN, JONATHAN AND PAUL \n"
+				+ "RULES TO BE LOADED SOON");
+		rulesText.setFont(new Font("Arial",30));;
+		rulesRectangle.widthProperty().bind(rulesText.wrappingWidthProperty().add(10));
+		rulesRectangle.setFill(Color.TRANSPARENT);
+		
+		rulesPane.getChildren().addAll(rulesRectangle, rulesText);
+		return rulesPane;
+	}
+	
 	public StackPane storyDeck() {
 		StackPane storyDeckPane = new StackPane();
-		//Text text = new Text ("THIS IS THE STORY DECK....WE NEED TO FILL UP WITH STORY CARDS");
-		//rect.widthProperty().bind(text.widthProperty().add(10));
-		//storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
-		//storyDeck.setFill(Color.TRANSPARENT);
-		
-		//storyDeckPane.getChildren().addAll(storyDeck, text);
 		return storyDeckPane;
 	}
 	
