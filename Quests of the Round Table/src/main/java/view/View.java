@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
 import model.Player;
-import model.Player.Person;
+import model.Players;
 
 public class View extends Application {
 	
@@ -35,8 +35,8 @@ public class View extends Application {
 	verticalView verticalView = new verticalView();
 	ArrayList<Adventure> adventureCards = new ArrayList<>();
 	int numberOfPlayers = 0;
-	public List<Person> persons = new ArrayList<Person>();
-	Player players = new Player();
+	public List<Player> persons = new ArrayList<Player>();
+	Players players = new Players();
 	
 	//declare it outside the start method to be called in Update()
 	private Stage primaryStage; //y do we need this pls....

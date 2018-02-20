@@ -8,7 +8,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Adventure;
 import model.AdventureDeck;
-import model.Player;
+import model.Person;
+import model.Players;
 
 public class verticalView extends VBox {
 	AdventureDeck adventureDeck = new AdventureDeck();
@@ -21,8 +22,8 @@ public class verticalView extends VBox {
 		
 		vBox.setSpacing(-80);
 		adventureDeck.shuffle();
-		Player players = new Player();
-		players.add();
+		Players players = new Players();
+		players.addHuman();
 		players.persons.get(0).drawCard(12, adventureDeck);
 		
 		for(Adventure a : players.persons.get(0).getHand()) {

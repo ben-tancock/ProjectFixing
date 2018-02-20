@@ -1,13 +1,12 @@
 package model;
 
 import java.util.ArrayList;
-import model.Player.Person;
 
 public class Quest extends Story {
 	private String name;
 	private ArrayList<Stage> stages;
-	private Person sponsor;
-	private ArrayList<Person> participants;
+	private Player sponsor;
+	private ArrayList<Player> participants;
 	private String specialFoes;
 	private final int numStages;
 	private int state;
@@ -18,7 +17,7 @@ public class Quest extends Story {
 		numStages = numStgs;
 		sponsor = null;
 		stages = new ArrayList<Stage>();
-		participants = new ArrayList<Person>();
+		participants = new ArrayList<Player>();
 		specialFoes = spFs;
 	}
 	
@@ -61,11 +60,11 @@ public class Quest extends Story {
 		}
 	}
 	
-	public void setSponsor(Person s) {
+	public void setSponsor(Player s) {
 		sponsor = s;
 	}
 	
-	public void addParticipant(Person p) {
+	public void addParticipant(Player p) {
 		participants.add(p);
 	}
 	

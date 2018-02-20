@@ -7,11 +7,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import model.Adventure;
 import model.AdventureDeck;
-import model.Player;
+import model.Players;
 
 public class DeckView extends HBox {
-	Player player = new Player();
-	Player players = new Player();
+	Players player = new Players();
+	Players players = new Players();
 	AdventureDeck adventureDeck;
 	public DeckView() {
 		adventureDeck  = new AdventureDeck();

@@ -9,9 +9,9 @@ import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Card;
 import model.Player;
+import model.Players;
 import model.StoryDeck;
 import model.StoryDiscard;
-import model.Player.Person;
 public class Test2Players {
 
 	/**
@@ -22,9 +22,9 @@ public class Test2Players {
 	public void testGameStart() {
 		//create 2 players and assign a player as the dealer
 		
-		Player players = new Player(); // model contains all the players in it
-		players.add();
-		players.add();
+		Players players = new Players(); // model contains all the players in it
+		players.addHuman();
+		players.addHuman();
 		System.out.print("test\n");
 		
 		
@@ -55,11 +55,11 @@ public class Test2Players {
 		}
 		System.out.println();
 		
-		for (Person person : players.getPlayers()){
+		for (Player person : players.getPlayers()){
 			person.drawRank("squire");
 		} 
 		
-		for (Person person : players.getPlayers()){
+		for (Player person : players.getPlayers()){
 			person.drawCard(12, adventureDeck);
 			person.displayHand();
 		} 

@@ -7,11 +7,11 @@ import org.junit.Test;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Foe;
+import model.Player;
 import model.StoryDeck;
 import model.StoryDiscard;
 import model.Weapon;
-import model.Player;
-import model.Player.Person;
+import model.Players;
 import model.Quest;
 import model.Stage;
 public class Test3Players {
@@ -19,19 +19,19 @@ public class Test3Players {
 	@Test
 	public void test() throws Exception {
 		//create 3 players and assign a player as the dealer
-		Player players = new Player();
+		Players players = new Players();
 		
 		for(int i = 0; i < 3; i++) {
-			players.add();
+			players.addHuman();
 		}
 		
 		players.getPlayers().get(0).setDealer(true);
 		
-		Person playerA = players.getPlayers().get(0);
+		Player playerA = players.getPlayers().get(0);
 		playerA.setName("Player A");
-		Person playerB = players.getPlayers().get(1);
+		Player playerB = players.getPlayers().get(1);
 		playerB.setName("Player B");
-		Person playerC = players.getPlayers().get(2);
+		Player playerC = players.getPlayers().get(2);
 		playerC.setName("Player C");
 		
 		assertEquals(players.getPlayers().size(), 3);
@@ -88,7 +88,7 @@ public class Test3Players {
 		assertEquals(playerB.getHand().size(), 12);
 		assertEquals(playerC.getHand().size(), 12);
 		
-		for(Person p : players.getPlayers()) {
+		for(Player p : players.getPlayers()) {
 			System.out.println(p.getName());
 			p.displayHand();
 		}

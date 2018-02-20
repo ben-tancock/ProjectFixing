@@ -5,7 +5,7 @@ import org.junit.Test;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Player;
-import model.Player.Person;
+import model.Players;
 import model.StoryDeck;
 import model.StoryDiscard;
 import control.PlayGame.PlayGameControlHandler;
@@ -15,22 +15,22 @@ public class Test4Players {
 	@Test
 	public void testScenario1() {
 		//Create 4 players and assign the 4th player as the dealer.
-		Player players = new Player();
+		Players players = new Players();
 		players.addListener(new PlayGameControlHandler());
 				
 		for(int i = 0; i < 4; i++) {
-			players.add();
+			players.addHuman();
 		}
 		
 		players.getPlayers().get(3).setDealer(true);
 		
-		Person player1 = players.getPlayers().get(0);
+		Player player1 = players.getPlayers().get(0);
 		player1.setName("Player 1");
-		Person player2 = players.getPlayers().get(1);
+		Player player2 = players.getPlayers().get(1);
 		player2.setName("Player 2");
-		Person player3 = players.getPlayers().get(2);
+		Player player3 = players.getPlayers().get(2);
 		player3.setName("Player 3");
-		Person player4 = players.getPlayers().get(3);
+		Player player4 = players.getPlayers().get(3);
 		player4.setName("Player 4");
 		
 		//Check for all players, check names.
@@ -60,7 +60,7 @@ public class Test4Players {
 		player4.drawCard(12, ADeck);
 		
 		
-		for(Person p : players.getPlayers()) {
+		for(Player p : players.getPlayers()) {
 			if(p.getHand().size() > 12) {
 				try {
 					p.discard(p.getCard(0), aDiscard, false);
@@ -85,21 +85,21 @@ public class Test4Players {
 	@Test
 	public void testScenario2() {
 		//create 4 players and assign a player as the dealer
-				Player players = new Player();
+				Players players = new Players();
 						
 				for(int i = 0; i < 4; i++) {
-					players.add();
+					players.addHuman();
 				}
 						
 				players.getPlayers().get(3).setDealer(true);
 				
-				Person player1 = players.getPlayers().get(0);
+				Player player1 = players.getPlayers().get(0);
 				player1.setName("Player 1");
-				Person player2 = players.getPlayers().get(1);
+				Player player2 = players.getPlayers().get(1);
 				player2.setName("Player 2");
-				Person player3 = players.getPlayers().get(2);
+				Player player3 = players.getPlayers().get(2);
 				player3.setName("Player 3");
-				Person player4 = players.getPlayers().get(3);
+				Player player4 = players.getPlayers().get(3);
 				player4.setName("Player 4");
 				
 				//Check for all players, check names

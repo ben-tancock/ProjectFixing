@@ -20,7 +20,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
-import model.Player;
+import model.Players;
 import model.Story;
 import model.StoryDeck;
 import view.DeckView;
@@ -28,7 +28,7 @@ import view.View;
 
 public class ViewController extends Application{
 	View view = new View();
-	Player players = new Player();
+	Players players = new Players();
 	AdventureDeck adventureDeck = new AdventureDeck();
 	StoryDeck storyDeck = new StoryDeck();
 	DeckView deckView = new DeckView();
@@ -178,7 +178,7 @@ public class ViewController extends Application{
 	//setting up the number of players
 	public void PlayerSetup(int playerNumber) {
 		for(int i = 0; i< playerNumber ; i++) {
-			players.add();
+			players.addHuman();
 		}
 	}
 	
