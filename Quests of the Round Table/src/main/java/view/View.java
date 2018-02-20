@@ -3,10 +3,17 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -17,8 +24,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
+import model.Card;
+import model.CardStates;
 import model.Player;
 import model.Players;
+import model.Story;
+import model.StoryDeck;
+import model.StoryDiscard;
 
 public class View extends Application {
 	
@@ -153,8 +165,116 @@ public class View extends Application {
 	}
 	
 	//need multiple of these for supporting different situations
-	public void update() {
+	public void update(ActionEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+		if(players.getPlayers().size() == 2) {
+			setupFor2Players(event, players, sDeck, sDiscard);
+		} else if (players.getPlayers().size() == 3) {
+			
+		} else {
+			
+		}
+	}
+	
+	private void setupFor2Players(ActionEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+		HBox player1Cards = getPlayerSpace();
+		HBox player2Cards = getsecondPlayerSpace();
 		
+		adventureDeck.shuffle();
+		player1Cards.getChildren().add(playerCards(0, players));			
+		
+		//player2Cards
+		adventureDeck.shuffle();
+		player2Cards.getChildren().add(playerCards(1, players));
+		
+		GridPane border = new GridPane();
+		border.setVgap(150);
+		border.setHgap(300);
+		border.add(deckView.playerRank(), 0, 0);
+		border.add(player1Cards, 1, 0);
+		border.add(player2Cards, 1, 2);
+		border.add(deckView.playerRank(),0, 2);
+		border.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
+		
+		//border.setGridLinesVisible(true);
+
+		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
+		
+		//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
+		Stage twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+		twoPlayerStage.setScene(getGameTable());
+		twoPlayerStage.getScene().setRoot(border);
+		twoPlayerStage.show();
+	}
+	
+	public HBox playerCards(int playerPosition, Players players) {
+		HBox playerCards = new HBox(-50);
+		if(playerPosition == 1) {
+			try {
+				players.getPlayers().get(playerPosition).setHandState(CardStates.FACE_UP);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		for(Adventure a : players.getPlayers().get(playerPosition).getHand()) {
+			Image card;
+			if(a.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
+			}
+			ImageView theCard = new ImageView(card);
+			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					// TODO Auto-generated method stub
+					System.out.println( "This is a " + a.getName());
+				}
+				
+			});
+			playerCards.getChildren().add(theCard);
+		
+		}
+		return playerCards;
+	}
+	
+	public HBox storyDeckSpace(StoryDeck sDeck, StoryDiscard sDiscard) {
+		HBox storyDeckSpace = new HBox(10);
+		storyDeckSpace.getChildren().addAll(storyDeckPile(sDeck), discardPileForStoryDeck(sDiscard));
+		return storyDeckSpace;
+	}
+	
+	public VBox storyDeckPile(StoryDeck storyDeck) {
+		VBox storyCards = storyDeckCards();
+		storyDeck.shuffle();
+		for(Story s: storyDeck) {
+			System.out.println(s.getName() + ".jpg");
+			Image card;
+			if(s.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
+			}
+			System.out.println(s.getName() + ".jpg");
+			ImageView theCard = new ImageView(card);
+			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					// TODO Auto-generated method stub
+					//notifyStoryCardClicked()
+				}
+				
+			});
+			storyCards.getChildren().add(theCard);
+		}
+		return storyCards;	
+	}
+	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {
+		VBox discardPile = new VBox(-99);
+		
+		return discardPile;
 	}
 
 }

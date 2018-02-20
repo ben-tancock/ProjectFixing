@@ -22,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
+import model.CardStates;
 import model.Players;
 import model.Story;
 import model.StoryDeck;
@@ -197,10 +198,22 @@ public class ViewController extends Application{
 	
 	public HBox playerCards(int playerPosition) {
 		HBox playerCards = new HBox(-50);
-		players.persons.get(playerPosition).drawCard(12, adventureDeck);
-		
+		players.getPlayers().get(playerPosition).drawCard(12, adventureDeck);
+		if(playerPosition == 1) {
+			try {
+				players.getPlayers().get(playerPosition).setHandState(CardStates.FACE_UP);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		for(Adventure a : players.persons.get(playerPosition).getHand()) {
-			Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			Image card;
+			if(a.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
+			}
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -223,7 +236,12 @@ public class ViewController extends Application{
 		storyDeck.shuffle();
 		for(Story s: storyDeck) {
 			System.out.println(s.getName() + ".jpg");
-			Image card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			Image card;
+			if(s.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
+			}
 			System.out.println(s.getName() + ".jpg");
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -246,7 +264,12 @@ public class ViewController extends Application{
 		storyDeck.shuffle();
 		for(Story s: storyDeck) {
 			System.out.println(s.getName() + ".jpg");
-			Image card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			Image card;
+			if(s.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
+			}
 			System.out.println(s.getName() + ".jpg");
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -277,10 +300,15 @@ public class ViewController extends Application{
 	
 	public VBox verticalPlayerCards(int playerPosition) {
 		VBox playerCards = new VBox(-80);
-		players.persons.get(playerPosition).drawCard(12, adventureDeck);
+		players.getPlayers().get(playerPosition).drawCard(12, adventureDeck);
 		
 		for(Adventure a : players.persons.get(playerPosition).getHand()) {
-			Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			Image card;
+			if(a.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
+			}
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
