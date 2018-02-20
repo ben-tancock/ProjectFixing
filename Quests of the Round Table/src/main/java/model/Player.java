@@ -11,7 +11,6 @@ public abstract class Player {
 	private int shields;
 	private ArrayList<Adventure> hand = new ArrayList<Adventure>();
 	private ArrayList<Ally> allies = new ArrayList<Ally>();
-	private List<Adventure> playingSurface = new ArrayList<Adventure>();
 	private List<Weapon> weapons = new ArrayList<Weapon>();
 	private List<Amour> amour = new ArrayList<Amour>();
 	private List<Adventure> bidCards = new ArrayList<Adventure> ();
@@ -105,8 +104,29 @@ public abstract class Player {
 	public Adventure playCard(Adventure card, boolean toPlayingSurface) {
 		boolean success;
 		if(toPlayingSurface == true) {
-			success = hand.remove(card);
-			playingSurface.add(card);
+			if(card instanceof Ally) {
+				success = hand.remove(card);
+				allies.add((Ally) card);
+			} else if(card instanceof Weapon) {
+				//check for duplicates and notify the controller if so
+				for(Weapon w : weapons) {
+					if(w.getName().equals(card.getName())) {
+						success = false;
+						Players.notifyListeners("invalid card played", this);
+					}
+				}
+				success = hand.remove(card);
+				weapons.add((Weapon) card);
+			} else if(card instanceof Amour) {
+				if(!amour.isEmpty()) {
+					success = false;
+					Players.notifyListeners("invalid card played", this);
+				}
+				success = hand.remove(card);
+			} else {
+				Players.notifyListeners("invalid card played", this);
+				success = false;
+			}
 		} else {
 			success = hand.remove(card);	
 		}
@@ -118,6 +138,16 @@ public abstract class Player {
 	}
 	
 	public List<Adventure> getPlayingSurface() {
+		List<Adventure> playingSurface = new ArrayList<Adventure>();
+		if(allies.size() > 0) {
+			playingSurface.addAll(allies);
+		}
+		if(weapons.size() > 0) {
+			playingSurface.addAll(weapons);
+		}
+		if(amour.size() > 0) {
+			playingSurface.addAll(amour);
+		}
 		return playingSurface;
 	}
 	
@@ -182,7 +212,15 @@ public abstract class Player {
 		//notifyListeners("discard", card);
 		boolean success;
 		if(onPlaySurface) {
-			success = playingSurface.remove(card);
+			if(card instanceof Ally) {
+				success = allies.remove(card);
+			} else if(card instanceof Weapon) {
+				success = weapons.remove(card);
+			} else if(card instanceof Amour) {
+				success = amour.remove(card);
+			}else {
+				success = false;
+			}
 		} else {
 			success = hand.remove(card);
 		}
