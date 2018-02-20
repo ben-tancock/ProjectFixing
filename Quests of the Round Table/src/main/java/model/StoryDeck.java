@@ -22,7 +22,7 @@ public class StoryDeck extends ArrayList<Story>{
 	public StoryDeck() {
 		//add quests
 		addCard(1, (new Quest("search_for_the_holy_grail", 5, "all")));
-		//addCard(1, (new Quest("test_of_the_green_knight", 4, "green_knight")));
+		addCard(1, (new Quest("test_of_the_green_knight", 4, "green_knight")));
 		addCard(1, (new Quest("search_for_the_questing_beast", 4, "")));
 		addCard(1, (new Quest("defend_the_queen's_honor", 4, "all")));
 		addCard(1, (new Quest("rescue_the_fair_maiden", 3, "black_knight")));
@@ -41,10 +41,10 @@ public class StoryDeck extends ArrayList<Story>{
 		//add events
 		addCard(2, (new Event("king's_recognition")));
 		addCard(2, (new Event("queen's_favor")));
-		//addCard(2, (new Event("court_called_to_camelot")));
+		addCard(2, (new Event("court_called_to_camelot")));
 		addCard(1, (new Event("pox")));
 		addCard(1, (new Event("plague")));
-		//addCard(1, (new Event("chivalrous_deed")));
+		addCard(1, (new Event("chivalrous_deed")));
 		addCard(1, (new Event("prosperity_throughout_the_realm")));
 		addCard(1, (new Event("king's_call_to_arms")));
 	}
