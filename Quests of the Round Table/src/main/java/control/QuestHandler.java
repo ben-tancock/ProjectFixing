@@ -18,17 +18,19 @@ public class QuestHandler {
 	private AdventureDeck deck;
 	private AdventureDiscard discard;
 	private Players players;
+	private Player player;
 	
-	public QuestHandler(Quest c, Players p, AdventureDeck d, AdventureDiscard di) {
+	public QuestHandler(Quest c, Players p, Player pr, AdventureDeck d, AdventureDiscard di) {
 		card = c;
 		deck = d;
 		discard = di;
 		players = p;
+		player = pr;
 	}
 
 	public boolean playQuest() throws Exception {
 		//Ask for the sponsor and move focus to them.
-		Player sponsor = askForSponsor();
+		Player sponsor = askForSponsor(player);
 		if(sponsor == null) {
 			return true; //nobody sponsored so go back
 		}
@@ -92,7 +94,7 @@ public class QuestHandler {
 		return true;
 	}
 	
-	public Player askForSponsor() {
+	public Player askForSponsor(Player pr) {
 		return null;
 	}
 	
@@ -118,4 +120,6 @@ public class QuestHandler {
 	public ArrayList<Player> askForParticipants() {
 		return null;
 	}
+	
+	
 }

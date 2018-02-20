@@ -14,16 +14,20 @@ import model.Weapon;
 import model.Players;
 import model.Quest;
 import model.Stage;
+
+import control.PlayGame.PlayGameControlHandler;
 public class Test3Players {
 
 	@Test
 	public void test() throws Exception {
 		//create 3 players and assign a player as the dealer
 		Players players = new Players();
+		players.addListener(new PlayGameControlHandler());
 		
 		for(int i = 0; i < 3; i++) {
 			players.addHuman();
 		}
+		
 		
 		players.getPlayers().get(0).setDealer(true);
 		
@@ -137,8 +141,6 @@ public class Test3Players {
 		playerA.displayHand();
 		playerB.displayHand();
 		//to check discarding functionality
-		playerA.discard(playerA.getCard(12), adventureDiscard, false);
-		playerB.discard(playerB.getCard(12), adventureDiscard, false);
 		assertEquals(playerA.getHand().size(), 12);
 		assertEquals(playerB.getHand().size(), 12);
 		
@@ -153,15 +155,14 @@ public class Test3Players {
 		playerB.playCard(playerB.getCard(0), true);
 		playerB.playCard(playerB.getCard(0), true);
 		playerB.playCard(playerB.getCard(0), true);
-		
-		assertEquals(playerB.getHand().size(), 2);
+		assertEquals(playerB.getHand().size(), 3);
 		assertEquals(playerB.getPlayingSurface().size(), 10);
 		
-		//Player B decides to play Queen Guinevere and a Sword
-		playerA.playCard(playerA.getCard(0), true);
+		
+		//Player A decides to play and a Sword (he has already played guinevere as part of the overflow catch)
 		playerA.playCard(playerA.getCard(0), true);
 		
-		assertEquals(playerA.getHand().size(), 10);
+		assertEquals(playerA.getHand().size(), 11);
 		assertEquals(playerA.getPlayingSurface().size(), 2);
 		System.out.println();
 		playerB.displayHand();

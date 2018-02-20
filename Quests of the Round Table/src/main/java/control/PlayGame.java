@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
+import model.Foe;
 import model.Player;
 import model.Players;
 import model.StoryDeck;
@@ -41,16 +42,17 @@ public class PlayGame extends Application{
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-		// TODO Auto-generated method stub
 		aDeck.shuffle();
 		sDeck.shuffle();
+		//logger.info("Shuffled the decks.");
 		View view = new View();
 		view.start(arg0);
+		//logger.info("Started the view.");
 		view.twoPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				//logger.info("Started the 2 player game.");
 				for(int i = 0; i < 2; i++) {
 					players.addHuman();
 				}
@@ -58,6 +60,7 @@ public class PlayGame extends Application{
 					p.drawCard(12, aDeck);
 				}
 				view.update(arg0, players, sDeck, sDiscard);
+				
 			}
 			
 		});
@@ -86,6 +89,20 @@ public class PlayGame extends Application{
 		@Override
 		public void onPlayerVictory(Player p) {
 			System.out.println(p.getName() + " has become knight of the round table!");
+		}
+		
+		@Override
+		public void onMordredPlayed(Player perp, Player targ) {
+			Foe mord = null;
+			for(Adventure a : perp.getHand()) {
+				if(a.getName().equals("mordred")) {
+					mord = (Foe)a;
+				}
+			}
+			perp.remove(perp.getHand(), aDiscard, perp.getCard(perp.getHand().indexOf(mord)));
+			if(targ.getAllies().get(0) != null) {
+				targ.remove(targ.getAllies(), aDiscard, targ.getAllies().get(0));
+			}
 		}
 	}
 }

@@ -31,4 +31,8 @@ public abstract class ControlHandler {
 	public void onMordredPlayed(Player perp, Player targ) {
 		
 	}
+	
+	public void onKingsRecognition() {
+		
+	}
 }

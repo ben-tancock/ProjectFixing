@@ -123,6 +123,7 @@ public abstract class Player {
 					Players.notifyListeners("invalid card played", this);
 				}
 				success = hand.remove(card);
+				amour.add((Amour) card);
 			} else {
 				Players.notifyListeners("invalid card played", this);
 				success = false;
