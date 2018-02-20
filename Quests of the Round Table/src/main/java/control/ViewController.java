@@ -6,6 +6,7 @@ import java.beans.PropertyChangeListener;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -44,8 +46,9 @@ public class ViewController extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				BorderPane border = new BorderPane();//view.getGameBorders();
-				border.setCenter(view.rulesBox());
+				GridPane border = new GridPane();//view.getGameBorders();
+				border.add(view.rulesBox(), 0, 1);
+				border.setAlignment(Pos.CENTER);
 				Stage rulesStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				//rulesStage.setScene(view.rulesBox());
 				rulesStage.getScene().setRoot(border);
@@ -72,13 +75,13 @@ public class ViewController extends Application{
 				adventureDeck.shuffle();
 				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				
-				BorderPane border = view.getGameBorders();
-				border.setBottom(player1Cards);
-				border.setTop(player2Cards);
-				//border.setCenter(view.storyDeck());
-				border.setCenter(storyDeckCards());
+				GridPane border = new GridPane();
+				border.setVgap(140);
+				border.add(player1Cards, 0, 0);
+				border.add(player2Cards, 0, 2);
+				border.add(storyDeckCards(), 0, 1);
 		
-				BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
+				//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 				
 				//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 				Stage twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -93,7 +96,7 @@ public class ViewController extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				BorderPane border = new BorderPane();
+				GridPane border = new GridPane();
 				HBox allPlayer1Cards = view.getPlayerSpace();
 				HBox player2Cards = view.getsecondPlayerSpace();
 				HBox player3Cards = new HBox();
@@ -116,10 +119,14 @@ public class ViewController extends Application{
 			
 				
 				//setting the scene and window
-				border.setTop(allPlayer1Cards);
-				border.setBottom(player2Cards);
-				border.setRight(player3Cards);
-				border.setCenter(storyDeckCards());
+				border.setHgap(350);
+				border.setVgap(50);
+				border.add(allPlayer1Cards, 0, 0);
+				border.add(storyDeckCards(), 0, 1);
+				border.add(player2Cards, 0, 2);
+				border.add(player3Cards, 1, 0);
+				
+				GridPane.setHalignment(storyDeckCards(), HPos.CENTER);
 				
 				//Scene threePlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 				Stage threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -135,7 +142,7 @@ public class ViewController extends Application{
 			@Override
 			public void handle(ActionEvent event) {
 				// TODO Auto-generated method stub
-				BorderPane border = new BorderPane();
+				GridPane border = new GridPane();
 				HBox allPlayer1Cards = view.getPlayerSpace();
 				HBox player2Cards = view.getsecondPlayerSpace();
 				HBox player3Cards = view.getThirdPlayerSpace();
@@ -149,19 +156,20 @@ public class ViewController extends Application{
 				
 				//player1 cards
 				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
-				border.setTop(allPlayer1Cards);
 				//player2 Cards
 				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
-				border.setBottom(player2Cards);
 				//player3 Cards
 				player3Cards.getChildren().addAll(deckView.playerRank(), verticalPlayerCards(2));
-				border.setRight(player3Cards);
 				//player4 Cards
 				player4Cards.getChildren().addAll(deckView.playerRank(), verticalPlayerCards(3));
-				border.setLeft(player4Cards);
 				
-				//setting the scene and window
-				border.setCenter(storyDeckCards());
+				border.setHgap(75);
+				border.setVgap(50);
+				border.add(player3Cards, 0, 0);
+				border.add(allPlayer1Cards, 1, 0);
+				border.add(player4Cards, 2, 0);
+				border.add(storyDeckCards(), 1, 1);
+				border.add(player2Cards, 1, 2);
 				
 				//Scene fourPlayerScene = new Scene(border, 1120, 800,Color.AQUA);
 				Stage fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
