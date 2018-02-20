@@ -69,17 +69,22 @@ public class ViewController extends Application{
 				
 				PlayerSetup(2);
 				adventureDeck.shuffle();
-				player1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
+				player1Cards.getChildren().add(playerCards(0));			
 				
 				//player2Cards
 				adventureDeck.shuffle();
-				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
+				player2Cards.getChildren().add(playerCards(1));
 				
 				GridPane border = new GridPane();
 				border.setVgap(150);
-				border.add(player1Cards, 0, 0);
-				border.add(player2Cards, 0, 2);
-				border.add(storyDeckPile(), 1, 1);
+				border.setHgap(300);
+				border.add(deckView.playerRank(), 0, 0);
+				border.add(player1Cards, 1, 0);
+				border.add(player2Cards, 1, 2);
+				border.add(deckView.playerRank(),0, 2);
+				border.add(storyDeckSpace(), 1, 1);
+				
+				//border.setGridLinesVisible(true);
 		
 				//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 				
@@ -256,6 +261,18 @@ public class ViewController extends Application{
 			storyCards.getChildren().add(theCard);
 		}
 		return storyCards;	
+	}
+	
+	public VBox discardPileForStoryDeck() {
+		VBox discardPile = new VBox(-99);
+		
+		return discardPile;
+	}
+	
+	public HBox storyDeckSpace() {
+		HBox storyDeckSpace = new HBox(10);
+		storyDeckSpace.getChildren().addAll(storyDeckPile(), discardPileForStoryDeck());
+		return storyDeckSpace;
 	}
 	
 	public VBox verticalPlayerCards(int playerPosition) {
