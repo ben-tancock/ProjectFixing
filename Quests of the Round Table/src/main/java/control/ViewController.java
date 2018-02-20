@@ -76,10 +76,10 @@ public class ViewController extends Application{
 				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				
 				GridPane border = new GridPane();
-				border.setVgap(140);
+				border.setVgap(150);
 				border.add(player1Cards, 0, 0);
 				border.add(player2Cards, 0, 2);
-				border.add(storyDeckCards(), 0, 1);
+				border.add(storyDeckPile(), 1, 1);
 		
 				//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 				
@@ -233,6 +233,29 @@ public class ViewController extends Application{
 			storyCards.getChildren().add(theCard);
 		}
 		return storyCards;
+	}
+	
+	//new storydeck in vbox
+	public VBox storyDeckPile() {
+		VBox storyCards = view.storyDeckCards();
+		storyDeck.shuffle();
+		for(Story s: storyDeck) {
+			System.out.println(s.getName() + ".jpg");
+			Image card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			System.out.println(s.getName() + ".jpg");
+			ImageView theCard = new ImageView(card);
+			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+			});
+			storyCards.getChildren().add(theCard);
+		}
+		return storyCards;	
 	}
 	
 	public VBox verticalPlayerCards(int playerPosition) {

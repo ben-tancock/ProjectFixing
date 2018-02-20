@@ -114,14 +114,15 @@ public class View extends Application {
 		primaryStage.show();
 	}
 	public HBox storyCards() {
-		HBox storyCards = new HBox(-50);
+		HBox storyCards = new HBox(-70.5);
 		
 		return storyCards;
 	}
 	
+	
 	//story deck with both story cards and the discard pile
 	public VBox storyDeckCards() {
-		VBox storyDeck = new VBox();
+		VBox storyDeck = new VBox(-99);
 		
 		return storyDeck;
 	}
