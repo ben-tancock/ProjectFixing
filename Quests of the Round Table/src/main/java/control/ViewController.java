@@ -26,7 +26,7 @@ import model.StoryDeck;
 import view.DeckView;
 import view.View;
 
-public class ViewController extends Application implements PropertyChangeListener{
+public class ViewController extends Application{
 	View view = new View();
 	Player players = new Player();
 	AdventureDeck adventureDeck = new AdventureDeck();
@@ -66,21 +66,11 @@ public class ViewController extends Application implements PropertyChangeListene
 				
 				PlayerSetup(2);
 				adventureDeck.shuffle();
-				try {
-					player1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}			
+				player1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
 				
 				//player2Cards
 				adventureDeck.shuffle();
-				try {
-					player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				
 				BorderPane border = view.getGameBorders();
 				border.setBottom(player1Cards);
@@ -116,20 +106,10 @@ public class ViewController extends Application implements PropertyChangeListene
 				adventureDeck.shuffle();
 				
 				//player1cards
-				try {
-					allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}			
+				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
 				
 				//player2Cards
-				try {
-					player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				
 				//player3Cards
 				player3Cards.getChildren().addAll(playerRank, verticalPlayerCards(2));
@@ -168,20 +148,10 @@ public class ViewController extends Application implements PropertyChangeListene
 				adventureDeck.shuffle();
 				
 				//player1 cards
-				try {
-					allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}			
+				allPlayer1Cards.getChildren().addAll(deckView.playerRank(), playerCards(0));			
 				border.setTop(allPlayer1Cards);
 				//player2 Cards
-				try {
-					player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				player2Cards.getChildren().addAll(deckView.playerRank(), playerCards(1));
 				border.setBottom(player2Cards);
 				//player3 Cards
 				player3Cards.getChildren().addAll(deckView.playerRank(), verticalPlayerCards(2));
@@ -212,10 +182,9 @@ public class ViewController extends Application implements PropertyChangeListene
 		}
 	}
 	
-	public HBox playerCards(int playerPosition) throws Exception {
+	public HBox playerCards(int playerPosition) {
 		HBox playerCards = new HBox(-50);
 		players.persons.get(playerPosition).drawCard(12, adventureDeck);
-		players.persons.get(playerPosition).setHandState(0);
 		
 		for(Adventure a : players.persons.get(playerPosition).getHand()) {
 			Image card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
@@ -279,12 +248,5 @@ public class ViewController extends Application implements PropertyChangeListene
 		}
 		return playerCards;
 	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		// TODO Auto-generated method stub
-		
-	}
-
 
 }

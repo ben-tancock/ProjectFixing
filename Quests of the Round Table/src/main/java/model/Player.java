@@ -5,16 +5,17 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import control.ControlHandler;
 import control.PlayGame.PlayGameControlHandler;
 
 public class Player {
 	
 	public List<Person> persons = new ArrayList<Person>();
-	private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
-	private PlayGameControlHandler playGameControlHandler;
+	//private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
+	private List<ControlHandler> listeners = new ArrayList<ControlHandler>();
 	
 	public Player() {
-		playGameControlHandler = new PlayGameControlHandler();
+		
 	}
 	
 	
@@ -63,6 +64,10 @@ public class Player {
 			return shields;
 		}
 		
+		public int getHandState() {
+			return hand.get(0).getState();
+		}
+		
 		public void setHandState(int state) throws Exception {
 			for(Adventure card : hand) {
 				card.setState(state);
@@ -70,7 +75,7 @@ public class Player {
 		}
 		
 		public void setShields(int s) {
-			notifyListeners("shieldset", this.getShields(), s);
+			//notifyListeners("shieldset", this.getShields(), s);
 			shields = s;
 		}
 		
@@ -146,7 +151,7 @@ public class Player {
 		public void drawCard(int j, AdventureDeck deck) { // to do: when player receives card from AD, remove card from AD
 			for(int i = 0; i < j; i++) {
 				hand.add(deck.top());
-				notifyListeners("draw", this.getCard(this.hand.size()-1)); // element in the hand at the end of the list is what was added
+				//notifyListeners("draw", this.getCard(this.hand.size()-1)); // element in the hand at the end of the list is what was added
 			}
 			
 			if(hand.size() > 12) {
@@ -175,7 +180,7 @@ public class Player {
 		public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
 			storyDiscard.add(storyDeck.top());
 			int current = storyDiscard.size() - 1;
-			notifyListeners("draw", storyDiscard.get(current));
+			//notifyListeners("draw", storyDiscard.get(current));
 			
 			if (storyDiscard.get(current) instanceof Quest) {
 				System.out.println("Quest card drawn: " + storyDiscard.get(current).getName());
@@ -193,7 +198,7 @@ public class Player {
 		}
 		
 		public void discard(Adventure card, AdventureDiscard discardPile, boolean onPlaySurface) throws Exception { // discard either from hand or allies in play, implement allies later
-			notifyListeners("discard", card);
+			//notifyListeners("discard", card);
 			boolean success;
 			if(onPlaySurface) {
 				success = playingSurface.remove(card);
@@ -212,7 +217,7 @@ public class Player {
 		}
 		
 		public void drawRank(String r) {
-			notifyListeners("rankset", this.rank, r);
+			//notifyListeners("rankset", this.rank, r);
 			setRank(r);
 		}
 		
@@ -238,37 +243,43 @@ public class Player {
 	
 	//Possible card overflow notify?
 	private void notifyCardOverflowListener(String event, Person p) {
-		playGameControlHandler.onCardOverflow(p);
+		if(listeners.get(0) != null) {
+			listeners.get(0).onCardOverflow(p);
+		}
+	}
+	
+	public void addListener(ControlHandler c) {
+		listeners.add(c);
 	}
 	
 	// card drawn notify: what card was drawn, and from where (to determine animation to execute)
-	private void notifyListeners(String event, Card card) { // not 100% sure Card type will work for this, 
-        for (PropertyChangeListener name : listener) {      // might need two functions, one for adventure and one for story (use instanceof ?)
-            name.propertyChange(new PropertyChangeEvent(this, event, null, card));
-        } 
-    }
+	//private void notifyListeners(String event, Card card) { // not 100% sure Card type will work for this, 
+    //    for (PropertyChangeListener name : listener) {      // might need two functions, one for adventure and one for story (use instanceof ?)
+    //        name.propertyChange(new PropertyChangeEvent(this, event, null, card));
+    //    } 
+    //}
 	
 	// rank change notify
-	private void notifyListeners(String event, String oldval, String newval) { 
-        for (PropertyChangeListener name : listener) {      
-            name.propertyChange(new PropertyChangeEvent(this, event, oldval, newval));
-        } 
-    }
+	//private void notifyListeners(String event, String oldval, String newval) { 
+    //    for (PropertyChangeListener name : listener) {      
+    //        name.propertyChange(new PropertyChangeEvent(this, event, oldval, newval));
+    //    } 
+   // }
 	
 	// shield change notify
-		private void notifyListeners(String event, int oldval, int newval) { 
-	        for (PropertyChangeListener name : listener) {      
-	            name.propertyChange(new PropertyChangeEvent(this, event, oldval, newval));
-	        } 
-	    }
+	//	private void notifyListeners(String event, int oldval, int newval) { 
+	//        for (PropertyChangeListener name : listener) {      
+	//            name.propertyChange(new PropertyChangeEvent(this, event, oldval, newval));
+	//        } 
+	//    }
 	
-	private void notifyListeners(Object object, String property, String oldValue, String newValue) {
-        for (PropertyChangeListener name : listener) {
-            name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
-        } 
-    }
+	//private void notifyListeners(Object object, String property, String oldValue, String newValue) {
+    //    for (PropertyChangeListener name : listener) {
+    //        name.propertyChange(new PropertyChangeEvent(this, property, oldValue, newValue));
+    //    } 
+    //}
 
-    public void addChangeListener(PropertyChangeListener newListener) {
-        listener.add(newListener);
-    }
+    //public void addChangeListener(PropertyChangeListener newListener) {
+    //    listener.add(newListener);
+   // }
 }

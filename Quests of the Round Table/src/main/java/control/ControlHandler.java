@@ -7,4 +7,8 @@ public abstract class ControlHandler {
 	public void onCardOverflow(Person p) {
 		
 	}
+	
+	public void onCardDraw(Person p) {
+		
+	}
 }
