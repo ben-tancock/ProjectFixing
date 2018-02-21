@@ -48,8 +48,13 @@ public class Players {
 	
 	//Possible card overflow notify?
 	public static void notifyListeners(String event, Player p) {
-		if(event.equals("card overflow")) {
-			listeners.get(0).onCardOverflow(p);
+		switch(event) {
+			case "card overflow":
+				listeners.get(0).onCardOverflow(p);
+				break;
+			case "invalid card played":
+				listeners.get(0).onInvalidCardPlayed(p);
+				break;
 		}
 	}
 	

@@ -56,10 +56,9 @@ public class View extends Application {
 	Players players = new Players();
 	
 	//declare it outside the start method to be called in Update()
-	private Stage primaryStage; //y do we need this pls....
 	private Stage twoPlayerStage;
 	private boolean firstTime;
-	private boolean firstNotify;
+	private int topCard;
 	
 	//Declare buttons on starting page
 	public Button rulesButton;
@@ -82,7 +81,7 @@ public class View extends Application {
 		fourthPlayerSpace = new HBox();
 		
 		firstTime = true;
-		firstNotify = true;
+		topCard = 0;
 		
 		gameTable = new Scene(border, 1120, 700,Color.AQUA);
 		listeners.add(new PlayGameControlHandler());
@@ -116,11 +115,13 @@ public class View extends Application {
 		return border;
 	}
 	
+	public int getCurrentTopStoryCardIndex() {
+		return topCard;
+	}
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
-		this.primaryStage = primaryStage;
 		VBox startPane = new VBox(50);
 		
 		//rules button
@@ -151,13 +152,6 @@ public class View extends Application {
 		VBox storyDeck = new VBox(-99);
 		
 		return storyDeck;
-	}
-	
-	public Rectangle rectangle() {
-		Rectangle storyDeckRectangle = new Rectangle(50, 50);
-		//storyDeck.widthProperty().bind(text.wrappingWidthProperty().add(10));
-		storyDeckRectangle.setFill(Color.TRANSPARENT);
-		return storyDeckRectangle;
 	}
 	
 	public StackPane rulesBox() {
@@ -249,9 +243,10 @@ public class View extends Application {
 		storyDeckSpace.getChildren().addAll(storyDeckPile(sDeck), discardPileForStoryDeck(sDiscard));
 		return storyDeckSpace;
 	}
-	int topCard;
+	
+	VBox storyCards;
 	public VBox storyDeckPile(StoryDeck storyDeck) {
-		VBox storyCards = storyDeckCards();
+		storyCards = storyDeckCards();
 		topCard = 0;
 		if(storyDeck.size() > 0) {
 			topCard = storyDeck.size() - 1;
@@ -268,16 +263,14 @@ public class View extends Application {
 			ImageView theCard = new ImageView(card);
 			storyCards.getChildren().add(theCard);
 		}
-		if(storyDeck.size() > 0) {
-			storyCards.getChildren().get(topCard).setOnMouseClicked(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent arg0) {
-					notifyStoryCardClicked(arg0, storyDeck.get(topCard));
-				}
-			});
-		} 
+		
 		return storyCards;	
 	}
+	
+	public VBox getStoryCards() {
+		return storyCards;
+	}
+	
 	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {
 		VBox discardPile = new VBox(-99);
 		for(Story s: sDiscard) {

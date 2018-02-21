@@ -11,6 +11,10 @@ public abstract class ControlHandler {
 		
 	}
 	
+	public void onInvalidCardPlayed(Player p) {
+		
+	}
+	
 	public void onAdventureCardDraw(Player p) {
 		
 	}

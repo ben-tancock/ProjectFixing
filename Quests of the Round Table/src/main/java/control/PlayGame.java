@@ -43,6 +43,7 @@ public class PlayGame extends Application{
 		Application.launch(args);
 		
 	}
+	int currentPlayer = 0;
 
 	@Override
 	public void start(Stage arg0) throws Exception {
@@ -57,21 +58,48 @@ public class PlayGame extends Application{
 			@Override
 			public void handle(MouseEvent arg0) {
 				//logger.info("Started the 2 player game.");
+				boolean playing = true;
 				for(int i = 0; i < 2; i++) {
 					players.addHuman();
 				}
+				players.getPlayers().get(0).setName("Player 1");
+				players.getPlayers().get(1).setName("Player 2");
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
-				players.getPlayers().get(0).setHandState(CardStates.FACE_DOWN);
-				players.getPlayers().get(1).setHandState(CardStates.FACE_UP);
+				 // current player is the dealer
 				view.update(arg0, players, sDeck, sDiscard);
+				int iters = 0;
+				currentPlayer = (currentPlayer + 1) % 2;
+				focusPlayer(players.getPlayers().get(currentPlayer));
 			}
 			
 		});
 		
 		//ViewController viewController = new ViewController();
 		//viewController.start(arg0);
+	}
+	
+	//Used to rotate between players to emulate a "focus on current player" feel so that the drawing of a story card and "turns" can be simulated.
+	public void focusPlayer(Player p) {
+		p.setFocused(true);
+		p.setHandState(CardStates.FACE_UP);
+		view.update(null, players, sDeck, sDiscard);
+		if(sDeck.size() > 0) {
+			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
+					p.setFocused(false);
+					p.setHandState(CardStates.FACE_DOWN);
+					view.update(null, players, sDeck, sDiscard);
+					currentPlayer = (currentPlayer + 1) % 2;
+					focusPlayer(players.getPlayers().get(currentPlayer));
+				}
+			}); 
+		}
+		
+		
 	}
 	
 	public static class PlayGameControlHandler extends ControlHandler {

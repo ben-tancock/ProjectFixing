@@ -7,7 +7,8 @@ public abstract class Player {
 	
 	private String name;
 	private String rank;
-	private boolean dealer = false;
+	private boolean dealer;
+	private boolean focused;
 	private int shields;
 	private ArrayList<Adventure> hand;
 	private ArrayList<Ally> allies;
@@ -21,6 +22,8 @@ public abstract class Player {
 		weapons = new ArrayList<Weapon>();
 		amour = new ArrayList<Amour>();
 		bidCards = new ArrayList<Adventure>();
+		dealer = false;
+		focused = false;
 	}
 	
 	// Getters and Setters --------------------------------
@@ -32,6 +35,14 @@ public abstract class Player {
 		name = n;
 	}
 	
+	public boolean isFocused() {
+		return focused;
+	}
+	
+	public void setFocused(boolean f) {
+		focused = f;
+	}
+	
 	public int getRank() {
 		if(rank.equals("squire")) {
 			return 0;
@@ -39,13 +50,18 @@ public abstract class Player {
 		else if(rank.equals("knight")) {
 			return 5;
 		}
-		else {
+		else if(rank.equals("champion_knight")){
 			return 12;
+		} else {
+			return 20;
 		}
 	}
 	
 	public void setRank(String s) {
 		rank = s;
+		if(rank.equals("knight_of_the_round_table")) {
+			
+		}
 	}
 	
 	public int getShields() {

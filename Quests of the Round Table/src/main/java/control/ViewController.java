@@ -35,7 +35,7 @@ public class ViewController extends Application{
 	AdventureDeck adventureDeck = new AdventureDeck();
 	StoryDeck storyDeck = new StoryDeck();
 	DeckView deckView = new DeckView();
-	Rectangle storyDeckRectangle = view.rectangle();
+	Rectangle storyDeckRectangle = null;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
