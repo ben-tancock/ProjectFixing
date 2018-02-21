@@ -68,7 +68,7 @@ public class Quest extends Story {
 		if(specialFoes.equals("all")) {
 			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
 		} else if(specialFoes.equals("all_saxons")) {
-			if(s.getFoe().getName().contains("saxons")) {
+			if(s.getFoe().getName().contains("saxon")) {
 				s.setBattlePoints(s.getFoe().getHigherBattlePoints());
 			} else {
 				s.setBattlePoints(s.getFoe().getLowerBattlePoints());

@@ -60,7 +60,6 @@ public class PlayGame extends Application{
 			public void handle(MouseEvent arg0) {
 				players.addListener(new PlayGameControlHandler());
 				//logger.info("Started the 2 player game.");
-				boolean playing = true;
 				for(int i = 0; i < 2; i++) {
 					players.addHuman();
 				}
@@ -71,7 +70,6 @@ public class PlayGame extends Application{
 				}
 				 // current player is the dealer
 				view.update(arg0, players, sDeck, sDiscard);
-				int iters = 0;
 				currentPlayer = (currentPlayer + 1) % 2;
 				focusPlayer(players.getPlayers().get(currentPlayer));
 			}
@@ -92,13 +90,14 @@ public class PlayGame extends Application{
 				@Override
 				public void handle(MouseEvent arg0) {
 					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
-					
+					System.out.println("Next player's turn...");
 					//Code should not execute until everything else is handled. Turns off the focus after activity is finished.
 					p.setFocused(false);
 					p.setHandState(CardStates.FACE_DOWN);
 					view.update(null, players, sDeck, sDiscard);
 					//Set next focused player.
 					currentPlayer = (currentPlayer + 1) % 2;
+					
 					focusPlayer(players.getPlayers().get(currentPlayer));
 				}
 			}); 
