@@ -15,6 +15,18 @@ public abstract class ControlHandler {
 		
 	}
 	
+	public void onQuestCardDraw(Player p) {
+		
+	}
+	
+	public void onTournamentCardDraw(Player p) {
+		
+	}
+	
+	public void onEventCardDraw(Player p) {
+		
+	}
+	
 	public void onAdventureCardDraw(Player p) {
 		
 	}

@@ -194,10 +194,10 @@ public class View extends Application {
 		GridPane border = new GridPane();
 		border.setVgap(150);
 		border.setHgap(300);
-		border.add(deckView.playerRank(), 0, 0);
+		border.add(deckView.playerRank(players.getPlayers().get(0)), 0, 0);
 		border.add(player1Cards, 1, 0);
 		border.add(player2Cards, 1, 2);
-		border.add(deckView.playerRank(),0, 2);
+		border.add(deckView.playerRank(players.getPlayers().get(1)),0, 2);
 		border.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
 		//border.setGridLinesVisible(true);
 
@@ -222,7 +222,12 @@ public class View extends Application {
 			} else {
 				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
 			}
+			
 			ImageView theCard = new ImageView(card);
+			//for 2 players for now
+			if(player.getName().equals("Player 1")) {
+				theCard.setRotate(180);
+			}
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override

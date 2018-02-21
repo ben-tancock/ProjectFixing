@@ -55,6 +55,15 @@ public class Players {
 			case "invalid card played":
 				listeners.get(0).onInvalidCardPlayed(p);
 				break;
+			case "quest drawn":
+				listeners.get(0).onQuestCardDraw(p);
+				break;
+			case "event drawn":
+				listeners.get(0).onEventCardDraw(p);
+				break;
+			case "tournament drawn":
+				listeners.get(0).onTournamentCardDraw(p);
+				break;
 		}
 	}
 	

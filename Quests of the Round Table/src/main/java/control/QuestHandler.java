@@ -6,6 +6,7 @@ import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Amour;
+import model.CardStates;
 import model.Player;
 import model.Players;
 import model.Quest;
@@ -31,6 +32,7 @@ public class QuestHandler {
 	public boolean playQuest() throws Exception {
 		//Ask for the sponsor and move focus to them.
 		Player sponsor = askForSponsor(player);
+		System.out.println("Starting quest...");
 		if(sponsor == null) {
 			return true; //nobody sponsored so go back
 		}
@@ -95,6 +97,15 @@ public class QuestHandler {
 	}
 	
 	public Player askForSponsor(Player pr) {
+		//pr = player that drew the quest card, so we start there.
+		int currentIndex = players.getPlayers().indexOf(pr);
+		if(!pr.isFocused()) { 
+			for(Player p : players.getPlayers()) {
+				p.setFocused(false);
+			}
+			pr.setFocused(true);
+		}
+		pr.setHandState(CardStates.FACE_UP);
 		return null;
 	}
 	

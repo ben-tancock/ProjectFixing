@@ -224,13 +224,13 @@ public abstract class Player {
 			e.printStackTrace();
 		}
 		if (storyDiscard.get(current) instanceof Quest) {
-			System.out.println("Quest card drawn: " + storyDiscard.get(current).getName());
+			Players.notifyListeners("quest drawn", this);
 		}
 		else if (storyDiscard.get(current) instanceof Event) {
-			System.out.println("Event card drawn: " + storyDiscard.get(current).getName());
+			Players.notifyListeners("event drawn", this);
 		}
 		else if (storyDiscard.get(current) instanceof Tournament) {
-			System.out.println("Tournament card drawn: " + storyDiscard.get(current).getName());
+			Players.notifyListeners("tournament drawn", this);
 		}
 		
 		if(hand.size() > 12) {
@@ -239,7 +239,7 @@ public abstract class Player {
 	}
 	
 	public void discard(Adventure card, AdventureDiscard discardPile, boolean onPlaySurface) throws Exception { // discard either from hand or allies in play, implement allies later
-		//notifyListeners("discard", card);
+		
 		boolean success;
 		if(onPlaySurface) {
 			if(card instanceof Ally) {
