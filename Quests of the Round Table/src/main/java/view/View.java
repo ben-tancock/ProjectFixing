@@ -2,6 +2,8 @@ package view;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import control.ControlHandler;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -32,6 +35,7 @@ import model.Players;
 import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
+import control.PlayGame.PlayGameControlHandler;
 
 public class View extends Application {
 	
@@ -55,12 +59,15 @@ public class View extends Application {
 	private Stage primaryStage; //y do we need this pls....
 	private Stage twoPlayerStage;
 	private boolean firstTime;
+	private boolean firstNotify;
 	
 	//Declare buttons on starting page
 	public Button rulesButton;
 	public Button twoPlayerButton;
 	public Button threePlayerButton;
 	public Button fourPlayerButton;
+	
+	private static List<ControlHandler> listeners = new ArrayList<ControlHandler>();
 	
 	public View() {
 		border = new BorderPane();
@@ -75,8 +82,10 @@ public class View extends Application {
 		fourthPlayerSpace = new HBox();
 		
 		firstTime = true;
+		firstNotify = true;
 		
 		gameTable = new Scene(border, 1120, 700,Color.AQUA);
+		listeners.add(new PlayGameControlHandler());
 	}
 	//player1 
 	public HBox getPlayerSpace() {
@@ -170,7 +179,7 @@ public class View extends Application {
 	}
 	
 	//need multiple of these for supporting different situations
-	public void update(ActionEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+	public void update(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
 		if(players.getPlayers().size() == 2) {
 			setupFor2Players(event, players, sDeck, sDiscard);
 		} else if (players.getPlayers().size() == 3) {
@@ -180,7 +189,7 @@ public class View extends Application {
 		}
 	}
 	
-	private void setupFor2Players(ActionEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
 		
@@ -196,7 +205,7 @@ public class View extends Application {
 		border.add(player2Cards, 1, 2);
 		border.add(deckView.playerRank(),0, 2);
 		border.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
-		
+		System.out.println(",");
 		//border.setGridLinesVisible(true);
 
 		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
@@ -241,43 +250,55 @@ public class View extends Application {
 		storyDeckSpace.getChildren().addAll(storyDeckPile(sDeck), discardPileForStoryDeck(sDiscard));
 		return storyDeckSpace;
 	}
-	
+	int topCard;
 	public VBox storyDeckPile(StoryDeck storyDeck) {
+		System.out.println(storyDeck);
 		VBox storyCards = storyDeckCards();
+		topCard = 0;
+		if(storyDeck.size() > 0) {
+			topCard = storyDeck.size() - 1;
+		}
+			
 		for(Story s: storyDeck) {
-			System.out.println(s.getName() + ".jpg");
 			Image card;
 			if(s.getState() == CardStates.FACE_UP) {
 				card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
 			} else {
 				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
 			}
-			System.out.println(s.getName() + ".jpg");
+			
 			ImageView theCard = new ImageView(card);
-			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					// TODO Auto-generated method stub
-					//notifyStoryCardClicked()
-				}
-				
-			});
 			storyCards.getChildren().add(theCard);
 		}
+		System.out.println(storyDeck.size());
+		System.out.println(topCard);
+		if(storyDeck.size() > 0) {
+			storyCards.getChildren().get(topCard).setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					notifyStoryCardClicked(arg0, storyDeck.get(topCard));
+				}
+			});
+		} else if(storyDeck.size() == 0) {
+			if(firstNotify) {
+				notifyStoryDeckEmpty();
+				firstNotify = false;
+			}
+		}
+		System.out.println(".");
+		System.out.println(storyCards.getChildren());
 		return storyCards;	
 	}
 	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {
+		System.out.println(sDiscard);
 		VBox discardPile = new VBox(-99);
 		for(Story s: sDiscard) {
-			System.out.println(s.getName() + ".jpg");
 			Image card;
 			if(s.getState() == CardStates.FACE_UP) {
 				card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
 			} else {
 				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
 			}
-			System.out.println(s.getName() + ".jpg");
 			ImageView theCard = new ImageView(card);
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
@@ -291,6 +312,18 @@ public class View extends Application {
 			discardPile.getChildren().add(theCard);
 		}
 		return discardPile;
+	}
+	
+	public void notifyStoryCardClicked(MouseEvent event, Story card) {
+		if(listeners.get(0) != null) {
+			listeners.get(0).onStoryCardDraw(event);
+		}
+	}
+	
+	public void notifyStoryDeckEmpty() {
+		if(listeners.get(0) != null) {
+			listeners.get(0).onStoryDeckEmpty();
+		}
 	}
 
 }

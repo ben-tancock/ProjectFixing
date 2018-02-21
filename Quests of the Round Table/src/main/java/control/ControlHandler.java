@@ -1,6 +1,9 @@
 package control;
 
+import javafx.event.ActionEvent;
+import javafx.scene.input.MouseEvent;
 import model.Player;
+import model.Story;
 //Possible abstract class for notifying the controllers?
 public abstract class ControlHandler {
 
@@ -16,11 +19,15 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onStoryCardDraw() {
+	public void onStoryCardDraw(MouseEvent event) {
 		
 	}
 	
 	public void onStoryCardDiscard() {
+		
+	}
+	
+	public void onStoryDeckEmpty() {
 		
 	}
 	

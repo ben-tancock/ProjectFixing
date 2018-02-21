@@ -81,5 +81,13 @@ public class StoryDeck extends ArrayList<Story>{
 	public void shuffle() {
 		Collections.shuffle(this);
 	}
+	
+	public String toString() {
+		String s = "";
+		for(Story st : this) {
+			s += st.getName() + ",";
+		}
+		return s;
+	}
 
 }

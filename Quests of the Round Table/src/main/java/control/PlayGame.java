@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
@@ -14,6 +15,7 @@ import model.CardStates;
 import model.Foe;
 import model.Player;
 import model.Players;
+import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
 import view.View;
@@ -26,6 +28,7 @@ public class PlayGame extends Application{
 	private static StoryDeck sDeck;
 	private static StoryDiscard sDiscard;
 	private static Players players;
+	private static View view;
 	
 	public PlayGame() {
 		aDeck = new AdventureDeck();
@@ -46,13 +49,13 @@ public class PlayGame extends Application{
 		aDeck.shuffle();
 		sDeck.shuffle();
 		//logger.info("Shuffled the decks.");
-		View view = new View();
+		view = new View();
 		view.start(arg0);
 		//logger.info("Started the view.");
-		view.twoPlayerButton.setOnAction(new EventHandler<ActionEvent>() {
+		view.twoPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
-			public void handle(ActionEvent arg0) {
+			public void handle(MouseEvent arg0) {
 				//logger.info("Started the 2 player game.");
 				for(int i = 0; i < 2; i++) {
 					players.addHuman();
@@ -62,15 +65,7 @@ public class PlayGame extends Application{
 				}
 				players.getPlayers().get(0).setHandState(CardStates.FACE_DOWN);
 				players.getPlayers().get(1).setHandState(CardStates.FACE_UP);
-				
 				view.update(arg0, players, sDeck, sDiscard);
-				players.getPlayers().get(1).drawCard(sDeck, sDiscard);
-				view.update(arg0, players, sDeck, sDiscard);
-				players.getPlayers().get(0).setHandState(CardStates.FACE_UP);
-				players.getPlayers().get(1).setHandState(CardStates.FACE_DOWN);
-				view.update(arg0, players, sDeck, sDiscard);
-				//players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-				//view.update(arg0, players, sDeck, sDiscard);
 			}
 			
 		});
@@ -113,6 +108,22 @@ public class PlayGame extends Application{
 			if(targ.getAllies().get(0) != null) {
 				targ.remove(targ.getAllies(), aDiscard, targ.getAllies().get(0));
 			}
+		}
+		
+		@Override
+		public void onStoryCardDraw(MouseEvent event) {
+			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
+			view.update(event, players, sDeck, sDiscard);
+		}
+		
+		@Override
+		public void onStoryDeckEmpty() {
+			System.out.println("Story Deck Empty caught");
+			sDeck.addAll(sDiscard);
+			sDiscard.removeAll(sDiscard);
+			sDeck.shuffle();
+			System.out.println("Story Deck reinitialized.");
+			view.update(null, players, sDeck, sDiscard);
 		}
 	}
 }

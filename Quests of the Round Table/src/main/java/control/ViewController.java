@@ -199,7 +199,7 @@ public class ViewController extends Application{
 	public HBox playerCards(int playerPosition) {
 		HBox playerCards = new HBox(-50);
 		players.getPlayers().get(playerPosition).drawCard(12, adventureDeck);
-		if(playerPosition == 1) {
+		if(playerPosition == 0) {
 			try {
 				players.getPlayers().get(playerPosition).setHandState(CardStates.FACE_UP);
 			} catch (Exception e) {
