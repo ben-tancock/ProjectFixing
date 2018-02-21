@@ -1,5 +1,8 @@
 package control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,6 +19,7 @@ import model.Foe;
 import model.Player;
 import model.Players;
 import model.Quest;
+import model.Tournament;
 import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
@@ -30,6 +34,7 @@ public class PlayGame extends Application{
 	private static StoryDiscard sDiscard;
 	private static Players players;
 	private static View view;
+	private static final PlayGame instance = new PlayGame();
 	
 	public PlayGame() {
 		aDeck = new AdventureDeck();
@@ -37,13 +42,18 @@ public class PlayGame extends Application{
 		sDeck = new StoryDeck();
 		sDiscard = new StoryDiscard();
 		players = new Players();
+		view = new View();
 	}
 	
 	public static void main(String[] args) {
 		//logger.info("Game Menu starting!");
 		Application.launch(args);
-		
 	}
+	
+	public static PlayGame getInstance() {
+		return instance;
+	}
+	
 	int currentPlayer = 0;
 
 	@Override
@@ -51,7 +61,7 @@ public class PlayGame extends Application{
 		aDeck.shuffle();
 		sDeck.shuffle();
 		//logger.info("Shuffled the decks.");
-		view = new View();
+		
 		view.start(arg0);
 		//logger.info("Started the view.");
 		view.twoPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -82,11 +92,28 @@ public class PlayGame extends Application{
 		//viewController.start(arg0);
 	}
 	
+	public Players getPlayers(){
+		return players;
+	}
+	
+	public AdventureDeck getADeck(){
+		return aDeck;
+	}
+	
+	public AdventureDiscard getADiscard(){
+		return aDiscard;
+	}
+	
+	public View getView(){
+		return view;
+	}
+	
 	//Used to rotate between players to emulate a "focus on current player" feel so that the drawing of a story card and "turns" can be simulated.
 	public void focusPlayer(Player p) {
 		p.setFocused(true);
 		p.setHandState(CardStates.FACE_UP);
 		view.update(null, players, sDeck, sDiscard);
+		//PlayGame game = this;
 		if(sDeck.size() > 0) {
 			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
@@ -184,7 +211,14 @@ public class PlayGame extends Application{
 		@Override
 		public void onTournamentCardDraw(Player p) {
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
+			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
 			System.out.println("Tournament: " + topCard.getName());
+			try {
+				tourneyHandler.playTournament();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }

@@ -2,8 +2,10 @@ package view;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import control.ControlHandler;
+import control.PlayGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,6 +14,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +29,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+// new stuff Ben added
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+// ------------------
+
 import model.Adventure;
 import model.AdventureDeck;
 import model.Card;
@@ -79,6 +88,8 @@ public class View extends Application {
 		verticalPlayerSpace = new VBox();
 		thirdPlayerSpace = new HBox();
 		fourthPlayerSpace = new HBox();
+		
+		
 		
 		firstTime = true;
 		topCard = 0;
@@ -164,6 +175,17 @@ public class View extends Application {
 		rulesRectangle.setFill(Color.TRANSPARENT);
 		
 		rulesPane.getChildren().addAll(rulesRectangle, rulesText);
+		
+		
+		// ADDED BY BEN TO TEST TOURNAMENT ASKING TO JOIN, COMMENT OUT IF NEEDED
+		/*Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Information Dialog");
+		alert.setHeaderText("Look, an Information Dialog");
+		alert.setContentText("I have a great message for you!");
+
+		alert.showAndWait();*/
+		// ----------------------------------------------------------------
+		
 		return rulesPane;
 	}
 	
@@ -299,6 +321,26 @@ public class View extends Application {
 		}
 		return discardPile;
 	}
+	
+	// ADDED FOR QUEST/TOURNEY PROMPT
+	public boolean prompt(String type) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		
+		alert.setTitle("Participant Dialog");
+		alert.setHeaderText(type + " Participant Request");
+		alert.setContentText("Would you like to participate?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+		    // ... user chose OK
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return false;
+		}
+	}
+	
 	
 	public void notifyStoryCardClicked(MouseEvent event, Story card) {
 		if(listeners.get(0) != null) {
