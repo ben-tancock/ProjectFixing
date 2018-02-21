@@ -13,40 +13,52 @@ public class StoryDeck extends ArrayList<Story>{
 	/**
 	 * During initialization the deck is setup
 	 */
-	public void addCard(int j, Story c) {
+	public void addQuest(int j, String name, int ns, String spFs) {
 		for (int i = 0; i < j; i++) {
-			add(c);
+			add(new Quest(name, ns, spFs));
+		}
+	}
+	
+	public void addTournament(int j, String name, int b) {
+		for (int i = 0; i < j; i++) {
+			add(new Tournament(name, b));
+		}
+	}
+	
+	public void addEvent(int j, String name) {
+		for (int i = 0; i < j; i++) {
+			add(new Event(name));
 		}
 	}
 	
 	public StoryDeck() {
 		//add quests
-		addCard(1, (new Quest("search_for_the_holy_grail", 5, "all")));
-		addCard(1, (new Quest("test_of_the_green_knight", 4, "green_knight")));
-		addCard(1, (new Quest("search_for_the_questing_beast", 4, "")));
-		addCard(1, (new Quest("defend_the_queen's_honor", 4, "all")));
-		addCard(1, (new Quest("rescue_the_fair_maiden", 3, "black_knight")));
-		addCard(1, (new Quest("journey_through_the_enchanted_forest", 3, "evil_knight")));
-		addCard(2, (new Quest("vanquish_king_arthur's_enemies", 3, "")));
-		addCard(1, (new Quest("slay_the_dragon", 3, "dragon")));
-		addCard(2, (new Quest("boar_hunt", 2, "boar")));
-		addCard(2, (new Quest("repel_the_saxon_raiders", 2, "all_saxons")));
+		addQuest(1, "search_for_the_holy_grail", 5, "all");
+		addQuest(1, "test_of_the_green_knight", 4, "green_knight");
+		addQuest(1, "search_for_the_questing_beast", 4, "");
+		addQuest(1, "defend_the_queen's_honor", 4, "all");
+		addQuest(1, "rescue_the_fair_maiden", 3, "black_knight");
+		addQuest(1, "journey_through_the_enchanted_forest", 3, "evil_knight");
+		addQuest(2, "vanquish_king_arthur's_enemies", 3, "");
+		addQuest(1, "slay_the_dragon", 3, "dragon");
+		addQuest(2, "boar_hunt", 2, "boar");
+		addQuest(2, "repel_the_saxon_raiders", 2, "all_saxons");
 		
 		//add tournaments
-		addCard(1, (new Tournament("camelot", 3)));
-		addCard(1, (new Tournament("orkney", 2)));
-		addCard(1, (new Tournament("tintagel", 1)));
-		addCard(1, (new Tournament("york", 0)));
+		addTournament(1, "camelot", 3);
+		addTournament(1, "orkney", 2);
+		addTournament(1, "tintagel", 1);
+		addTournament(1, "york", 0);
 		
 		//add events
-		addCard(2, (new Event("king's_recognition")));
-		addCard(2, (new Event("queen's_favor")));
-		addCard(2, (new Event("court_called_to_camelot")));
-		addCard(1, (new Event("pox")));
-		addCard(1, (new Event("plague")));
-		addCard(1, (new Event("chivalrous_deed")));
-		addCard(1, (new Event("prosperity_throughout_the_realm")));
-		addCard(1, (new Event("king's_call_to_arms")));
+		addEvent(2, "king's_recognition");
+		addEvent(2, "queen's_favor");
+		addEvent(2, "court_called_to_camelot");
+		addEvent(1, "pox");
+		addEvent(1, "plague");
+		addEvent(1, "chivalrous_deed");
+		addEvent(1, "prosperity_throughout_the_realm");
+		addEvent(1, "king's_call_to_arms");
 	}
 	
 	public Story top() {

@@ -22,6 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.Adventure;
 import model.AdventureDeck;
 import model.Card;
@@ -52,6 +53,8 @@ public class View extends Application {
 	
 	//declare it outside the start method to be called in Update()
 	private Stage primaryStage; //y do we need this pls....
+	private Stage twoPlayerStage;
+	private boolean firstTime;
 	
 	//Declare buttons on starting page
 	public Button rulesButton;
@@ -70,6 +73,8 @@ public class View extends Application {
 		verticalPlayerSpace = new VBox();
 		thirdPlayerSpace = new HBox();
 		fourthPlayerSpace = new HBox();
+		
+		firstTime = true;
 		
 		gameTable = new Scene(border, 1120, 700,Color.AQUA);
 	}
@@ -176,16 +181,13 @@ public class View extends Application {
 	}
 	
 	private void setupFor2Players(ActionEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
-		HBox player1Cards = getPlayerSpace();
-		HBox player2Cards = getsecondPlayerSpace();
+		HBox player1Cards = new HBox();
+		HBox player2Cards = new HBox();
 		
-		adventureDeck.shuffle();
-		player1Cards.getChildren().add(playerCards(0, players));			
-		
+		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0)));			
+			
 		//player2Cards
-		adventureDeck.shuffle();
-		player2Cards.getChildren().add(playerCards(1, players));
-		
+		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1)));
 		GridPane border = new GridPane();
 		border.setVgap(150);
 		border.setHgap(300);
@@ -200,23 +202,18 @@ public class View extends Application {
 		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 		
 		//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
-		Stage twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-		twoPlayerStage.setScene(getGameTable());
+		if(firstTime) {
+			twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+			firstTime = false;
+		}
+		twoPlayerStage.setScene(new Scene(border, 1120, 700,Color.AQUA));
 		twoPlayerStage.getScene().setRoot(border);
 		twoPlayerStage.show();
 	}
 	
-	public HBox playerCards(int playerPosition, Players players) {
+	public HBox playerCards(Player player) {
 		HBox playerCards = new HBox(-50);
-		if(playerPosition == 1) {
-			try {
-				players.getPlayers().get(playerPosition).setHandState(CardStates.FACE_UP);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		for(Adventure a : players.getPlayers().get(playerPosition).getHand()) {
+		for(Adventure a : player.getHand()) {
 			Image card;
 			if(a.getState() == CardStates.FACE_UP) {
 				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
@@ -247,7 +244,6 @@ public class View extends Application {
 	
 	public VBox storyDeckPile(StoryDeck storyDeck) {
 		VBox storyCards = storyDeckCards();
-		storyDeck.shuffle();
 		for(Story s: storyDeck) {
 			System.out.println(s.getName() + ".jpg");
 			Image card;
@@ -273,7 +269,27 @@ public class View extends Application {
 	}
 	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {
 		VBox discardPile = new VBox(-99);
-		
+		for(Story s: sDiscard) {
+			System.out.println(s.getName() + ".jpg");
+			Image card;
+			if(s.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + s.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
+			}
+			System.out.println(s.getName() + ".jpg");
+			ImageView theCard = new ImageView(card);
+			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					// TODO Auto-generated method stub
+					//notifyStoryCardClicked()
+				}
+				
+			});
+			discardPile.getChildren().add(theCard);
+		}
 		return discardPile;
 	}
 

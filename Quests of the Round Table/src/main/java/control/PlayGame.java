@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
+import model.CardStates;
 import model.Foe;
 import model.Player;
 import model.Players;
@@ -59,8 +60,17 @@ public class PlayGame extends Application{
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
-				view.update(arg0, players, sDeck, sDiscard);
+				players.getPlayers().get(0).setHandState(CardStates.FACE_DOWN);
+				players.getPlayers().get(1).setHandState(CardStates.FACE_UP);
 				
+				view.update(arg0, players, sDeck, sDiscard);
+				players.getPlayers().get(1).drawCard(sDeck, sDiscard);
+				view.update(arg0, players, sDeck, sDiscard);
+				players.getPlayers().get(0).setHandState(CardStates.FACE_UP);
+				players.getPlayers().get(1).setHandState(CardStates.FACE_DOWN);
+				view.update(arg0, players, sDeck, sDiscard);
+				//players.getPlayers().get(0).drawCard(sDeck, sDiscard);
+				//view.update(arg0, players, sDeck, sDiscard);
 			}
 			
 		});

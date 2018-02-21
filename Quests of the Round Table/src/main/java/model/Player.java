@@ -9,11 +9,19 @@ public abstract class Player {
 	private String rank;
 	private boolean dealer = false;
 	private int shields;
-	private ArrayList<Adventure> hand = new ArrayList<Adventure>();
-	private ArrayList<Ally> allies = new ArrayList<Ally>();
-	private List<Weapon> weapons = new ArrayList<Weapon>();
-	private List<Amour> amour = new ArrayList<Amour>();
-	private List<Adventure> bidCards = new ArrayList<Adventure> ();
+	private ArrayList<Adventure> hand;
+	private ArrayList<Ally> allies;
+	private List<Weapon> weapons;
+	private List<Amour> amour;
+	private List<Adventure> bidCards;
+	
+	public Player() {
+		hand = new ArrayList<Adventure>();
+		allies = new ArrayList<Ally>();
+		weapons = new ArrayList<Weapon>();
+		amour = new ArrayList<Amour>();
+		bidCards = new ArrayList<Adventure>();
+	}
 	
 	// Getters and Setters --------------------------------
 	public String getName() {
@@ -48,7 +56,7 @@ public abstract class Player {
 		return hand.get(0).getState();
 	}
 	
-	public void setHandState(int state) throws Exception {
+	public void setHandState(int state) {
 		for(Adventure card : hand) {
 			card.setState(state);
 		}
@@ -193,7 +201,12 @@ public abstract class Player {
 		storyDiscard.add(storyDeck.top());
 		int current = storyDiscard.size() - 1;
 		//notifyListeners("draw", storyDiscard.get(current));
-		
+		try {
+			storyDiscard.get(current).setState(CardStates.FACE_UP);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (storyDiscard.get(current) instanceof Quest) {
 			System.out.println("Quest card drawn: " + storyDiscard.get(current).getName());
 		}

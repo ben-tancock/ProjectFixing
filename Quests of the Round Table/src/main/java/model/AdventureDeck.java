@@ -13,51 +13,75 @@ public class AdventureDeck extends ArrayList<Adventure>{
 	/**
 	 * During initialization the deck is setup
 	 */
-	public void addCard(int j, Adventure c) {
+	public void addWeapon(int j, String name, int bp) {
 		for (int i = 0; i < j; i++) {
-			add(c);
+			add(new Weapon(name, bp));
+		}
+	}
+	
+	public void addFoe(int j, String name, int lbp, int hbp) {
+		for (int i = 0; i < j; i++) {
+			add(new Foe(name, lbp, hbp));
+		}
+	}
+	
+	public void addAlly(int j, String name, int lbp, int hbp) {
+		for (int i = 0; i < j; i++) {
+			add(new Ally(name, lbp, hbp));
+		}
+	}
+	
+	public void addTest(int j, String name, int b) {
+		for (int i = 0; i < j; i++) {
+			add(new Test(name, b));
+		}
+	}
+	
+	public void addAmour(int j, String name, int bp) {
+		for (int i = 0; i < j; i++) {
+			add(new Amour(name, bp));
 		}
 	}
 	
 	public AdventureDeck() {
 		//setup the adventure deck with Weapons, Allies, Foes, Tests and Amour
-		addCard(11, (new Weapon("horse", 10)));
-		addCard(16, (new Weapon("sword", 10)));
-		addCard(6, (new Weapon("dagger", 5)));
-		addCard(2, (new Weapon("excalibur", 30)));
-		addCard(6, (new Weapon("lance", 20)));
-		addCard(8, (new Weapon("battle-ax", 15)));
+		addWeapon(11, "horse", 10);
+		addWeapon(16, "sword", 10);
+		addWeapon(6, "dagger", 5);
+		addWeapon(2, "excalibur", 30);
+		addWeapon(6, "lance", 20);
+		addWeapon(8, "battle-ax", 15);
 		
 		
-		addCard(7, (new Foe("robber_Knight", 15, 15)));
-		addCard(5, (new Foe("saxons", 10, 20)));
-		addCard(4, (new Foe("boar", 5, 15)));
-		addCard(8, (new Foe("thieves", 5, 5)));
-		addCard(2, (new Foe("green_knight", 25, 40)));
-		addCard(3, (new Foe("black_knight", 25, 35)));
-		addCard(6, (new Foe("evil_knight", 20, 30)));
-		addCard(8, (new Foe("saxon_knight", 15, 15)));
-		addCard(1, (new Foe("dragon", 50, 70)));
-		addCard(2, (new Foe("giant", 40, 40)));
-		addCard(4, (new Foe("mordred", 30, 30)));
+		addFoe(7, "robber_Knight", 15, 15);
+		addFoe(5, "saxons", 10, 20);
+		addFoe(4, "boar", 5, 15);
+		addFoe(8, "thieves", 5, 5);
+		addFoe(2, "green_knight", 25, 40);
+		addFoe(3, "black_knight", 25, 35);
+		addFoe(6, "evil_knight", 20, 30);
+		addFoe(8, "saxon_knight", 15, 15);
+		addFoe(1, "dragon", 50, 70);
+		addFoe(2, "giant", 40, 40);
+		addFoe(4, "mordred", 30, 30);
 		
-		addCard(1, (new Ally("sir_gawain", 10, 0)));
-		addCard(1, (new Ally("king_pellinore", 10, 0)));
-		addCard(1, (new Ally("sir_percival", 5, 0)));
-		addCard(1, (new Ally("sir_tristan", 10, 0)));
-		addCard(1, (new Ally("king_arthur", 10, 2)));
-		addCard(1, (new Ally("queen_guinevere", 0, 3)));
-		addCard(1, (new Ally("merlin", 0, 0)));
-		addCard(1, (new Ally("sir_galahad", 15, 0)));
-		addCard(1, (new Ally("sir_lancelot", 15, 0)));
-		addCard(1, (new Ally("queen_iseult", 0, 2)));
+		addAlly(1, "sir_gawain", 10, 0);
+		addAlly(1, "king_pellinore", 10, 0);
+		addAlly(1, "sir_percival", 5, 0);
+		addAlly(1, "sir_tristan", 10, 0);
+		addAlly(1, "king_arthur", 10, 2);
+		addAlly(1, "queen_guinevere", 0, 3);
+		addAlly(1, "merlin", 0, 0);
+		addAlly(1, "sir_galahad", 15, 0);
+		addAlly(1, "sir_lancelot", 15, 0);
+		addAlly(1, "queen_iseult", 0, 2);
 		
-		addCard(2, (new Test("test_of_the_questing_beast", 4)));
-		addCard(2, (new Test("test_of_temptation", 0)));
-		addCard(2, (new Test("test_of_valor", 0)));
-		addCard(2, (new Test("test_of_morgan_le_fey", 3)));
+		addTest(2, "test_of_the_questing_beast", 4);
+		addTest(2, "test_of_temptation", 0);
+		addTest(2, "test_of_valor", 0);
+		addTest(2, "test_of_morgan_le_fey", 3);
 
-		addCard(8, (new Amour("amour", 10)));
+		addAmour(8, "amour", 10);
 	}
 	
 	public Adventure top() {
