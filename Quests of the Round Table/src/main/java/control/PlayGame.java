@@ -114,15 +114,18 @@ public class PlayGame extends Application{
 		public void onStoryCardDraw(MouseEvent event) {
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			view.update(event, players, sDeck, sDiscard);
+			if(sDeck.isEmpty()) {
+				onStoryDeckEmpty();
+			}
 		}
 		
 		@Override
 		public void onStoryDeckEmpty() {
-			System.out.println("Story Deck Empty caught");
-			sDeck.addAll(sDiscard);
-			sDiscard.removeAll(sDiscard);
+			Story topCard = sDiscard.get(sDiscard.size() - 1);
+			sDeck = new StoryDeck();
+			sDiscard = new StoryDiscard();
+			sDiscard.add(topCard);
 			sDeck.shuffle();
-			System.out.println("Story Deck reinitialized.");
 			view.update(null, players, sDeck, sDiscard);
 		}
 	}

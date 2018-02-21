@@ -205,7 +205,6 @@ public class View extends Application {
 		border.add(player2Cards, 1, 2);
 		border.add(deckView.playerRank(),0, 2);
 		border.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
-		System.out.println(",");
 		//border.setGridLinesVisible(true);
 
 		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
@@ -252,7 +251,6 @@ public class View extends Application {
 	}
 	int topCard;
 	public VBox storyDeckPile(StoryDeck storyDeck) {
-		System.out.println(storyDeck);
 		VBox storyCards = storyDeckCards();
 		topCard = 0;
 		if(storyDeck.size() > 0) {
@@ -270,8 +268,6 @@ public class View extends Application {
 			ImageView theCard = new ImageView(card);
 			storyCards.getChildren().add(theCard);
 		}
-		System.out.println(storyDeck.size());
-		System.out.println(topCard);
 		if(storyDeck.size() > 0) {
 			storyCards.getChildren().get(topCard).setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
@@ -279,18 +275,10 @@ public class View extends Application {
 					notifyStoryCardClicked(arg0, storyDeck.get(topCard));
 				}
 			});
-		} else if(storyDeck.size() == 0) {
-			if(firstNotify) {
-				notifyStoryDeckEmpty();
-				firstNotify = false;
-			}
-		}
-		System.out.println(".");
-		System.out.println(storyCards.getChildren());
+		} 
 		return storyCards;	
 	}
 	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {
-		System.out.println(sDiscard);
 		VBox discardPile = new VBox(-99);
 		for(Story s: sDiscard) {
 			Image card;
@@ -319,11 +307,4 @@ public class View extends Application {
 			listeners.get(0).onStoryCardDraw(event);
 		}
 	}
-	
-	public void notifyStoryDeckEmpty() {
-		if(listeners.get(0) != null) {
-			listeners.get(0).onStoryDeckEmpty();
-		}
-	}
-
 }
