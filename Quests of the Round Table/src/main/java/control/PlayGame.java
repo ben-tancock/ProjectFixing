@@ -120,7 +120,7 @@ public class PlayGame extends Application{
 	}
 	
 	
-	public void doTurn(Player p) { // a repurposed focus method
+	public void doTurn(Player p) { // a repurposed focus method :)
 		
 		p.setHandState(CardStates.FACE_UP);
 		view.update(null, players, sDeck, sDiscard);
