@@ -1,6 +1,7 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,12 +50,18 @@ import control.PlayGame.PlayGameControlHandler;
 public class View extends Application {
 	
 	private BorderPane border;
+	
+	// NEW THING I ADDED V WEEKY DEEKY
+	public GridPane grid;// = new GridPane();
+	// -------------------------------
+	
 	AdventureDeck adventureDeck = new AdventureDeck();
 	private HBox playerSpace;
 	private HBox secondPlayerSpace;
 	private HBox thirdPlayerSpace;
 	private HBox fourthPlayerSpace;
 	private VBox verticalPlayerSpace;
+	
 	
 	private Scene gameTable;
 	DeckView deckView = new DeckView();
@@ -205,6 +212,7 @@ public class View extends Application {
 		}
 	}
 	
+	// SET UP FOR TWO PLAYERS ----------------------------------------------------------------------------------------------------------
 	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
@@ -213,14 +221,20 @@ public class View extends Application {
 			
 		//player2Cards
 		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1)));
-		GridPane border = new GridPane();
-		border.setVgap(150);
-		border.setHgap(300);
-		border.add(deckView.playerRank(players.getPlayers().get(0)), 0, 0);
-		border.add(player1Cards, 1, 0);
-		border.add(player2Cards, 1, 2);
-		border.add(deckView.playerRank(players.getPlayers().get(1)),0, 2);
-		border.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
+		
+		// WEEKY DEEKY THING BEN DID ----------
+		//GridPane border = new GridPane();
+		grid = new GridPane();
+		// ------------------------------------
+		
+		grid.setVgap(150);
+		grid.setHgap(300);
+		grid.add(deckView.playerRank(players.getPlayers().get(0)), 0, 0);
+		grid.add(player1Cards, 1, 0);
+		grid.add(player2Cards, 1, 2);
+		grid.add(deckView.playerRank(players.getPlayers().get(1)),0, 2);
+		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
+		
 		//border.setGridLinesVisible(true);
 
 		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
@@ -230,8 +244,8 @@ public class View extends Application {
 			twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			firstTime = false;
 		}
-		twoPlayerStage.setScene(new Scene(border, 1120, 700,Color.AQUA));
-		twoPlayerStage.getScene().setRoot(border);
+		twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
+		twoPlayerStage.getScene().setRoot(grid);
 		twoPlayerStage.show();
 	}
 	
@@ -339,6 +353,52 @@ public class View extends Application {
 		    // ... user chose CANCEL or closed the dialog
 			return false;
 		}
+	}
+	
+	public boolean switchPrompt(String name) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		
+		alert.setTitle("Participant Dialog");
+		alert.setHeaderText("Switch Participant");
+		alert.setContentText("Please switch to " + name + ". When you have switched, click 'OK'.");
+
+		ButtonType buttonTypeOk = new ButtonType("OK");
+		
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == buttonTypeOk){
+		    // ... user chose OK
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return true;
+		}
+	}
+	
+	public void rotate(PlayGame game) {
+		// for now, will switch focus between just two players
+		System.out.println("test rotate");
+		this.grid.getChildren().clear();
+		Players reversed = new Players();
+		reversed = game.getPlayers();
+				
+		// we should probably make Players have methods that do this???
+		List<Player> persons = new ArrayList<Player>();
+		persons = game.getPlayers().getPlayers(); // this is really weird...
+		Player temp = persons.get(persons.size()-1);
+		persons.add(0, temp);
+		persons.remove(persons.size()-1);
+		
+		//Collections.reverse(persons);
+		
+		reversed.setPlayers(persons);
+
+	//	reversed.setPlayers(Collections.reverse(reversed.getPlayers()));
+		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard());
+		
+		
+		
 	}
 	
 	

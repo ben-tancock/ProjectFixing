@@ -83,7 +83,10 @@ public class PlayGame extends Application{
 				view.update(arg0, players, sDeck, sDiscard);
 				int iters = 0;
 				currentPlayer = (currentPlayer + 1) % 2;
-				focusPlayer(players.getPlayers().get(currentPlayer));
+				//focusPlayer(players.getPlayers().get(currentPlayer));
+				// ADD A THING HERE WHICH WILL DO THE TURN THING THAT FOCUS DID
+			    doTurn(players.getPlayers().get(currentPlayer));
+				
 			}
 			
 		});
@@ -104,12 +107,41 @@ public class PlayGame extends Application{
 		return aDiscard;
 	}
 	
+	public StoryDeck getSDeck(){
+		return sDeck;
+	}
+	
+	public StoryDiscard getSDiscard(){
+		return sDiscard;
+	}
+	
 	public View getView(){
 		return view;
 	}
 	
+	
+	public void doTurn(Player p) { // a repurposed focus method
+		
+		p.setHandState(CardStates.FACE_UP);
+		view.update(null, players, sDeck, sDiscard);
+		if(sDeck.size() > 0) {
+			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
+					view.update(null, players, sDeck, sDiscard);
+					view.rotate(PlayGame.getInstance());
+					doTurn(players.getPlayers().get(0));
+				}
+			}); 
+		}
+		
+		
+	}
+	
+	
 	//Used to rotate between players to emulate a "focus on current player" feel so that the drawing of a story card and "turns" can be simulated.
-	public void focusPlayer(Player p) {
+	/*public void focusPlayer(Player p) {
 		p.setFocused(true);
 		p.setHandState(CardStates.FACE_UP);
 		view.update(null, players, sDeck, sDiscard);
@@ -122,7 +154,7 @@ public class PlayGame extends Application{
 					
 					//Code should not execute until everything else is handled. Turns off the focus after activity is finished.
 					p.setFocused(false);
-					p.setHandState(CardStates.FACE_DOWN);
+					//p.setHandState(CardStates.FACE_DOWN);
 					view.update(null, players, sDeck, sDiscard);
 					//Set next focused player.
 					currentPlayer = (currentPlayer + 1) % 2;
@@ -132,7 +164,7 @@ public class PlayGame extends Application{
 		}
 		
 		
-	}
+	}*/
 	
 	public static class PlayGameControlHandler extends ControlHandler {
 

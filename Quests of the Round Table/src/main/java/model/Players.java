@@ -43,6 +43,10 @@ public class Players {
         return persons;
     }
 	
+	public void setPlayers(List<Player> p) {
+        this.persons = p;
+    }
+	
 	// notify listeners: send event message (e.g. drawCard, discard), old value(s), new value(s)
 	// possible changes: card drawn/discarded, rank up/down, shields up/down, 
 	

@@ -42,25 +42,35 @@ public class TournamentHandler {
 		//pr = player that drew the quest card, so we start there.
 		// to do:
 		// - ask each player, starting at who drew, to join (prompt: join tourney? (Y/N))
-		// 		- tournament.askPlayer(i) (need to make)
-		// - if Y: Tournament.addParticipant() (still need to make)
+		// 		- tournament.askPlayer(i) 
+		// - if Y: Tournament.addParticipant() 
 		// 
 		int currentIndex = players.getPlayers().indexOf(pr);
 		//ask(currentIndex);
 		
 		for(int i = 0; i < players.getPlayers().size(); i++) {
-			ask(currentIndex + i);
+			
+			
+			if(i > 0) {
+				if(this.pg.getView().switchPrompt(players.getPlayers().get(currentIndex + i).getName())) {
+					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
+					this.pg.getView().rotate(pg);
+				}
+			}
+			// focus switch to currentIndex + i
+			
+			ask(0);
 			if(currentIndex + i + 1 == players.getPlayers().size()) { // loop when it reaches end and ask the rest (e.g. 2 -> 3 -> 4 -> 1)
 				currentIndex = -1;
 			}
 		}
 		
-		if(!pr.isFocused()) { 
+		/*if(!pr.isFocused()) { 
 			for(Player p : players.getPlayers()) {
 				p.setFocused(false);
 			}
 			pr.setFocused(true);
-		}
+		}*/
 		pr.setHandState(CardStates.FACE_UP);
 		return null;
 	}
