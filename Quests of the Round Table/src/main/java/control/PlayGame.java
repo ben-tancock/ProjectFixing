@@ -64,18 +64,20 @@ public class PlayGame extends Application{
 		
 		view.start(arg0);
 		//logger.info("Started the view.");
+		
 		view.twoPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
 				players.addListener(new PlayGameControlHandler());
 				//logger.info("Started the 2 player game.");
-				boolean playing = true;
+				
 				for(int i = 0; i < 2; i++) {
 					players.addHuman();
 				}
 				players.getPlayers().get(0).setName("Player 1");
 				players.getPlayers().get(1).setName("Player 2");
+				view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
@@ -121,23 +123,32 @@ public class PlayGame extends Application{
 	
 	
 	public void doTurn(Player p) { // a repurposed focus method 
-		
-		p.setHandState(CardStates.FACE_UP);
+		boolean seeCards = view.seeCardPrompt(p);
+		if(seeCards) {
+			p.setHandState(CardStates.FACE_UP);
+		} else {
+			doTurn(p);
+		}
 		view.update(null, players, sDeck, sDiscard);
 		if(sDeck.size() > 0) {
 			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
 					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
+					for(Player p : players.getPlayers()) {
+						p.setHandState(CardStates.FACE_DOWN);
+					}
 					view.update(null, players, sDeck, sDiscard);
 					view.rotate(PlayGame.getInstance());
-					doTurn(players.getPlayers().get(0));
+					
+					doTurn(players.getPlayers().get(1));
 				}
 			}); 
 		}
 		
 		
 	}
+	
 	
 	
 	//Used to rotate between players to emulate a "focus on current player" feel so that the drawing of a story card and "turns" can be simulated.
@@ -242,6 +253,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onTournamentCardDraw(Player p) {
+			view.update(null, players, sDeck, sDiscard);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
 			System.out.println("Tournament: " + topCard.getName());

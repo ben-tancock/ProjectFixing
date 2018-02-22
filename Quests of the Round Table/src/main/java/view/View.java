@@ -217,10 +217,10 @@ public class View extends Application {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
 		
-		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0)));			
+		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 			
 		//player2Cards
-		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1)));
+		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
 		
 		// WEEKY DEEKY THING BEN DID ----------
 		//GridPane border = new GridPane();
@@ -229,10 +229,10 @@ public class View extends Application {
 		
 		grid.setVgap(150);
 		grid.setHgap(300);
-		grid.add(deckView.playerRank(players.getPlayers().get(0)), 0, 0);
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 0);
 		grid.add(player1Cards, 1, 0);
 		grid.add(player2Cards, 1, 2);
-		grid.add(deckView.playerRank(players.getPlayers().get(1)),0, 2);
+		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 2);
 		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
 		
 		//border.setGridLinesVisible(true);
@@ -249,7 +249,7 @@ public class View extends Application {
 		twoPlayerStage.show();
 	}
 	
-	public HBox playerCards(Player player) {
+	public HBox playerCards(Player player, int index) {
 		HBox playerCards = new HBox(-50);
 		for(Adventure a : player.getHand()) {
 			Image card;
@@ -260,8 +260,7 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			//for 2 players for now
-			if(player.getName().equals("Player 1")) {
+			if(index == 0) {
 				theCard.setRotate(180);
 			}
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -347,10 +346,25 @@ public class View extends Application {
 
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-		    // ... user chose OK
+		    
 			return true;
 		} else {
 		    // ... user chose CANCEL or closed the dialog
+			return false;
+		}
+	}
+	
+	public boolean seeCardPrompt(Player p) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		alert.setTitle(p.getName() + "'s Turn");
+		alert.setHeaderText(p.getName() + "'s Turn");
+		alert.setContentText("Please pass the computer to " + p.getName());
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return true;
+		} else {
 			return false;
 		}
 	}

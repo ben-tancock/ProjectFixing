@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import model.Adventure;
 import model.AdventureDeck;
+import model.CardStates;
 import model.Player;
 import model.Players;
 
@@ -44,12 +45,14 @@ public class DeckView extends HBox {
 	}
 	
 	//playerRank
-	public HBox playerRank(Player p) {
+	public HBox playerRank(Player p, int index) {
 		HBox hbox = new HBox();
-		Image card = new Image("/playingCards/squire.jpg", 105, 140, true, true);
+		Image card;
+		
+		card = new Image("/playingCards/squire.jpg", 105, 140, true, true);
 		ImageView theCard = new ImageView(card);
 		//for 2 players for now.
-		if(p.getName().equals("Player 1")) {
+		if(index == 0) {
 			theCard.setRotate(180);
 		}
 		hbox.getChildren().add(theCard);

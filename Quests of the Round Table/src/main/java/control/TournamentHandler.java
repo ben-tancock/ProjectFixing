@@ -50,19 +50,16 @@ public class TournamentHandler {
 		
 		for(int i = 0; i < players.getPlayers().size(); i++) {
 			
-			
 			if(i > 0) {
-				if(this.pg.getView().switchPrompt(players.getPlayers().get(currentIndex + i).getName())) {
+				pg.getView().rotate(pg);
+				if(this.pg.getView().switchPrompt(players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).getName())) {
 					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
-					this.pg.getView().rotate(pg);
+					
 				}
 			}
-			// focus switch to currentIndex + i
 			
 			ask(0);
-			if(currentIndex + i + 1 == players.getPlayers().size()) { // loop when it reaches end and ask the rest (e.g. 2 -> 3 -> 4 -> 1)
-				currentIndex = -1;
-			}
+			currentIndex += 1 % players.getPlayers().size();
 		}
 		
 		/*if(!pr.isFocused()) { 
@@ -71,7 +68,7 @@ public class TournamentHandler {
 			}
 			pr.setFocused(true);
 		}*/
-		pr.setHandState(CardStates.FACE_UP);
+		//pr.setHandState(CardStates.FACE_UP);
 		return null;
 	}
 	
@@ -85,17 +82,13 @@ public class TournamentHandler {
 		if(join) {
 			System.out.println(players.getPlayers().get(i).getName() + " joins the tournament");
 			this.tournament.addParticipant(players.getPlayers().get(i));
+			players.getPlayers().get(i).setHandState(CardStates.FACE_DOWN);
 		}
 		else {
 			System.out.println(players.getPlayers().get(i).getName() + " does not join the tournament");
 		}
 		// Yes --> Tournament.addParticipant(player)
 		// No --> ?
-	}
-
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

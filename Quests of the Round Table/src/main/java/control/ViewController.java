@@ -79,10 +79,10 @@ public class ViewController extends Application{
 				GridPane border = new GridPane();
 				border.setVgap(150);
 				border.setHgap(300);
-				border.add(deckView.playerRank(players.getPlayers().get(0)), 0, 0);
+			//	border.add(deckView.playerRank(players.getPlayers().get(0)), 0, 0);
 				border.add(player1Cards, 1, 0);
 				border.add(player2Cards, 1, 2);
-				border.add(deckView.playerRank(players.getPlayers().get(1)),0, 2);
+			//	border.add(deckView.playerRank(players.getPlayers().get(1)),0, 2);
 				border.add(storyDeckSpace(), 1, 1);
 				
 				//border.setGridLinesVisible(true);
@@ -106,7 +106,7 @@ public class ViewController extends Application{
 				HBox allPlayer1Cards = view.getPlayerSpace();
 				HBox player2Cards = view.getsecondPlayerSpace();
 				HBox player3Cards = new HBox();
-				HBox playerRank = deckView.playerRank(players.getPlayers().get(2));
+				//HBox playerRank = deckView.playerRank(players.getPlayers().get(2));
 				
 				//adding 3 players
 				PlayerSetup(3);
@@ -115,13 +115,13 @@ public class ViewController extends Application{
 				adventureDeck.shuffle();
 				
 				//player1cards
-				allPlayer1Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(0)), playerCards(0));			
+				//allPlayer1Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(0)), playerCards(0));			
 				
 				//player2Cards
-				player2Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(1)), playerCards(1));
+				//player2Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(1)), playerCards(1));
 				
 				//player3Cards
-				player3Cards.getChildren().addAll(playerRank, verticalPlayerCards(2));
+				//player3Cards.getChildren().addAll(playerRank, verticalPlayerCards(2));
 			
 				
 				//setting the scene and window
@@ -161,13 +161,13 @@ public class ViewController extends Application{
 				adventureDeck.shuffle();
 				
 				//player1 cards
-				allPlayer1Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(0)), playerCards(0));			
+				//allPlayer1Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(0)), playerCards(0));			
 				//player2 Cards
-				player2Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(1)), playerCards(1));
+				//player2Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(1)), playerCards(1));
 				//player3 Cards
-				player3Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(2)), verticalPlayerCards(2));
+				//player3Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(2)), verticalPlayerCards(2));
 				//player4 Cards
-				player4Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(3)), verticalPlayerCards(3));
+				//player4Cards.getChildren().addAll(deckView.playerRank(players.getPlayers().get(3)), verticalPlayerCards(3));
 				
 				border.setHgap(75);
 				border.setVgap(50);
