@@ -2,6 +2,7 @@ package control;
 
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
+import model.Adventure;
 import model.Player;
 import model.Story;
 //Possible abstract class for notifying the controllers?
@@ -27,7 +28,7 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onAdventureCardDraw(Player p) {
+	public void onAdventureCardDraw(Player p, Adventure card, MouseEvent event) {
 		
 	}
 	
@@ -56,6 +57,10 @@ public abstract class ControlHandler {
 	}
 	
 	public void onKingsRecognition() {
+		
+	}
+	
+	public void onCardDrawn() {
 		
 	}
 }

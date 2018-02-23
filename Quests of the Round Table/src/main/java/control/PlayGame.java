@@ -82,12 +82,35 @@ public class PlayGame extends Application{
 					p.drawCard(12, aDeck);
 				}
 				 // current player is the dealer
-				view.update(arg0, players, sDeck, sDiscard);
+				view.update(arg0, players, sDeck, sDiscard, aDiscard);
 				int iters = 0;
 				currentPlayer = (currentPlayer + 1) % 2;
 				//focusPlayer(players.getPlayers().get(currentPlayer));
 				// ADD A THING HERE WHICH WILL DO THE TURN THING THAT FOCUS DID
 			    doTurn(players.getPlayers().get(currentPlayer));
+				
+			}
+			
+		});
+		
+		view.threePlayerButton.setOnMouseClicked(new EventHandler <MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				players.addListener(new PlayGameControlHandler());
+				for(int i = 0; i < 3; i++) {
+					players.addHuman();
+				}
+				players.getPlayers().get(0).setName("Player 1");
+				players.getPlayers().get(1).setName("Player 2");
+				players.getPlayers().get(2).setName("Player 3");
+				
+				view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
+				for(Player p : players.getPlayers()) {
+					p.drawCard(12, aDeck);
+				}
+				view.update(event, players, sDeck, sDiscard, aDiscard);
 				
 			}
 			
@@ -129,7 +152,7 @@ public class PlayGame extends Application{
 		} else {
 			doTurn(p);
 		}
-		view.update(null, players, sDeck, sDiscard);
+		view.update(null, players, sDeck, sDiscard, aDiscard);
 		if(sDeck.size() > 0) {
 			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
@@ -138,7 +161,7 @@ public class PlayGame extends Application{
 					for(Player p : players.getPlayers()) {
 						p.setHandState(CardStates.FACE_DOWN);
 					}
-					view.update(null, players, sDeck, sDiscard);
+					view.update(null, players, sDeck, sDiscard, aDiscard);
 					view.rotate(PlayGame.getInstance());
 					
 					doTurn(players.getPlayers().get(1));
@@ -190,8 +213,11 @@ public class PlayGame extends Application{
 		}
 		
 		@Override
-		public void onAdventureCardDraw(Player p) {
-			System.out.println(p.getName() + " has drawn a card.");
+		public void onAdventureCardDraw(Player p, Adventure card, MouseEvent event) {
+			System.out.println(p.getName() + " has drawn a card.");			
+			p.remove(aDiscard, aDeck, card);
+			view.update(event, players, sDeck, sDiscard, aDiscard);	
+			//p.discard(card, aDiscard, true);
 		}
 		
 		@Override
@@ -216,7 +242,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-			view.update(event, players, sDeck, sDiscard);
+			view.update(event, players, sDeck, sDiscard,aDiscard);
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
 			}
@@ -229,7 +255,7 @@ public class PlayGame extends Application{
 			sDiscard = new StoryDiscard();
 			sDiscard.add(topCard);
 			sDeck.shuffle();
-			view.update(null, players, sDeck, sDiscard);
+			view.update(null, players, sDeck, sDiscard, aDiscard);
 		}
 		
 		@Override
@@ -253,7 +279,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onTournamentCardDraw(Player p) {
-			view.update(null, players, sDeck, sDiscard);
+			view.update(null, players, sDeck, sDiscard, aDiscard);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
 			System.out.println("Tournament: " + topCard.getName());
