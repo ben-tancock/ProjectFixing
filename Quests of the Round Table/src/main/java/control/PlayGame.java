@@ -273,7 +273,6 @@ public class PlayGame extends Application{
 				}
 			}
 			view.update(event, players, sDeck, sDiscard);	
-			//p.discard(card, aDiscard, true);
 		}
 		
 		@Override

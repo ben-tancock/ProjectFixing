@@ -325,7 +325,7 @@ public class View extends Application {
 			ImageView theCard = new ImageView(card);
 			if(index == 1) {
 				theCard.setRotate(180);
-			}
+			}/* This should only be called in the controllers when appropriate, otherwise we run into issues.
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -333,11 +333,11 @@ public class View extends Application {
 					// TODO Auto-generated method stub
 					System.out.println( "This is a " + a.getName());
 					//player.playCard(a, true);
-					notifyPlayerCardPlayed(event,player,a);
+					//notifyPlayerCardPlayed(event,player,a); this should only be called w
 					//notify other players
 				}
 				
-			});
+			});*/
 			playerCards.getChildren().add(theCard);
 		
 		}
@@ -357,7 +357,7 @@ public class View extends Application {
 			ImageView theCard = new ImageView(card);
 			if(index == 0) {
 				theCard.setRotate(180);
-			}
+			}/* This should only be called in the controller when appropriate, otherwise we have issues.
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -366,7 +366,7 @@ public class View extends Application {
 					System.out.println( "This is a " + a.getName());
 				}
 				
-			});
+			});*/
 			playerCards.getChildren().add(theCard);
 		
 		}
