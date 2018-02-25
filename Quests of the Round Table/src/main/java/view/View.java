@@ -234,14 +234,17 @@ public class View extends Application {
 		
 		grid.setVgap(150);
 		grid.setHgap(300);
-		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 0);
-		grid.add(player1PlayingSurface, 1, 0);
-		grid.add(player2Cards, 1, 2);
-		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 2);
+		
+		grid.add(player1PlayingSurface, 1, 2);
+		grid.add(player2PlayingSurface, 1, 0);
+		grid.add(player2Cards, 1, 0);
+		grid.add(player1Cards, 1, 2);
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 2);
+		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 1);
 		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
 		
 		
-		//border.setGridLinesVisible(true);
+		grid.setGridLinesVisible(true);
 
 		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 		
@@ -254,6 +257,7 @@ public class View extends Application {
 		twoPlayerStage.getScene().setRoot(grid);
 		twoPlayerStage.show();
 	}
+	// -----------------------------------------------------------------------------------------------------------------------
 	
 	public void setUpFor3Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
 		HBox player1Cards = new HBox();

@@ -77,17 +77,22 @@ public class PlayGame extends Application{
 				}
 				players.getPlayers().get(0).setName("Player 1");
 				players.getPlayers().get(1).setName("Player 2");
-				view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
+				
+				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
+				// have to wait for everything to be set up before we can start rotating i think
+				//view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
+				
+				
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
 				 // current player is the dealer
 				view.update(arg0, players, sDeck, sDiscard, aDiscard);
 				int iters = 0;
-				currentPlayer = (currentPlayer + 1) % 2;
+				currentPlayer = 0;//(currentPlayer + 1) % 2;
 				//focusPlayer(players.getPlayers().get(currentPlayer));
 				// ADD A THING HERE WHICH WILL DO THE TURN THING THAT FOCUS DID
-			    doTurn(players.getPlayers().get(currentPlayer));
+			    doTurn(players.getPlayers().get(0));
 				
 			}
 			
@@ -144,10 +149,11 @@ public class PlayGame extends Application{
 		return view;
 	}
 	
-	
+	// DO TURN ------------------------------------------------------------------------------------------------------------
 	public void doTurn(Player p) { // a repurposed focus method 
 		boolean seeCards = view.seeCardPrompt(p);
 		if(seeCards) {
+			System.out.println("setting " + p.getName() + " hand to face up");
 			p.setHandState(CardStates.FACE_UP);
 		} else {
 			doTurn(p);
@@ -159,16 +165,16 @@ public class PlayGame extends Application{
 				public void handle(MouseEvent arg0) {
 					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
 					for(Player p : players.getPlayers()) {
-						p.setHandState(CardStates.FACE_DOWN);
+						//p.setHandState(CardStates.FACE_DOWN);
 					}
 					view.update(null, players, sDeck, sDiscard, aDiscard);
 					view.rotate(PlayGame.getInstance());
 					
-					doTurn(players.getPlayers().get(1));
+					doTurn(players.getPlayers().get(0));
 				}
 			}); 
 		}
-		
+	// ---------------------------------------------------------------------------------------------------------------------	
 		
 	}
 	
@@ -279,6 +285,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onTournamentCardDraw(Player p) {
+			System.out.println("test tourn draw");
 			view.update(null, players, sDeck, sDiscard, aDiscard);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
