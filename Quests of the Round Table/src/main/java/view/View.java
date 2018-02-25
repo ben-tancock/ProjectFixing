@@ -76,7 +76,7 @@ public class View extends Application {
 	Players players = new Players();
 	
 	//declare it outside the start method to be called in Update()
-	private Stage twoPlayerStage, threePlayerStage, fourPlayerStage;
+	private Stage twoPlayerStage, threePlayerStage, fourPlayerStage, primStage;
 	private boolean firstTime;
 	private int topCard;
 	
@@ -145,6 +145,7 @@ public class View extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
 		VBox startPane = new VBox(50);
+		primStage = primaryStage;
 		
 		//rules button
 		rulesButton.setPrefSize(300, 100);
@@ -158,9 +159,9 @@ public class View extends Application {
 		startPane.getChildren().addAll(rulesButton, twoPlayerButton, threePlayerButton, fourPlayerButton);
 		startPane.setAlignment(Pos.CENTER);
 		Scene scene = new Scene(startPane, 1220, 700,Color.BISQUE);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Quest of the Round Table");
-		primaryStage.show();
+		primStage.setScene(scene);
+		primStage.setTitle("Quest of the Round Table");
+		primStage.show();
 	}
 	public HBox storyCards() {
 		HBox storyCards = new HBox(-70.5);
@@ -257,7 +258,7 @@ public class View extends Application {
 		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
 		grid.add(storyDeckSpace, 2, 2);
 		
-		grid.setGridLinesVisible(true);
+		//grid.setGridLinesVisible(true);
 
 		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 		
@@ -506,11 +507,32 @@ public class View extends Application {
 		
 		
 		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == buttonTypeOk){
+		if (result.get() == ButtonType.OK){
 			return true;
 		} else {
 		    // ... user chose CANCEL or closed the dialog
 			return true;
+		}
+	}
+	
+	public boolean promptGameEnd(Player p) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		
+		alert.setTitle("Player Win Dialog");
+		alert.setHeaderText("Congratulations " + p.getName() + "You win!!");
+		alert.setContentText("Would you like to play again?");
+
+		ButtonType buttonTypeOk = new ButtonType("OK");
+		
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			primStage.close();
+			return true;
+		} else {
+		    primStage.close();
+			return false;
 		}
 	}
 	

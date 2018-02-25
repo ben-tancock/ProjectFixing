@@ -38,6 +38,8 @@ public class PlayGame extends Application{
 	private static StoryDiscard sDiscard;
 	private static Players players;
 	private static View view;
+	private static List<Player> winners;
+	private static Stage primStage;
 	private static final PlayGame instance = new PlayGame();
 	
 	public PlayGame() {
@@ -47,6 +49,7 @@ public class PlayGame extends Application{
 		sDiscard = new StoryDiscard();
 		players = new Players();
 		view = new View();
+		winners = new ArrayList<Player>();
 	}
 	
 	public static void main(String[] args) {
@@ -62,6 +65,8 @@ public class PlayGame extends Application{
 
 	@Override
 	public void start(Stage arg0) throws Exception {
+		primStage = arg0;
+		
 		aDeck.shuffle();
 		sDeck.shuffle();
 		//logger.info("Shuffled the decks.");
@@ -174,6 +179,24 @@ public class PlayGame extends Application{
 					for(Player p : players.getPlayers()) {
 						p.setHandState(CardStates.FACE_DOWN);
 					}
+					if(winners.size() == 1) {
+						System.out.println("Congratulations " + winners.get(0).getName() + "! You Win!");
+						boolean gameRestart = view.promptGameEnd(winners.get(0));
+						if(gameRestart) {
+							try {
+								PlayGame playGame = new PlayGame();
+								playGame.start(primStage);
+								return;
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						} else {
+							return;
+						}
+					} else if (winners.size() > 1) {
+						//begin final tournament!
+					}
 					view.update(null, players, sDeck, sDiscard);
 					view.rotate(PlayGame.getInstance());
 					
@@ -256,6 +279,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onPlayerVictory(Player p) {
 			System.out.println(p.getName() + " has become knight of the round table!");
+			winners.add(p);
 		}
 		
 		@Override
@@ -325,6 +349,11 @@ public class PlayGame extends Application{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		
+		@Override
+		public void onRankSet(Player p) {
+			view.update(null, players, sDeck, sDiscard);
 		}
 	}
 }

@@ -24,6 +24,7 @@ public abstract class Player {
 		bidCards = new ArrayList<Adventure>();
 		dealer = false;
 		focused = false;
+		rank = "";
 	}
 	
 	// Getters and Setters --------------------------------
@@ -53,14 +54,14 @@ public abstract class Player {
 		else if(rank.equals("champion_knight")){
 			return 12;
 		} else {
-			return 20;
+			return 22;
 		}
 	}
 	
 	public void setRank(String s) {
 		rank = s;
 		if(rank.equals("knight_of_the_round_table")) {
-			
+			//notify win
 		}
 	}
 	
@@ -81,6 +82,29 @@ public abstract class Player {
 	public void setShields(int s) {
 		//notifyListeners("shieldset", this.getShields(), s);
 		shields = s;
+		if(shields >= 5 && rank.equals("squire")) {
+			setRank("knight");
+			shields = shields - 5;
+			if(shields >= 7) {
+				setRank("champion_knight");
+				shields = shields - 7;
+				if(shields >= 10) {
+					Players.notifyListeners("player won", this);
+				}
+			}
+			Players.notifyListeners("rank set", this);
+		}
+		else if(shields >= 7 && rank.equals("knight")) {
+			setRank("champion_knight");
+			shields = shields - 7;
+			if(shields >= 10) {
+				Players.notifyListeners("player won", this);
+			}
+			Players.notifyListeners("rank set", this);
+		}
+		else if(shields >= 10 && rank.equals("champion_knight")) {
+			Players.notifyListeners("player won", this);
+		}
 	}
 	
 	public List<Adventure> getHand(){	

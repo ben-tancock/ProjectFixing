@@ -68,6 +68,12 @@ public class Players {
 			case "tournament drawn":
 				listeners.get(0).onTournamentCardDraw(p);
 				break;
+			case "rank set":
+				listeners.get(0).onRankSet(p);
+				break;
+			case "player won":
+				listeners.get(0).onPlayerVictory(p);
+				break;
 		}
 	}
 	

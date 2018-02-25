@@ -51,7 +51,7 @@ public class EventHandler {
 	}
 	
 	public void kingsRecognition() {// notify that the next player to finish a quest gets 2 bonus shields
-		listeners.get(0).onKingsRecognition();
+		//listeners.get(0).onKingsRecognition();
 	}
 	
 	public void plague(Player p) { // drawer loses 2 shields if possible

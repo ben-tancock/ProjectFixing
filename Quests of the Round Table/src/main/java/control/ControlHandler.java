@@ -29,6 +29,10 @@ public abstract class ControlHandler {
 		
 	}
 	
+	public void onRankSet(Player p) {
+		
+	}
+	
 	public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 		
 	}
