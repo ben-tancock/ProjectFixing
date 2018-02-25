@@ -10,7 +10,9 @@ import control.PlayGame;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -204,9 +206,9 @@ public class View extends Application {
 	}
 	
 	//need multiple of these for supporting different situations
-	public void update(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, AdventureDiscard aDiscard) {
+	public void update(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
 		if(players.getPlayers().size() == 2) {
-			setupFor2Players(event, players, sDeck, sDiscard, aDiscard);
+			setupFor2Players(event, players, sDeck, sDiscard);
 		} else if (players.getPlayers().size() == 3) {
 			setUpFor3Players(event, players,sDeck, sDiscard);
 		} else {
@@ -215,13 +217,14 @@ public class View extends Application {
 	}
 	
 	// SET UP FOR TWO PLAYERS ----------------------------------------------------------------------------------------------------------
-	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, AdventureDiscard aDiscard) {
+	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
 		HBox player1PlayingSurface = new HBox();
 		HBox player2PlayingSurface = new HBox();
 		HBox player1ShieldSurface = new HBox();
 		HBox player2ShieldSurface = new HBox();
+		HBox storyDeckSpace = new HBox();
 		
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
@@ -230,6 +233,8 @@ public class View extends Application {
 		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
 		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
 		player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
+		//Story deck space
+		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
 		// WEEKY DEEKY THING BEN DID ----------
 		//GridPane border = new GridPane();
 		grid = new GridPane();
@@ -246,7 +251,10 @@ public class View extends Application {
 		grid.add(player2ShieldSurface, 1, 0);
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
 		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
-		grid.add(storyDeckSpace(sDeck, sDiscard), 2, 2);
+		grid.add(storyDeckSpace, 2, 2);
+		GridPane.setHalignment(player1ShieldSurface, HPos.CENTER);
+		GridPane.setValignment(player1ShieldSurface, VPos.CENTER);
+		GridPane.setConstraints(storyDeckSpace, 2, 2, 2, 1, HPos.CENTER, VPos.CENTER);
 		
 		
 		grid.setGridLinesVisible(true);
@@ -260,6 +268,7 @@ public class View extends Application {
 		}
 		twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
 		twoPlayerStage.getScene().setRoot(grid);
+		twoPlayerStage.getScene().getRoot().autosize();
 		twoPlayerStage.show();
 	}
 	// -----------------------------------------------------------------------------------------------------------------------
@@ -520,7 +529,7 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean switchPrompt(String name) {
+	public boolean switchPrompt(String name, Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
 		
@@ -533,7 +542,6 @@ public class View extends Application {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == buttonTypeOk){
-		    // ... user chose OK
 			return true;
 		} else {
 		    // ... user chose CANCEL or closed the dialog
@@ -560,7 +568,7 @@ public class View extends Application {
 		reversed.setPlayers(persons);
 
 	//	reversed.setPlayers(Collections.reverse(reversed.getPlayers()));
-		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard(), game.getADiscard());
+		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard());
 		
 		
 		

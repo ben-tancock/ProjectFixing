@@ -91,7 +91,7 @@ public class PlayGame extends Application{
 					p.drawCard(12, aDeck);
 				}
 				 // current player is the dealer
-				view.update(arg0, players, sDeck, sDiscard, aDiscard);
+				view.update(arg0, players, sDeck, sDiscard);
 				int iters = 0;
 				currentPlayer = 0;//(currentPlayer + 1) % 2;
 				//focusPlayer(players.getPlayers().get(currentPlayer));
@@ -119,7 +119,7 @@ public class PlayGame extends Application{
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
-				view.update(event, players, sDeck, sDiscard, aDiscard);
+				view.update(event, players, sDeck, sDiscard);
 				
 			}
 			
@@ -162,16 +162,16 @@ public class PlayGame extends Application{
 		} else {
 			doTurn(p);
 		}
-		view.update(null, players, sDeck, sDiscard, aDiscard);
+		view.update(null, players, sDeck, sDiscard);
 		if(sDeck.size() > 0) {
 			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
 					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
 					for(Player p : players.getPlayers()) {
-						//p.setHandState(CardStates.FACE_DOWN);
+						p.setHandState(CardStates.FACE_DOWN);
 					}
-					view.update(null, players, sDeck, sDiscard, aDiscard);
+					view.update(null, players, sDeck, sDiscard);
 					view.rotate(PlayGame.getInstance());
 					
 					doTurn(players.getPlayers().get(0));
@@ -246,7 +246,7 @@ public class PlayGame extends Application{
 					p.remove(p.getHand(), p.getWeapons(), card);
 				}
 			}
-			view.update(event, players, sDeck, sDiscard, aDiscard);	
+			view.update(event, players, sDeck, sDiscard);	
 			//p.discard(card, aDiscard, true);
 		}
 		
@@ -272,7 +272,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-			view.update(event, players, sDeck, sDiscard,aDiscard);
+			view.update(event, players, sDeck, sDiscard);
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
 			}
@@ -285,7 +285,7 @@ public class PlayGame extends Application{
 			sDiscard = new StoryDiscard();
 			sDiscard.add(topCard);
 			sDeck.shuffle();
-			view.update(null, players, sDeck, sDiscard, aDiscard);
+			view.update(null, players, sDeck, sDiscard);
 		}
 		
 		@Override
@@ -310,7 +310,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onTournamentCardDraw(Player p) {
 			System.out.println("test tourn draw");
-			view.update(null, players, sDeck, sDiscard, aDiscard);
+			view.update(null, players, sDeck, sDiscard);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
 			System.out.println("Tournament: " + topCard.getName());
