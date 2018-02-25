@@ -240,7 +240,7 @@ public class View extends Application {
 		grid.add(player2Cards, 1, 0);
 		grid.add(player1Cards, 1, 2);
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 2);
-		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 1);
+		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
 		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
 		
 		
@@ -309,9 +309,9 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			if(index == 0) {
+			/*if(index == 0) {
 				theCard.setRotate(180);
-			}
+			}*/
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
