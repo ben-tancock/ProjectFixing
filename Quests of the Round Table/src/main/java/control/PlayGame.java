@@ -14,12 +14,15 @@ import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
+import model.Ally;
+import model.Amour;
 import model.CardStates;
 import model.Foe;
 import model.Player;
 import model.Players;
 import model.Quest;
 import model.Tournament;
+import model.Weapon;
 import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
@@ -77,7 +80,8 @@ public class PlayGame extends Application{
 				}
 				players.getPlayers().get(0).setName("Player 1");
 				players.getPlayers().get(1).setName("Player 2");
-				
+				players.getPlayers().get(0).setShields(1);
+				players.getPlayers().get(1).setShields(2);
 				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
 				// have to wait for everything to be set up before we can start rotating i think
 				//view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
@@ -219,9 +223,29 @@ public class PlayGame extends Application{
 		}
 		
 		@Override
-		public void onAdventureCardDraw(Player p, Adventure card, MouseEvent event) {
+		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 			System.out.println(p.getName() + " has drawn a card.");			
-			p.remove(aDiscard, aDeck, card);
+			if(card instanceof Ally) {
+				p.remove(p.getHand(), p.getAllies(), card);
+			} else if (card instanceof Amour) {
+				if(p.getAmour().size() >= 1) {
+					//show an error alert
+				}else {
+					p.remove(p.getHand(), p.getAmour(), card);
+				} 
+			} else if (card instanceof Weapon) {
+				boolean dup = false;
+				for(Weapon w : p.getWeapons()) {
+					if(w.getName().equals(card.getName())) {
+						dup = true;
+					}
+				}
+				if(dup) {
+					System.out.println("Duplicate!!" + card.getName());
+				} else {
+					p.remove(p.getHand(), p.getWeapons(), card);
+				}
+			}
 			view.update(event, players, sDeck, sDiscard, aDiscard);	
 			//p.discard(card, aDiscard, true);
 		}

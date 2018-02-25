@@ -28,7 +28,7 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onAdventureCardDraw(Player p, Adventure card, MouseEvent event) {
+	public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 		
 	}
 	

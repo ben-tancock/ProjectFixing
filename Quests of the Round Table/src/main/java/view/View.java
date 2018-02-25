@@ -218,30 +218,35 @@ public class View extends Application {
 	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, AdventureDiscard aDiscard) {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
-		VBox player1PlayingSurface = new VBox();
-		VBox player2PlayingSurface = new VBox();
-		
+		HBox player1PlayingSurface = new HBox();
+		HBox player2PlayingSurface = new HBox();
+		HBox player1ShieldSurface = new HBox();
+		HBox player2ShieldSurface = new HBox();
 		
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
-		player1PlayingSurface.getChildren().addAll(PlayedCards(aDiscard),player1Cards);
+		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		//player2Cards
 		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
-		player2PlayingSurface.getChildren().addAll(PlayedCards(aDiscard),player2Cards);
+		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+		player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
 		// WEEKY DEEKY THING BEN DID ----------
 		//GridPane border = new GridPane();
 		grid = new GridPane();
 		// ------------------------------------
 		
-		grid.setVgap(150);
-		grid.setHgap(300);
+		grid.setVgap(23);
+		grid.setHgap(0);
 		
-		grid.add(player1PlayingSurface, 1, 2);
-		grid.add(player2PlayingSurface, 1, 0);
-		grid.add(player2Cards, 1, 0);
-		grid.add(player1Cards, 1, 2);
-		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 2);
+		grid.add(player1PlayingSurface, 2, 3);
+		grid.add(player2PlayingSurface, 2, 1);
+		grid.add(player2Cards, 2, 0);
+		grid.add(player1Cards, 2, 4);
+		grid.add(player1ShieldSurface, 1, 4);
+		grid.add(player2ShieldSurface, 1, 0);
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
 		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
-		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
+		grid.add(storyDeckSpace(sDeck, sDiscard), 2, 2);
 		
 		
 		grid.setGridLinesVisible(true);
@@ -371,21 +376,38 @@ public class View extends Application {
 		return playerSpace;
 	}*/
 	
-	public VBox PlayedCards(AdventureDiscard aDiscard) {
-		VBox playedCards = new VBox();
+	public HBox playedCards(List<Adventure> playingSurface) {
+		HBox playedCards = new HBox(-50);
 		
-		for(Adventure a: aDiscard) {
+		for(Adventure a: playingSurface) {
 			Image card;
 			if(a.getState() == CardStates.FACE_UP) {
 				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
 			} else {
-				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
+				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
 			}
 			
 			ImageView theCard = new ImageView(card);
-			storyCards.getChildren().add(theCard);
+			playedCards.getChildren().add(theCard);
+		}
+		if(playedCards.getChildren().isEmpty()) {
+			playedCards.setMinHeight(100);
 		}
 		return playedCards;
+	}
+	
+	public HBox shields(Player p, int pIndex) {
+		HBox shields = new HBox(-50);
+		for(int i = 0; i < p.getShields(); i++) {
+			if(pIndex == 0) {
+				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
+			} else if(pIndex == 1) {
+				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
+				theCard.setRotate(180);
+				shields.getChildren().add(theCard);
+			}
+		}
+		return shields;
 	}
 	
 	VBox storyCards;
@@ -554,7 +576,7 @@ public class View extends Application {
 	//notify when adventure card is drawn
 	public void notifyPlayerCardPlayed(MouseEvent event,Player p, Adventure card) {
 		if(listeners.get(0) != null) {
-			listeners.get(0).onAdventureCardDraw(p,card, event);
+			listeners.get(0).onAdventureCardPlayed(p,card, event);
 		}
 	}
 }
