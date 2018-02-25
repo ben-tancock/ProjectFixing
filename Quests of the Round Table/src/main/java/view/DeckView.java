@@ -52,9 +52,9 @@ public class DeckView extends HBox {
 		card = new Image("/playingCards/squire.jpg", 105, 140, true, true);
 		ImageView theCard = new ImageView(card);
 		//for 2 players for now.
-		/*if(index == 0) {
+		if(index == 1) {
 			theCard.setRotate(180);
-		}*/
+		}
 		hbox.getChildren().add(theCard);
 		return hbox;
 	}

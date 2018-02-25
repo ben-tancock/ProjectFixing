@@ -309,9 +309,9 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			/*if(index == 0) {
+			if(index == 1) {
 				theCard.setRotate(180);
-			}*/
+			}
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
