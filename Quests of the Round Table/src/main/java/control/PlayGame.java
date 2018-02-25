@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+//import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Adventure;
@@ -17,6 +17,7 @@ import model.AdventureDiscard;
 import model.Ally;
 import model.Amour;
 import model.CardStates;
+import model.Event;
 import model.Foe;
 import model.Player;
 import model.Players;
@@ -68,7 +69,7 @@ public class PlayGame extends Application{
 		view.start(arg0);
 		//logger.info("Started the view.");
 		
-		view.twoPlayerButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+		view.twoPlayerButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
@@ -82,6 +83,8 @@ public class PlayGame extends Application{
 				players.getPlayers().get(1).setName("Player 2");
 				players.getPlayers().get(0).setShields(1);
 				players.getPlayers().get(1).setShields(2);
+				players.getPlayers().get(0).setRank("squire");
+				players.getPlayers().get(1).setRank("knight");
 				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
 				// have to wait for everything to be set up before we can start rotating i think
 				//view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
@@ -102,7 +105,7 @@ public class PlayGame extends Application{
 			
 		});
 		
-		view.threePlayerButton.setOnMouseClicked(new EventHandler <MouseEvent>() {
+		view.threePlayerButton.setOnMouseClicked(new javafx.event.EventHandler <MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
@@ -164,7 +167,7 @@ public class PlayGame extends Application{
 		}
 		view.update(null, players, sDeck, sDiscard);
 		if(sDeck.size() > 0) {
-			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
+			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
 					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
@@ -304,6 +307,8 @@ public class PlayGame extends Application{
 		@Override
 		public void onEventCardDraw(Player p) {
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
+			EventHandler eventHandler = new EventHandler((Event)topCard, p, players, aDeck, aDiscard);
+			view.update(null, players, sDeck, sDiscard);
 			System.out.println("Event: " + topCard.getName());
 		}
 		

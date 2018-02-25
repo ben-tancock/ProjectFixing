@@ -229,10 +229,15 @@ public class View extends Application {
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
+		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player1ShieldSurface.setMinWidth(337.5);
 		//player2Cards
 		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
 		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
 		player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
+		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player2ShieldSurface.setMinHeight(140);
+		player2ShieldSurface.setMinWidth(337.5);
 		//Story deck space
 		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
 		// WEEKY DEEKY THING BEN DID ----------
@@ -242,7 +247,6 @@ public class View extends Application {
 		
 		grid.setVgap(23);
 		grid.setHgap(0);
-		
 		grid.add(player1PlayingSurface, 2, 3);
 		grid.add(player2PlayingSurface, 2, 1);
 		grid.add(player2Cards, 2, 0);
@@ -252,10 +256,6 @@ public class View extends Application {
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
 		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
 		grid.add(storyDeckSpace, 2, 2);
-		GridPane.setHalignment(player1ShieldSurface, HPos.CENTER);
-		GridPane.setValignment(player1ShieldSurface, VPos.CENTER);
-		GridPane.setConstraints(storyDeckSpace, 2, 2, 2, 1, HPos.CENTER, VPos.CENTER);
-		
 		
 		grid.setGridLinesVisible(true);
 
@@ -268,7 +268,6 @@ public class View extends Application {
 		}
 		twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
 		twoPlayerStage.getScene().setRoot(grid);
-		twoPlayerStage.getScene().getRoot().autosize();
 		twoPlayerStage.show();
 	}
 	// -----------------------------------------------------------------------------------------------------------------------
@@ -456,43 +455,9 @@ public class View extends Application {
 				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
 			}
 			ImageView theCard = new ImageView(card);
-			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					// TODO Auto-generated method stub
-					//notifyStoryCardClicked()
-				}
-				
-			});
 			discardPile.getChildren().add(theCard);
 		}
 		return discardPile;
-	}
-	
-	//played cards
-	public VBox pileForplayedCards(AdventureDiscard aDiscard) {
-		VBox playedCards = new VBox(-99);
-		for(Adventure a: aDiscard) {
-			Image card;
-			if(a.getState() == CardStates.FACE_UP) {
-				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
-			} else {
-				card = new Image("/playingCards/story_back.jpg", 75, 100, true, true);
-			}
-			ImageView theCard = new ImageView(card);
-			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					// TODO Auto-generated method stub
-					//notifyStoryCardClicked()
-				}
-				
-			});
-			playedCards.getChildren().add(theCard);
-		}
-		return playedCards;
 	}
 	
 	// ADDED FOR QUEST/TOURNEY PROMPT
@@ -570,7 +535,7 @@ public class View extends Application {
 	//	reversed.setPlayers(Collections.reverse(reversed.getPlayers()));
 		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard());
 		
-		
+		// We should make either Players or PlayGame do this, I prefer PlayGame because it calls update from the view.
 		
 	}
 	

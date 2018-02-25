@@ -3,6 +3,7 @@ package control;
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import model.Adventure;
+import model.Event;
 import model.Player;
 import model.Story;
 //Possible abstract class for notifying the controllers?

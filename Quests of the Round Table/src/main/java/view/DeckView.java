@@ -47,9 +47,16 @@ public class DeckView extends HBox {
 	//playerRank
 	public HBox playerRank(Player p, int index) {
 		HBox hbox = new HBox();
-		Image card;
-		
-		card = new Image("/playingCards/squire.jpg", 105, 140, true, true);
+		Image card = null;
+		if(p.getRank() == 0) {
+			card = new Image("/playingCards/squire.jpg", 105, 140, true, true);
+		} else if(p.getRank() == 5) {
+			card = new Image("/playingCards/knight.jpg", 105, 140, true, true);
+		} else if(p.getRank() == 12) {
+			card = new Image("/playingCards/champion_knight.jpg", 105, 140, true, true);
+		} else if(p.getRank() == 22) {
+			//notify win
+		}
 		ImageView theCard = new ImageView(card);
 		//for 2 players for now.
 		if(index == 1) {
