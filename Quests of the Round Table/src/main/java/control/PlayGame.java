@@ -139,6 +139,40 @@ public class PlayGame extends Application{
 			
 		});
 		
+		view.fourPlayerButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// TODO Auto-generated method stub
+				players.addListener(new PlayGameControlHandler());
+				
+				for(int i = 0; i < 4; i++) {
+					players.addHuman();
+				}
+				players.getPlayers().get(0).setName("Player 1");
+				players.getPlayers().get(1).setName("Player 2");
+				players.getPlayers().get(2).setName("Player 3");
+				players.getPlayers().get(3).setName("Player 4");
+				
+				for(Player p : players.getPlayers()) {
+					p.setRank("squire");
+				}
+				players.getPlayers().get(0).setShields(1);
+				players.getPlayers().get(1).setShields(1);
+				players.getPlayers().get(2).setShields(1);
+				players.getPlayers().get(3).setShields(1);
+				
+				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
+				for(Player p : players.getPlayers()) {
+					p.drawCard(12, aDeck);
+				}
+				currentPlayer = 0;
+				view.update(event, players, sDeck, sDiscard, null);
+				doTurn(players.getPlayers().get(0));
+			}
+			
+		});
+		
 		//ViewController viewController = new ViewController();
 		//viewController.start(arg0);
 	}

@@ -214,7 +214,7 @@ public class View extends Application {
 		} else if (players.getPlayers().size() == 3) {
 			setUpFor3Players(event, players,sDeck, sDiscard);
 		} else {
-			
+			setUpFor4Players(event, players, sDeck, sDiscard);
 		}
 	}
 	
@@ -280,8 +280,8 @@ public class View extends Application {
 		HBox player3Cards = new HBox();
 		HBox player1PlayingSurface = new HBox();
 		HBox player1ShieldSurface = new HBox();
-		HBox player2PlayingSurface = new HBox();
-		HBox player2ShieldSurface = new HBox();
+		VBox player2PlayingSurface = new VBox();
+		VBox player2ShieldSurface = new VBox();
 		HBox player3PlayingSurface = new HBox();
 		HBox player3ShieldSurface = new HBox();
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
@@ -296,7 +296,7 @@ public class View extends Application {
 		grid.setVgap(0);
 		grid.setHgap(0);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 5);
 		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
@@ -304,9 +304,10 @@ public class View extends Application {
 		
 		//player2 variables
 		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
-		player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
+		player2PlayingSurface.setMinWidth(275);
+		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
 		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
-		player2ShieldSurface.setMinWidth(337.5);
+		player2ShieldSurface.setMinHeight(75);
 		
 		//player3 variables
 		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface()));
@@ -314,22 +315,24 @@ public class View extends Application {
 		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player3ShieldSurface.setMinWidth(337.5);
 		
-		grid.add(player1ShieldSurface, 1, 4);
-		
-		grid.add(player1Cards, 2, 4);
+		grid.add(player1ShieldSurface, 1, 5);
+		grid.add(player1Cards, 2, 5);
+		grid.add(player1PlayingSurface, 2, 4);
 		
 		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 5, 4);
-		//grid.add(player3ShieldSurface, 5, 3);
-		grid.add(player2Cards, 5, 2);
+		grid.add(player2ShieldSurface, 5, 3);
+		grid.add(player2Cards, 5, 1);
+		grid.add(player2PlayingSurface, 4, 2);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 0, 0);
 		grid.add(player3ShieldSurface, 1, 0);
 		grid.add(player3Cards, 2, 0);
+		grid.add(player3PlayingSurface, 2, 1);
 		
 		
 		grid.add(storyDeckSpace(sDeck, sDiscard), 2, 2);
 		
-		grid.setGridLinesVisible(true);
+		//grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
 			threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -340,6 +343,95 @@ public class View extends Application {
 		threePlayerStage.show();
 	}
 	
+	//4 player game setup
+	public void setUpFor4Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+		HBox player1Cards = new HBox();
+		HBox player2Cards = new HBox();
+		HBox player3Cards = new HBox();
+		VBox player4Cards = new VBox();
+		
+		HBox player1PlayingSurface = new HBox();
+		HBox player1ShieldSurface = new HBox();
+		VBox player2PlayingSurface = new VBox();
+		VBox player2ShieldSurface = new VBox();
+		HBox player3PlayingSurface = new HBox();
+		HBox player3ShieldSurface = new HBox();
+		VBox player4ShieldSurface = new VBox();
+		VBox player4PlayingSurface = new VBox();
+		
+		grid = new GridPane();
+		grid.setVgap(0);
+		grid.setHgap(0);
+		
+		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
+		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player1ShieldSurface.setMinWidth(337.5);
+		
+		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
+		
+		//player2Cards
+		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(1), 1));
+		
+		//player3 cards
+		player3Cards.getChildren().add(playerCards(players.getPlayers().get(2), 2));
+		
+		//player4Cards
+		player4Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(3), 3));
+		//player2 variables
+		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+		//player2PlayingSurface.setMinWidth(275);
+		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
+		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player2ShieldSurface.setMinHeight(75);
+		
+		//player3 variables
+		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface()));
+		player3ShieldSurface.getChildren().add(shields(players.getPlayers().get(2), 2));
+		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player3ShieldSurface.setMinWidth(337.5);
+		
+		//player4 variables
+		player4PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(3).getPlayingSurface()));
+		//player4PlayingSurface.setMinWidth(275);
+		player4ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(3), 3));
+		player4ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player4ShieldSurface.setMinHeight(75);
+		
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 1, 4);
+		grid.add(player1ShieldSurface, 2, 4);
+		grid.add(player1Cards, 3, 4);
+		
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 4, 3);
+		grid.add(player2ShieldSurface, 4, 2);
+		grid.add(player2Cards, 4, 1);
+		//grid.add(player2PlayingSurface, 4, 2);
+		
+		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 1, 0);
+		grid.add(player3ShieldSurface, 2, 0);
+		grid.add(player3Cards, 3, 0);
+		//grid.add(player3PlayingSurface, 2, 1);
+		
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(3), 3), 0, 3);
+		grid.add(player4ShieldSurface, 0, 2);
+		//player4PlayingSurface.setMinWidth(175);
+		grid.add(player4Cards, 0, 1);
+		
+		grid.add(storyDeckSpace(sDeck, sDiscard), 3, 2);
+		
+		grid.setGridLinesVisible(true);
+		
+		if(firstTime) {
+			fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+			firstTime = false;
+		}
+		fourPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
+		fourPlayerStage.getScene().setRoot(grid);
+		fourPlayerStage.show();
+		
+	}
+	
+	//setting up display for top and bottom of screen
 	public HBox playerCards(Player player, int index) {
 		HBox playerCards = new HBox(-50);
 		for(Adventure a : player.getHand()) {
@@ -351,9 +443,10 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			if(index == 1) {
+			if(index == 1 || index == 2) {
 				theCard.setRotate(180);
-			}/* This should only be called in the controllers when appropriate, otherwise we run into issues.
+			}
+			/* This should only be called in the controllers when appropriate, otherwise we run into issues.
 			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 				@Override
@@ -443,6 +536,10 @@ public class View extends Application {
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
 				theCard.setRotate(180);
 				shields.getChildren().add(theCard);
+			}else{
+				ImageView theCard = new ImageView(new Image("/playingCards/shield_3.jpg", 75, 100, true, true));
+				//theCard.setRotate(180);
+				shields.getChildren().add(theCard);
 			}
 		}
 		return shields;
@@ -455,7 +552,11 @@ public class View extends Application {
 				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
 			} else if(pIndex == 1) {
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
-				theCard.setRotate(180);
+				theCard.setRotate(270);
+				shields.getChildren().add(theCard);
+			}else if (pIndex == 3){
+				ImageView theCard = new ImageView(new Image("/playingCards/shield_4.jpg", 75, 100, true, true));
+				theCard.setRotate(90);
 				shields.getChildren().add(theCard);
 			}
 		}
