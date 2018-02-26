@@ -313,6 +313,9 @@ public class View extends Application {
 		VBox player2ShieldSurface = new VBox();
 		HBox player3PlayingSurface = new HBox();
 		HBox player3ShieldSurface = new HBox();
+		HBox storyDeckSpace = new HBox();
+		HBox questStageSpace = new HBox(-50);
+		
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 			
 		//player2Cards
@@ -359,7 +362,10 @@ public class View extends Application {
 		grid.add(player3PlayingSurface, 2, 1);
 		
 		
-		grid.add(storyDeckSpace(sDeck, sDiscard), 2, 2);
+		//Story deck space
+		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
+		storyDeckSpace.getChildren().add(questStageSpace);
+		grid.add(storyDeckSpace, 2, 2);
 		
 		//grid.setGridLinesVisible(true);
 		
@@ -387,6 +393,8 @@ public class View extends Application {
 		HBox player3ShieldSurface = new HBox();
 		VBox player4ShieldSurface = new VBox();
 		VBox player4PlayingSurface = new VBox();
+		HBox storyDeckSpace = new HBox();
+		HBox questStageSpace = new HBox(-50);
 		
 		grid = new GridPane();
 		grid.setVgap(0);
@@ -396,6 +404,10 @@ public class View extends Application {
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player1ShieldSurface.setMinWidth(337.5);
+		
+		//storyDeck
+		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
+		storyDeckSpace.getChildren().add(questStageSpace);
 		
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 		
@@ -407,48 +419,53 @@ public class View extends Application {
 		
 		//player4Cards
 		player4Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(3), 3));
+		
 		//player2 variables
 		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
-		//player2PlayingSurface.setMinWidth(275);
+		player2PlayingSurface.setMinWidth(125);
+		player2PlayingSurface.setMinHeight(175);
 		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
 		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player2ShieldSurface.setMinHeight(75);
 		
 		//player3 variables
 		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface()));
+		player3PlayingSurface.setMinWidth(125);
 		player3ShieldSurface.getChildren().add(shields(players.getPlayers().get(2), 2));
 		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player3ShieldSurface.setMinWidth(337.5);
 		
 		//player4 variables
 		player4PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(3).getPlayingSurface()));
-		//player4PlayingSurface.setMinWidth(275);
+		player4PlayingSurface.setMinWidth(125);
 		player4ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(3), 3));
 		player4ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
-		player4ShieldSurface.setMinHeight(75);
+		player4ShieldSurface.setMinWidth(100);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 1, 4);
 		grid.add(player1ShieldSurface, 2, 4);
 		grid.add(player1Cards, 3, 4);
 		
-		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 4, 3);
-		grid.add(player2ShieldSurface, 4, 2);
-		grid.add(player2Cards, 4, 1);
-		//grid.add(player2PlayingSurface, 4, 2);
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 5, 3);
+		grid.add(player2ShieldSurface, 5, 2);
+		grid.add(player2Cards, 5, 1);
+		grid.add(player2PlayingSurface, 4, 2);
+		
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 1, 0);
 		grid.add(player3ShieldSurface, 2, 0);
 		grid.add(player3Cards, 3, 0);
-		//grid.add(player3PlayingSurface, 2, 1);
+		grid.add(player3PlayingSurface, 3, 1);
 		
 		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(3), 3), 0, 3);
 		grid.add(player4ShieldSurface, 0, 2);
 		//player4PlayingSurface.setMinWidth(175);
 		grid.add(player4Cards, 0, 1);
+		grid.add(player4PlayingSurface, 1, 1);
 		
-		grid.add(storyDeckSpace(sDeck, sDiscard), 3, 2);
+		grid.add(storyDeckSpace, 3, 2);
 		
-		grid.setGridLinesVisible(true);
+		//grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
 			fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -546,11 +563,6 @@ public class View extends Application {
 		return storyDeckSpace;
 	}
 	
-	/*public VBox PlayingSurface(AdventureDeck aDeck, AdventureDiscard aDiscard, Player player, int i) {
-		VBox playerSpace = new VBox(5);
-		playerSpace.getChildren().addAll(PlayedCards(aDiscard),playerCards(player, i));
-		return playerSpace;
-	}*/
 	
 	public HBox playedCards(List<Adventure> playingSurface) {
 		HBox playedCards = new HBox(-50);
@@ -583,7 +595,7 @@ public class View extends Application {
 				shields.getChildren().add(theCard);
 			}else{
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_3.jpg", 75, 100, true, true));
-				//theCard.setRotate(180);
+				theCard.setRotate(180);
 				shields.getChildren().add(theCard);
 			}
 		}
@@ -601,7 +613,7 @@ public class View extends Application {
 				shields.getChildren().add(theCard);
 			}else if (pIndex == 3){
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_4.jpg", 75, 100, true, true));
-				theCard.setRotate(90);
+				theCard.setRotate(270);
 				shields.getChildren().add(theCard);
 			}
 		}
