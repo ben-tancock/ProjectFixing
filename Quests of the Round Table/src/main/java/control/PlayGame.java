@@ -99,7 +99,7 @@ public class PlayGame extends Application{
 					p.drawCard(12, aDeck);
 				}
 				 // current player is the dealer
-				view.update(arg0, players, sDeck, sDiscard);
+				view.update(arg0, players, sDeck, sDiscard, null);
 				currentPlayer = 0;//(currentPlayer + 1) % 2;
 				//focusPlayer(players.getPlayers().get(currentPlayer));
 				// ADD A THING HERE WHICH WILL DO THE TURN THING THAT FOCUS DID
@@ -133,7 +133,7 @@ public class PlayGame extends Application{
 					p.drawCard(12, aDeck);
 				}
 				currentPlayer = 0;
-				view.update(event, players, sDeck, sDiscard);
+				view.update(event, players, sDeck, sDiscard, null);
 				doTurn(players.getPlayers().get(0));
 			}
 			
@@ -176,7 +176,7 @@ public class PlayGame extends Application{
 		} else {
 			doTurn(p);
 		}
-		view.update(null, players, sDeck, sDiscard);
+		view.update(null, players, sDeck, sDiscard, null);
 		if(sDeck.size() > 0) {
 			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
@@ -203,7 +203,7 @@ public class PlayGame extends Application{
 					} else if (winners.size() > 1) {
 						//begin final tournament!
 					}
-					view.update(null, players, sDeck, sDiscard);
+					view.update(null, players, sDeck, sDiscard, null);
 					view.rotate(PlayGame.getInstance());
 					
 					doTurn(players.getPlayers().get(0));
@@ -278,7 +278,7 @@ public class PlayGame extends Application{
 					p.remove(p.getHand(), p.getWeapons(), card);
 				}
 			}
-			view.update(event, players, sDeck, sDiscard);	
+			view.update(event, players, sDeck, sDiscard, null);	
 		}
 		
 		@Override
@@ -304,7 +304,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-			view.update(event, players, sDeck, sDiscard);
+			view.update(event, players, sDeck, sDiscard, null);
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
 			}
@@ -317,7 +317,7 @@ public class PlayGame extends Application{
 			sDiscard = new StoryDiscard();
 			sDiscard.add(topCard);
 			sDeck.shuffle();
-			view.update(null, players, sDeck, sDiscard);
+			view.update(null, players, sDeck, sDiscard, null);
 		}
 		
 		@Override
@@ -337,14 +337,14 @@ public class PlayGame extends Application{
 		public void onEventCardDraw(Player p) {
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			EventHandler eventHandler = new EventHandler((Event)topCard, p, players, aDeck, aDiscard);
-			view.update(null, players, sDeck, sDiscard);
+			view.update(null, players, sDeck, sDiscard, null);
 			System.out.println("Event: " + topCard.getName());
 		}
 		
 		@Override
 		public void onTournamentCardDraw(Player p) {
 			System.out.println("test tourn draw");
-			view.update(null, players, sDeck, sDiscard);
+			view.update(null, players, sDeck, sDiscard, null);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
 			System.out.println("Tournament: " + topCard.getName());
@@ -358,7 +358,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onRankSet(Player p) {
-			view.update(null, players, sDeck, sDiscard);
+			view.update(null, players, sDeck, sDiscard, null);
 		}
 	}
 }

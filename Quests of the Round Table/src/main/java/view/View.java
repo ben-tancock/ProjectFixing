@@ -46,6 +46,7 @@ import model.Card;
 import model.CardStates;
 import model.Player;
 import model.Players;
+import model.Quest;
 import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
@@ -207,9 +208,9 @@ public class View extends Application {
 	}
 	
 	//need multiple of these for supporting different situations
-	public void update(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+	public void update(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
 		if(players.getPlayers().size() == 2) {
-			setupFor2Players(event, players, sDeck, sDiscard);
+			setupFor2Players(event, players, sDeck, sDiscard, quest);
 		} else if (players.getPlayers().size() == 3) {
 			setUpFor3Players(event, players,sDeck, sDiscard);
 		} else {
@@ -218,7 +219,7 @@ public class View extends Application {
 	}
 	
 	// SET UP FOR TWO PLAYERS ----------------------------------------------------------------------------------------------------------
-	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
 		HBox player1PlayingSurface = new HBox();
@@ -617,7 +618,7 @@ public class View extends Application {
 		reversed.setPlayers(persons);
 
 	//	reversed.setPlayers(Collections.reverse(reversed.getPlayers()));
-		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard());
+		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard(), null);
 		
 		// We should make either Players or PlayGame do this, I prefer PlayGame because it calls update from the view.
 		

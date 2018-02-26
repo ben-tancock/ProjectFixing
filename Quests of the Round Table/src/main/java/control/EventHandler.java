@@ -65,8 +65,6 @@ public class EventHandler {
 	
 	public void chivalrousDeed(Players p) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
 		//	boolean lower = false; 
-			
-			List<Player> per = new ArrayList<Player>();
 			Integer pShields[] =  p.getPlayers().stream().map(Player::getShields).toArray(Integer[]::new);
 			int minS = Collections.min(Arrays.asList(pShields));
 			

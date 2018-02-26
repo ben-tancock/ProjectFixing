@@ -39,6 +39,12 @@ public class QuestHandler {
 		card.setSponsor(sponsor);
 		int sponsorIndex = players.getPlayers().indexOf(sponsor);
 		
+		PlayGame pg = PlayGame.getInstance();
+		boolean seeCards = pg.getView().promptForStageSetup(sponsor.getName());
+		if(seeCards) {
+			sponsor.setHandState(CardStates.FACE_UP);
+		}
+		
 		for(int i = 0; i < card.getNumStages(); i++) {
 			try {
 				card.addStage(setupStage(sponsor));
@@ -109,7 +115,7 @@ public class QuestHandler {
 				if(pg.getView().switchPrompt("Sponsor", players.getPlayers().get((currentIndex + i) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + i) % players.getPlayers().size()))) {
 					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
 					players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).setHandState(CardStates.FACE_UP);
-					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard());
+					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 				}
 			}
 			
@@ -138,8 +144,7 @@ public class QuestHandler {
 	}
 	
 	public Stage setupStage(Player sponsor) {
-		PlayGame pg = PlayGame.getInstance();
-		pg.getView().promptForStageSetup(sponsor.getName());
+		
 		
 		return null;
 	}
