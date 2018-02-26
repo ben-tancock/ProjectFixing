@@ -49,11 +49,11 @@ public class DeckView extends HBox {
 		HBox hbox = new HBox();
 		Image card = null;
 		if(p.getRank() == 0) {
-			card = new Image("/playingCards/squire.jpg", 105, 140, true, true);
+			card = new Image("/playingCards/squire.jpg", 75, 100, true, true);
 		} else if(p.getRank() == 5) {
-			card = new Image("/playingCards/knight.jpg", 105, 140, true, true);
+			card = new Image("/playingCards/knight.jpg", 75, 100, true, true);
 		} else if(p.getRank() == 12) {
-			card = new Image("/playingCards/champion_knight.jpg", 105, 140, true, true);
+			card = new Image("/playingCards/champion_knight.jpg", 75, 100, true, true);
 		} else if(p.getRank() == 22) {
 			//notify win
 		}
@@ -62,6 +62,28 @@ public class DeckView extends HBox {
 		if(index == 1) {
 			theCard.setRotate(180);
 		}
+		hbox.getChildren().add(theCard);
+		return hbox;
+	}
+	
+	public HBox verticalPlayerRank(Player p, int index) {
+		HBox hbox = new HBox();
+		Image card = null;
+		if(p.getRank() == 0) {
+			card = new Image("/playingCards/squire.jpg", 75, 100, true, true);
+		} else if(p.getRank() == 5) {
+			card = new Image("/playingCards/knight.jpg", 75, 100, true, true);
+		} else if(p.getRank() == 12) {
+			card = new Image("/playingCards/champion_knight.jpg", 75, 100, true, true);
+		} else if(p.getRank() == 22) {
+			//notify win
+		}
+		ImageView theCard = new ImageView(card);
+		//for 2 players for now.
+		if(index == 1) {
+			theCard.setRotate(180);
+		}
+		theCard.setRotate(270);
 		hbox.getChildren().add(theCard);
 		return hbox;
 	}

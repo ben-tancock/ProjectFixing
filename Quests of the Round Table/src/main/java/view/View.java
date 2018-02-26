@@ -277,7 +277,12 @@ public class View extends Application {
 		HBox player1Cards = new HBox();
 		HBox player2Cards = new HBox();
 		HBox player3Cards = new HBox();
-		
+		HBox player1PlayingSurface = new HBox();
+		HBox player1ShieldSurface = new HBox();
+		HBox player2PlayingSurface = new HBox();
+		HBox player2ShieldSurface = new HBox();
+		HBox player3PlayingSurface = new HBox();
+		HBox player3ShieldSurface = new HBox();
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 			
 		//player2Cards
@@ -291,17 +296,37 @@ public class View extends Application {
 		grid.setHgap(0);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
+		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
+		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player1ShieldSurface.setMinWidth(337.5);
+		
+		//player2 variables
+		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+		player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
+		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player2ShieldSurface.setMinWidth(337.5);
+		
+		//player3 variables
+		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface()));
+		player3ShieldSurface.getChildren().add(shields(players.getPlayers().get(2), 2));
+		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player3ShieldSurface.setMinWidth(337.5);
+		
+		grid.add(player1ShieldSurface, 1, 4);
 		
 		grid.add(player1Cards, 2, 4);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(1), 1), 5, 0);
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 5, 4);
+		//grid.add(player3ShieldSurface, 5, 3);
 		grid.add(player2Cards, 5, 2);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 2, 0);
-		grid.add(player3Cards, 2, 1);
+		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 0, 0);
+		grid.add(player3ShieldSurface, 1, 0);
+		grid.add(player3Cards, 2, 0);
 		
 		
-		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
+		grid.add(storyDeckSpace(sDeck, sDiscard), 2, 2);
 		
 		grid.setGridLinesVisible(true);
 		
@@ -357,6 +382,7 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
+			theCard.setRotate(270);
 			if(index == 0) {
 				theCard.setRotate(180);
 			}/* This should only be called in the controller when appropriate, otherwise we have issues.
@@ -409,6 +435,20 @@ public class View extends Application {
 	
 	public HBox shields(Player p, int pIndex) {
 		HBox shields = new HBox(-50);
+		for(int i = 0; i < p.getShields(); i++) {
+			if(pIndex == 0) {
+				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
+			} else if(pIndex == 1) {
+				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
+				theCard.setRotate(180);
+				shields.getChildren().add(theCard);
+			}
+		}
+		return shields;
+	}
+	
+	public VBox verticalPlayerShields(Player p, int pIndex) {
+		VBox shields = new VBox(-50);
 		for(int i = 0; i < p.getShields(); i++) {
 			if(pIndex == 0) {
 				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));

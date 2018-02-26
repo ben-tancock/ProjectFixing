@@ -124,6 +124,9 @@ public class PlayGame extends Application{
 				for(Player p : players.getPlayers()) {
 					p.setRank("squire");
 				}
+				players.getPlayers().get(0).setShields(1);
+				players.getPlayers().get(1).setShields(1);
+				players.getPlayers().get(2).setShields(1);
 				
 				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
