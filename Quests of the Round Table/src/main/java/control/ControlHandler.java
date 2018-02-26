@@ -1,5 +1,7 @@
 package control;
 
+import java.util.ArrayList;
+
 import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import model.Adventure;
@@ -65,7 +67,11 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onStageCardPicked() {
+	public void onStageCardPicked(Player p, Adventure card) {
+		
+	}
+	
+	public void onStageWeaponsPicked(Player p, ArrayList<Adventure> cards) {
 		
 	}
 }

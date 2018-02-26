@@ -24,6 +24,7 @@ public class QuestHandler {
 	private Players players;
 	private Player player;
 	private ArrayList<Adventure> addedCards;
+	private static QuestHandler instance;
 	
 	public QuestHandler(Quest c, Players p, Player pr, AdventureDeck d, AdventureDiscard di) {
 		card = c;
@@ -32,6 +33,11 @@ public class QuestHandler {
 		players = p;
 		player = pr;
 		addedCards = new ArrayList<>();
+		instance = this;
+	}
+	
+	public static QuestHandler getInstance() {
+		return instance;
 	}
 
 	public boolean playQuest() throws Exception {
@@ -187,13 +193,14 @@ public class QuestHandler {
 	public Stage setupStage(Player sponsor) throws Exception {
 		PlayGame pg = PlayGame.getInstance();
 		
-		boolean finished = pg.getView().promptAddCardToStage(addedCards, sponsor);
+		boolean finished = pg.getView().promptAddCardToStage(sponsor);
 		if(finished) {
 			if(addedCards.get(0) instanceof Test)
 				return new Stage((Test)addedCards.get(0));
 			else if(addedCards.get(0) instanceof Foe) {
-				ArrayList<Weapon> weapons = new ArrayList<>();
-				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(addedCards, sponsor);
+				System.out.println("got here");
+				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor);
 				if(fChoosingWeapons) {
 					for(Adventure a : addedCards) {
 						if(a instanceof Weapon) {
@@ -205,6 +212,10 @@ public class QuestHandler {
 			}
 		}
 		return null;
+	}
+	
+	public ArrayList<Adventure> getAddedCards() {
+		return addedCards;
 	}
 	
 	public void promptPlayerToFightFoe(Player p) {
@@ -228,8 +239,21 @@ public class QuestHandler {
 	
 	public static class QuestControlHandler extends ControlHandler {
 		@Override
-		public void onStageCardPicked() {
-			
+		public void onStageCardPicked(Player p, Adventure card) {
+			QuestHandler qh = QuestHandler.getInstance();
+			PlayGame pg = PlayGame.getInstance();
+			p.remove(p.getHand(), qh.getAddedCards(), card);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+		}
+		
+		@Override
+		public void onStageWeaponsPicked(Player p, ArrayList<Adventure> cards) {
+			QuestHandler qh = QuestHandler.getInstance();
+			PlayGame pg = PlayGame.getInstance();
+			for(Adventure a : cards) {
+				p.remove(p.getHand(), qh.getAddedCards(), a);
+			}
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
 		}
 	}
  	

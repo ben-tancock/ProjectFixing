@@ -45,13 +45,17 @@ import model.AdventureDiscard;
 import model.Ally;
 import model.Card;
 import model.CardStates;
+import model.Foe;
 import model.Player;
 import model.Players;
 import model.Quest;
 import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
+import model.Test;
+import model.Weapon;
 import control.PlayGame.PlayGameControlHandler;
+import control.QuestHandler.QuestControlHandler;
 
 public class View extends Application {
 	
@@ -115,6 +119,7 @@ public class View extends Application {
 		
 		gameTable = new Scene(border, 1120, 700,Color.AQUA);
 		listeners.add(new PlayGameControlHandler());
+		listeners.add(new QuestControlHandler());
 	}
 	//player1 
 	public HBox getPlayerSpace() {
@@ -762,46 +767,72 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean promptAddCardToStage(List<Adventure> cards, Player p) {
+	public boolean promptAddCardToStage(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
 		alert.setTitle("Stage Dialog");
 		alert.setHeaderText("Add Foe/Test to Stage");
-		alert.setContentText("Please choose a Foe or Test to add to the stage.");
+		alert.setContentText("Please choose a Foe or Test to add to the stage and then click OK.");
 		
 		alert.initModality(Modality.NONE);
 		for(Node theCard :player1Cards.getChildren()) {
-			
-			theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					int index = player1Cards.getChildren().indexOf(theCard);
-					p.remove(p.getHand(), cards, p.getCard(index));
+			int index = player1Cards.getChildren().indexOf(theCard);
+			if(p.getHand().get(index) instanceof Foe || p.getHand().get(index) instanceof Test) {
+				theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+	
+					@Override
+					public void handle(MouseEvent event) {
+						//p.remove(p.getHand(), cards, p.getCard(index));
+						System.out.println("Picked card: " + p.getHand().get(index).getName());
+						notifyStageCardChosen(p, p.getHand().get(index));
+						
+					}
 					
-				}
-				
-			});
+				});
+			}
 		}
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if(result.get() == ButtonType.OK) {
 			return true;
 		} else {
-			promptAddCardToStage(cards, p);
+			promptAddCardToStage(p);
 			return false;
 		}
 	}
 	
-	public boolean promptAddWeaponsToFoe(List<Adventure> cards, Player p) {
+	public boolean promptAddWeaponsToFoe(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
-		alert.setTitle("Player Win Dialog");
-		alert.setHeaderText("Congratulations " + p.getName() + "You win!!");
-		alert.setContentText("Would you like to play again?");
+		alert.setTitle("Stage Dialog");
+		alert.setHeaderText("Add Weapons to Stage");
+		alert.setContentText("Please choose weapons to add to the stage and then click OK.");
+		
+		ArrayList<Adventure> weapons = new ArrayList<>();
 		
 		alert.initModality(Modality.NONE);
-		return false;
+		for(Node theCard :player1Cards.getChildren()) {
+			int index = player1Cards.getChildren().indexOf(theCard);
+			if(p.getHand().get(index) instanceof Weapon) {
+				theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+	
+					@Override
+					public void handle(MouseEvent event) {
+						weapons.add(p.getHand().get(index));
+					}
+					
+				});
+			}
+		}
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			notifyStageWeaponsChosen(p, weapons);
+			return true;
+		} else {
+			promptAddWeaponsToFoe(p);
+			return false;
+		}
 	}
 	
 	public void rotate(PlayGame game) {
@@ -844,7 +875,16 @@ public class View extends Application {
 	}
 	
 	//notify when stage card is chosen
-	public void notifyStageCardChosen() {
-		
+	public void notifyStageCardChosen(Player p, Adventure card) {
+		if(listeners.get(1) != null) {
+			listeners.get(1).onStageCardPicked(p, card);
+		}
+	}
+	
+	//notify when stage weapons are chosen
+	public void notifyStageWeaponsChosen(Player p, ArrayList<Adventure> cards) {
+		if(listeners.get(1) != null) {
+			listeners.get(1).onStageWeaponsPicked(p, cards);
+		}
 	}
 }
