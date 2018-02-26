@@ -100,7 +100,6 @@ public class PlayGame extends Application{
 				}
 				 // current player is the dealer
 				view.update(arg0, players, sDeck, sDiscard);
-				int iters = 0;
 				currentPlayer = 0;//(currentPlayer + 1) % 2;
 				//focusPlayer(players.getPlayers().get(currentPlayer));
 				// ADD A THING HERE WHICH WILL DO THE TURN THING THAT FOCUS DID
@@ -122,13 +121,17 @@ public class PlayGame extends Application{
 				players.getPlayers().get(0).setName("Player 1");
 				players.getPlayers().get(1).setName("Player 2");
 				players.getPlayers().get(2).setName("Player 3");
+				for(Player p : players.getPlayers()) {
+					p.setRank("squire");
+				}
 				
-				view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
+				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
+				currentPlayer = 0;
 				view.update(event, players, sDeck, sDiscard);
-				
+				doTurn(players.getPlayers().get(0));
 			}
 			
 		});

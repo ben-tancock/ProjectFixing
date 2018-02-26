@@ -41,12 +41,12 @@ public class QuestHandler {
 		
 		for(int i = 0; i < card.getNumStages(); i++) {
 			try {
-				card.addStage(setupStage());
+				card.addStage(setupStage(sponsor));
 			} catch (Exception e) {
 				throw new Exception(e); // Exception for a quest only being able to have 1 test card in it.
 			}
 		}
-		
+		/*
 		ArrayList<Player> participants = askForParticipants();
 		
 		for(int i = 0; i < card.getNumStages(); i++) {
@@ -91,7 +91,7 @@ public class QuestHandler {
 			for(Amour a : p.getAmour()) {
 				p.remove(p.getAmour(), discard, a);
 			}
-		}
+		}*/
 		
 		return true;
 	}
@@ -99,17 +99,48 @@ public class QuestHandler {
 	public Player askForSponsor(Player pr) {
 		//pr = player that drew the quest card, so we start there.
 		int currentIndex = players.getPlayers().indexOf(pr);
-		if(!pr.isFocused()) { 
-			for(Player p : players.getPlayers()) {
-				p.setFocused(false);
+		PlayGame pg = PlayGame.getInstance();
+		Player sponsor = null;
+		
+		for(int i = 0; i < players.getPlayers().size(); i++) {
+			
+			if(i > 0) {
+				pg.getView().rotate(pg);
+				if(pg.getView().switchPrompt("Sponsor", players.getPlayers().get((currentIndex + i) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + i) % players.getPlayers().size()))) {
+					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
+					players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).setHandState(CardStates.FACE_UP);
+					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard());
+				}
 			}
-			pr.setFocused(true);
+			
+			sponsor = askSponsor(0);
+			currentIndex += 1 % players.getPlayers().size();
+			if(sponsor != null) {
+				return sponsor;
+			}
 		}
-		pr.setHandState(CardStates.FACE_UP);
+		
+		return sponsor;
+	}
+	
+	public Player askSponsor(int i) {
+		PlayGame pg = PlayGame.getInstance();
+		boolean isSponsor =  pg.getView().sponsorPrompt();
+		if(isSponsor) {
+			System.out.println(players.getPlayers().get(i).getName() + " sponsors.");
+			players.getPlayers().get(i).setHandState(CardStates.FACE_DOWN);
+			return players.getPlayers().get(i);
+		}
+		else {
+			System.out.println(players.getPlayers().get(i).getName() + " does not sponsor.");
+		}
 		return null;
 	}
 	
-	public Stage setupStage() {
+	public Stage setupStage(Player sponsor) {
+		PlayGame pg = PlayGame.getInstance();
+		pg.getView().promptForStageSetup(sponsor.getName());
+		
 		return null;
 	}
 	

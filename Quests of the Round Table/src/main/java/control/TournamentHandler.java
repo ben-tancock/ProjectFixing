@@ -52,7 +52,7 @@ public class TournamentHandler {
 			
 			if(i > 0) {
 				pg.getView().rotate(pg);
-				if(this.pg.getView().switchPrompt(players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()))) {
+				if(this.pg.getView().switchPrompt("Participant", players.getPlayers().get((currentIndex + i) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + i) % players.getPlayers().size()))) {
 					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
 					players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).setHandState(CardStates.FACE_UP);
 					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard());

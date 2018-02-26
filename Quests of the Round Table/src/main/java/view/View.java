@@ -281,27 +281,29 @@ public class View extends Application {
 		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
 			
 		//player2Cards
-		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
+		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(1), 1));
 		
 		//player3 cards
-		player3Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(2), 2));
+		player3Cards.getChildren().add(playerCards(players.getPlayers().get(2), 2));
 		
 		grid = new GridPane();
-		grid.setVgap(100);
-		grid.setHgap(300);
+		grid.setVgap(0);
+		grid.setHgap(0);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 0);
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
 		
-		grid.add(player1Cards, 1, 0);
+		grid.add(player1Cards, 2, 4);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 2);
-		grid.add(player2Cards, 1, 2);
+		grid.add(deckView.playerRank(players.getPlayers().get(1), 1), 5, 0);
+		grid.add(player2Cards, 5, 2);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 2, 0);
 		grid.add(player3Cards, 2, 1);
 		
 		
 		grid.add(storyDeckSpace(sDeck, sDiscard), 1, 1);
+		
+		grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
 			threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -480,6 +482,22 @@ public class View extends Application {
 		}
 	}
 	
+	public boolean sponsorPrompt() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		
+		alert.setTitle("Sponsor Dialog");
+		alert.setHeaderText("Sponsor Request");
+		alert.setContentText("Would you like to sponsor?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean seeCardPrompt(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
@@ -495,16 +513,13 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean switchPrompt(String name, Player p) {
+	public boolean switchPrompt(String type, String name, Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
 		
-		alert.setTitle("Participant Dialog");
-		alert.setHeaderText("Switch Participant");
+		alert.setTitle(type + " Dialog");
+		alert.setHeaderText("Switch " + type);
 		alert.setContentText("Please switch to " + name + ". When you have switched, click 'OK'.");
-
-		ButtonType buttonTypeOk = new ButtonType("OK");
-		
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
@@ -515,6 +530,16 @@ public class View extends Application {
 		}
 	}
 	
+	public boolean promptForStageSetup(String name) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+	
+		alert.setTitle("Stage Dialog");
+		alert.setHeaderText("Stage setup");
+		alert.setContentText("Please press OK to let "+ name + "view their cards for stage setup.");
+		
+		return false;
+	}
+	
 	public boolean promptGameEnd(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
@@ -522,9 +547,6 @@ public class View extends Application {
 		alert.setTitle("Player Win Dialog");
 		alert.setHeaderText("Congratulations " + p.getName() + "You win!!");
 		alert.setContentText("Would you like to play again?");
-
-		ButtonType buttonTypeOk = new ButtonType("OK");
-		
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
