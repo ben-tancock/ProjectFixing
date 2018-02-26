@@ -65,7 +65,7 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onCardDrawn() {
+	public void onStageCardPicked() {
 		
 	}
 }

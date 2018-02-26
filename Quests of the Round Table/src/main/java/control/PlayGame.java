@@ -377,7 +377,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onTournamentCardDraw(Player p) {
-			System.out.println("test tourn draw");
+			//System.out.println("test tourn draw");
 			view.update(null, players, sDeck, sDiscard, null);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);

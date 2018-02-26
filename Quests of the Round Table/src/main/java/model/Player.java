@@ -231,6 +231,23 @@ public abstract class Player {
 	//draws a specific card from the SD
 	public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard, String name) {
 		storyDiscard.add(storyDeck.findAndDraw(name));
+		int current = storyDiscard.size() - 1;
+		//notifyListeners("draw", storyDiscard.get(current));
+		try {
+			storyDiscard.get(current).setState(CardStates.FACE_UP);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (storyDiscard.get(current) instanceof Quest) {
+			Players.notifyListeners("quest drawn", this);
+		}
+		else if (storyDiscard.get(current) instanceof Event) {
+			Players.notifyListeners("event drawn", this);
+		}
+		else if (storyDiscard.get(current) instanceof Tournament) {
+			Players.notifyListeners("tournament drawn", this);
+		}
 		
 		if(hand.size() > 12) {
 			Players.notifyListeners("card overflow", this);

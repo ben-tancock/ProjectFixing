@@ -1,5 +1,6 @@
 package control;
 
+import java.awt.List;
 import java.util.ArrayList;
 
 import model.Adventure;
@@ -7,10 +8,12 @@ import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Amour;
 import model.CardStates;
+import model.Foe;
 import model.Player;
 import model.Players;
 import model.Quest;
 import model.Stage;
+import model.Test;
 import model.Weapon;
 
 public class QuestHandler {
@@ -20,6 +23,7 @@ public class QuestHandler {
 	private AdventureDiscard discard;
 	private Players players;
 	private Player player;
+	private ArrayList<Adventure> addedCards;
 	
 	public QuestHandler(Quest c, Players p, Player pr, AdventureDeck d, AdventureDiscard di) {
 		card = c;
@@ -27,6 +31,7 @@ public class QuestHandler {
 		discard = di;
 		players = p;
 		player = pr;
+		addedCards = new ArrayList<>();
 	}
 
 	public boolean playQuest() throws Exception {
@@ -43,15 +48,51 @@ public class QuestHandler {
 		boolean seeCards = pg.getView().promptForStageSetup(sponsor.getName());
 		if(seeCards) {
 			sponsor.setHandState(CardStates.FACE_UP);
+		}/*
+		for(Adventure a : sponsor.getHand()) {
+			if(a instanceof Foe) {
+				sponsor.getHand().remove(a);
+				Stage stage = new Stage((Foe)a, new ArrayList<Weapon>());
+				stage.displayStage();
+				card.addStage(stage);
+				break;
+			}
 		}
+		for(Adventure a : sponsor.getHand()) {
+			if(a instanceof Test) {
+				sponsor.getHand().remove(a);
+				card.addStage(new Stage((Test)a));
+				break;
+			}
+		}
+		for(Adventure a : sponsor.getHand()) {
+			if(a instanceof Foe) {
+				sponsor.getHand().remove(a);
+				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+				for(Adventure ad : sponsor.getHand()) {
+					if(ad instanceof Weapon) {
+						weapons.add((Weapon)ad);
+						break;
+					}
+				}
+				Stage stage = new Stage((Foe)a, weapons);
+				stage.displayStage();
+				card.addStage(stage);
+				break;
+			}
+		}*/
+		
+		
 		
 		for(int i = 0; i < card.getNumStages(); i++) {
 			try {
 				card.addStage(setupStage(sponsor));
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 			} catch (Exception e) {
 				throw new Exception(e); // Exception for a quest only being able to have 1 test card in it.
 			}
 		}
+		pg.getView().prompt("Quest");
 		/*
 		ArrayList<Player> participants = askForParticipants();
 		
@@ -143,9 +184,26 @@ public class QuestHandler {
 		return null;
 	}
 	
-	public Stage setupStage(Player sponsor) {
+	public Stage setupStage(Player sponsor) throws Exception {
+		PlayGame pg = PlayGame.getInstance();
 		
-		
+		boolean finished = pg.getView().promptAddCardToStage(addedCards, sponsor);
+		if(finished) {
+			if(addedCards.get(0) instanceof Test)
+				return new Stage((Test)addedCards.get(0));
+			else if(addedCards.get(0) instanceof Foe) {
+				ArrayList<Weapon> weapons = new ArrayList<>();
+				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(addedCards, sponsor);
+				if(fChoosingWeapons) {
+					for(Adventure a : addedCards) {
+						if(a instanceof Weapon) {
+							weapons.add((Weapon)a);
+						}
+					}
+					return new Stage((Foe)addedCards.get(0), weapons);
+				}
+			}
+		}
 		return null;
 	}
 	
@@ -168,5 +226,11 @@ public class QuestHandler {
 		return null;
 	}
 	
-	
+	public static class QuestControlHandler extends ControlHandler {
+		@Override
+		public void onStageCardPicked() {
+			
+		}
+	}
+ 	
 }

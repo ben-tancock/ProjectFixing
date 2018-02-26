@@ -30,6 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
@@ -86,6 +87,12 @@ public class View extends Application {
 	public Button twoPlayerButton;
 	public Button threePlayerButton;
 	public Button fourPlayerButton;
+	
+	//Declare cards
+	private HBox player1Cards;
+	private HBox player2Cards;
+	private HBox player3Cards;
+	private VBox player4Cards;
 	
 	private static List<ControlHandler> listeners = new ArrayList<ControlHandler>();
 	
@@ -219,65 +226,87 @@ public class View extends Application {
 	}
 	
 	// SET UP FOR TWO PLAYERS ----------------------------------------------------------------------------------------------------------
-	private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
-		HBox player1Cards = new HBox();
-		HBox player2Cards = new HBox();
-		HBox player1PlayingSurface = new HBox();
-		HBox player2PlayingSurface = new HBox();
-		HBox player1ShieldSurface = new HBox();
-		HBox player2ShieldSurface = new HBox();
-		HBox storyDeckSpace = new HBox();
-		
-		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
-		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
-		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
-		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
-		player1ShieldSurface.setMinWidth(337.5);
-		//player2Cards
-		player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
-		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
-		player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
-		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
-		player2ShieldSurface.setMinHeight(140);
-		player2ShieldSurface.setMinWidth(337.5);
-		//Story deck space
-		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
-		// WEEKY DEEKY THING BEN DID ----------
-		//GridPane border = new GridPane();
-		grid = new GridPane();
-		// ------------------------------------
-		
-		grid.setVgap(23);
-		grid.setHgap(0);
-		grid.add(player1PlayingSurface, 2, 3);
-		grid.add(player2PlayingSurface, 2, 1);
-		grid.add(player2Cards, 2, 0);
-		grid.add(player1Cards, 2, 4);
-		grid.add(player1ShieldSurface, 1, 4);
-		grid.add(player2ShieldSurface, 1, 0);
-		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
-		grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
-		grid.add(storyDeckSpace, 2, 2);
-		
-		//grid.setGridLinesVisible(true);
+		private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
+			player1Cards = new HBox();
+			player2Cards = new HBox();
+			HBox player1PlayingSurface = new HBox();
+			HBox player2PlayingSurface = new HBox();
+			HBox player1ShieldSurface = new HBox();
+			HBox player2ShieldSurface = new HBox();
+			HBox storyDeckSpace = new HBox();
+			HBox questStageSpace = new HBox(-50);
+			if(quest != null) {
+				System.out.println("got here");
+				for(model.Stage stage : quest.getStages()) {
+					HBox stageSpace = new HBox();
+					List<Adventure> cards = new ArrayList<Adventure>();
+					if(stage.getTest() != null) {
+						cards.add(stage.getTest());
+						stageSpace.getChildren().add(stageCards(cards));
+					}
+					if(stage.getFoe() != null) {
+						cards.add(stage.getFoe());
+						cards.addAll(stage.getFoe().getWeapons());
+						stageSpace.getChildren().add(stageCards(cards));
+					}
+					questStageSpace.getChildren().add(stageSpace);
+				}
+				questStageSpace.setMinWidth(187.5);
+			}
+			
+			player1Cards = playerCards(players.getPlayers().get(0), 0);	
+			player1Cards.setMinWidth(350);
+			player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+			player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
+			player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+			player1ShieldSurface.setMinWidth(337.5);
+			//player2Cards
+			player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
+			player1Cards.setMinWidth(350);
+			player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+			player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
+			player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+			player2ShieldSurface.setMinHeight(140);
+			player2ShieldSurface.setMinWidth(337.5);
+			//Story deck space
+			storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
+			storyDeckSpace.getChildren().add(questStageSpace);
+			// WEEKY DEEKY THING BEN DID ----------
+			//GridPane border = new GridPane();
+			grid = new GridPane();
+			// ------------------------------------
+			
+			grid.setVgap(23);
+			grid.setHgap(0);
+			grid.add(player1PlayingSurface, 2, 3);
+			grid.add(player2PlayingSurface, 2, 1);
+			grid.add(player2Cards, 2, 0);
+			grid.add(player1Cards, 2, 4);
+			grid.add(player1ShieldSurface, 1, 4);
+			grid.add(player2ShieldSurface, 1, 0);
+			grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 4);
+			grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
+			grid.add(storyDeckSpace, 2, 2);
+			
+			grid.setGridLinesVisible(true);
 
-		//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
-		
-		//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
-		if(firstTime) {
-			twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-			firstTime = false;
+			//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
+			
+			//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
+			if(firstTime) {
+				twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+				firstTime = false;
+			}
+			twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
+			twoPlayerStage.getScene().setRoot(grid);
+			twoPlayerStage.show();
 		}
-		twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
-		twoPlayerStage.getScene().setRoot(grid);
-		twoPlayerStage.show();
-	}
 	// -----------------------------------------------------------------------------------------------------------------------
 	
 	public void setUpFor3Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
-		HBox player1Cards = new HBox();
-		HBox player2Cards = new HBox();
-		HBox player3Cards = new HBox();
+		player1Cards = new HBox();
+		player2Cards = new HBox();
+		player3Cards = new HBox();
 		HBox player1PlayingSurface = new HBox();
 		HBox player1ShieldSurface = new HBox();
 		VBox player2PlayingSurface = new VBox();
@@ -345,9 +374,9 @@ public class View extends Application {
 	
 	//4 player game setup
 	public void setUpFor4Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
-		HBox player1Cards = new HBox();
-		HBox player2Cards = new HBox();
-		HBox player3Cards = new HBox();
+		player1Cards = new HBox();
+		player2Cards = new HBox();
+		player3Cards = new HBox();
 		VBox player4Cards = new VBox();
 		
 		HBox player1PlayingSurface = new HBox();
@@ -493,6 +522,22 @@ public class View extends Application {
 		
 		}
 		return playerCards;
+	}
+	
+	public HBox stageCards(List<Adventure> cards) {
+		HBox stageCards = new HBox(-75);
+		for(Adventure a : cards) {
+			Image card;
+			if(a.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
+			}
+			
+			ImageView theCard = new ImageView(card);
+			stageCards.getChildren().add(theCard);
+		}
+		return stageCards;
 	}
 	
 	public HBox storyDeckSpace(StoryDeck sDeck, StoryDiscard sDiscard) {
@@ -672,16 +717,6 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean promptForStageSetup(String name) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-	
-		alert.setTitle("Stage Dialog");
-		alert.setHeaderText("Stage setup");
-		alert.setContentText("Please press OK to let "+ name + "view their cards for stage setup.");
-		
-		return false;
-	}
-	
 	public boolean promptGameEnd(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
@@ -698,6 +733,63 @@ public class View extends Application {
 		    primStage.close();
 			return false;
 		}
+	}
+	
+	public boolean promptForStageSetup(String name) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+	
+		alert.setTitle("Stage Dialog");
+		alert.setHeaderText("Stage setup");
+		alert.setContentText("Please press OK to let "+ name + "view their cards for stage setup.");
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean promptAddCardToStage(List<Adventure> cards, Player p) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		alert.setTitle("Stage Dialog");
+		alert.setHeaderText("Add Foe/Test to Stage");
+		alert.setContentText("Please choose a Foe or Test to add to the stage.");
+		
+		alert.initModality(Modality.NONE);
+		for(Node theCard :player1Cards.getChildren()) {
+			
+			theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					int index = player1Cards.getChildren().indexOf(theCard);
+					p.remove(p.getHand(), cards, p.getCard(index));
+					
+				}
+				
+			});
+		}
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return true;
+		} else {
+			promptAddCardToStage(cards, p);
+			return false;
+		}
+	}
+	
+	public boolean promptAddWeaponsToFoe(List<Adventure> cards, Player p) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		alert.setTitle("Player Win Dialog");
+		alert.setHeaderText("Congratulations " + p.getName() + "You win!!");
+		alert.setContentText("Would you like to play again?");
+		
+		alert.initModality(Modality.NONE);
+		return false;
 	}
 	
 	public void rotate(PlayGame game) {
@@ -737,5 +829,10 @@ public class View extends Application {
 		if(listeners.get(0) != null) {
 			listeners.get(0).onAdventureCardPlayed(p,card, event);
 		}
+	}
+	
+	//notify when stage card is chosen
+	public void notifyStageCardChosen() {
+		
 	}
 }
