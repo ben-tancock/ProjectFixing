@@ -109,7 +109,7 @@ public class QuestHandler {
 		pg.getView().rotate(pg);
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
 		ArrayList<Player> participants = askForParticipants(sponsor, players.getPlayers().get(0));
-		
+		int numParticipants = participants.size();
 		for(int i = 0; i < card.getNumStages(); i++) {
 			//All participants draw a card for the first stage
 			for(Player p : participants) {
@@ -130,19 +130,20 @@ public class QuestHandler {
 					if(p.getBattlePoints() < card.getStages().get(i).getBattlePoints()) {
 						participantIterator.remove();
 						
-						for(Iterator<Weapon> weaponsIter = p.getWeapons().iterator(); weaponsIter.hasNext();) {
-							Weapon w = weaponsIter.next();
-							p.remove(p.getWeapons(), discard, w);
-						}
-						
-					}	
+						p.getWeapons().removeAll(p.getWeapons());
+						discard.addAll(p.getWeapons());
+						//player lost
+					} else {
+						//player won
+					}
 				}
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				//remaining participants discard the weapons in their playing field
-				for(Player p : participants) {
-					for(Weapon w : p.getWeapons()) {
-						p.remove(p.getWeapons(), discard, w);
-					}
+				for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
+					Player p = participantIterator.next();
+					
+					p.getWeapons().removeAll(p.getWeapons());
+					discard.addAll(p.getWeapons());
 					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				}
 				
@@ -158,13 +159,18 @@ public class QuestHandler {
 		}
 		
 		// Quest is over, Amours are all discarded.
-		for(Player p : players.getPlayers()) {
-			for(Amour a : p.getAmour()) {
-				p.remove(p.getAmour(), discard, a);
-			}
+		for(Iterator<Player> playerIterator = players.getPlayers().iterator(); playerIterator.hasNext();) {
+			Player p = playerIterator.next();
+			p.getAmour().removeAll(p.getAmour());
+		}
+		//Winning participants get shields
+		for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
+			Player p = participantIterator.next();
+			p.setShields(p.getShields() + numParticipants + card.getNumStages());
 		}
 		//sponsor then draws back num cards used + numstages
 		sponsor.drawCard(numCardsUsed + card.getNumStages(), deck);
+		
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		return true;
 	}
@@ -223,6 +229,7 @@ public class QuestHandler {
 			}
 			else if(addedCards.get(0) instanceof Foe) {
 				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+				addedCards.get(0).setState(CardStates.FACE_DOWN);
 				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor, new ArrayList<Weapon>());
 				if(fChoosingWeapons) {
 					for(Adventure a : addedCards) {

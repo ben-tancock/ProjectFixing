@@ -140,7 +140,19 @@ public abstract class Player {
 	}
 	
 	public int getBattlePoints() {
-		return 0;
+		int totalBP = 0;
+		if(allies.size() > 0) {
+			for(Ally a : allies) {
+				totalBP += a.getBattlePoints();
+			}
+		} if(weapons.size() > 0) {
+			for(Weapon w : weapons) {
+				totalBP += w.getBattlePoints();
+			}
+		} if(amour.size() > 0) {
+			totalBP += amour.get(0).getBattlePoints();
+		}
+		return totalBP;
 	}
 	
 	public void displayHand() {

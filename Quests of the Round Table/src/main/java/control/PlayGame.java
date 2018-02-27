@@ -66,7 +66,7 @@ public class PlayGame extends Application{
 
 	@Override
 	public void start(Stage arg0) throws Exception {
-		primStage = arg0;
+		primStage = arg0; // for restarting the game after win.
 		
 		aDeck.shuffle();
 		sDeck.shuffle();
@@ -320,7 +320,9 @@ public class PlayGame extends Application{
 			System.out.println(p.getName() + " has too many cards, must either discard or play an ally.");
 			for(int i = 0; i < p.getHand().size(); i++) {
 				if(p.getHand().get(i).getClass().getSimpleName().equals("Ally") && p.getHand().size() > 12) {
+					p.getHand().get(i).setState(CardStates.FACE_UP);
 					p.remove(p.getHand(), p.getAllies(), p.getHand().get(i));
+					
 					view.update(null, players, sDeck, sDiscard, null);	
 				}
 			}
@@ -329,7 +331,8 @@ public class PlayGame extends Application{
 		@Override
 		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 			QuestHandler qh = QuestHandler.getInstance();
-			System.out.println(p.getName() + " has drawn a card.");			
+			System.out.println(p.getName() + " has drawn a card.");	
+			card.setState(CardStates.FACE_DOWN);
 			if(card instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), card);
 			} else if (card instanceof Amour) {

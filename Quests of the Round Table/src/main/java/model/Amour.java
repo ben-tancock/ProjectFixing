@@ -1,9 +1,9 @@
 package model;
 
 public class Amour extends Adventure{
-	String name;
-	int bp;
-	int state;
+	private String name;
+	private int bp;
+	private int state;
 	
 	public Amour(String n, int b) {
 		name = n;
@@ -21,5 +21,9 @@ public class Amour extends Adventure{
 	
 	public void setState(int s) {
 		state = s;
+	}
+	
+	public int getBattlePoints() {
+		return bp;
 	}
 }
