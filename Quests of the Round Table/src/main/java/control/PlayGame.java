@@ -51,6 +51,8 @@ public class PlayGame extends Application{
 		players = new Players();
 		view = new View();
 		winners = new ArrayList<Player>();
+		aDeck.shuffle();
+		sDeck.shuffle();
 	}
 	
 	public static void main(String[] args) {
@@ -68,13 +70,12 @@ public class PlayGame extends Application{
 	public void start(Stage arg0) throws Exception {
 		primStage = arg0; // for restarting the game after win.
 		
-		aDeck.shuffle();
-		sDeck.shuffle();
+		/*
 		for(int i = 0; i < sDeck.size(); i++) {
 			if(sDeck.get(i) instanceof Tournament) {
 				sDeck.set(0, sDeck.get(i));
 			}
-		}
+		}*/
 		//logger.info("Shuffled the decks.");
 		
 		view.start(arg0);
@@ -96,10 +97,20 @@ public class PlayGame extends Application{
 				players.getPlayers().get(1).setShields(2);
 				players.getPlayers().get(0).setRank("squire");
 				players.getPlayers().get(1).setRank("knight");
+				
 				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
 				// have to wait for everything to be set up before we can start rotating i think
 				//view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
-				
+				/* for hacking purposes
+				 *try {
+				 *	players.getPlayers().get(0).drawCard(aDeck, "test_of_the_questing_beast");
+				 *} catch (Exception e) {
+				 *	// TODO Auto-generated catch block
+				 *	e.printStackTrace();
+				 *}
+				 *players.getPlayers().get(0).drawCard(11, aDeck);
+				 *players.getPlayers().get(1).drawCard(12, aDeck);
+				 */
 				
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
@@ -383,6 +394,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
+			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "search_for_the_questing_beast"); for hacking purposes
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			QuestHandler qh = QuestHandler.getInstance();
 			if(sDeck.isEmpty()) {

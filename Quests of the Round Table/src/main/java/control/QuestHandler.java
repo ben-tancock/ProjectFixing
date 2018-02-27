@@ -291,9 +291,11 @@ public class QuestHandler {
 		}
 		//winning player discards all bided cards.
 		if(bidWinner != null) {
-			ArrayList<Adventure> bidedCards = pg.getView().discardPrompt(bidWinner, bidWinner.getBid());// will get these from a discard prompt.
-			for(Adventure a : bidedCards) {
-				bidWinner.remove(bidWinner.getHand(), discard, a);
+			if(bidWinner.getBid() > 0) {
+				ArrayList<Adventure> bidedCards = pg.getView().discardPrompt(bidWinner, bidWinner.getBid());// will get these from a discard prompt.
+				for(Adventure a : bidedCards) {
+					bidWinner.remove(bidWinner.getHand(), discard, a);
+				}
 			}
 			return bidWinner;
 		}

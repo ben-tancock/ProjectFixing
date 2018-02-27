@@ -76,7 +76,7 @@ public class AdventureDeck extends ArrayList<Adventure>{
 		addAlly(1, "sir_lancelot", 15, 0);
 		addAlly(1, "queen_iseult", 0, 2);
 		
-		addTest(2, "test_of_the_questing_beast", 4);
+		addTest(2, "test_of_the_questing_beast", 0);
 		addTest(2, "test_of_temptation", 0);
 		addTest(2, "test_of_valor", 0);
 		addTest(2, "test_of_morgan_le_fey", 3);

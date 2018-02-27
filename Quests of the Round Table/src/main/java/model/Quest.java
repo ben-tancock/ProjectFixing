@@ -42,8 +42,13 @@ public class Quest extends Story {
 			//Check if the Quest already has a test in it.
 			if(stage.getTest() != null && s.getTest() != null) {
 				throw new Exception("Only one test is allowed.");
-			}
-			
+			}	
+		}
+		
+		//Check to see if the test of the questing beast is played in the search for the questing beast.
+		if(s.getTest() != null && s.getTest().getName().equals("test_of_the_questing_beast") && name.equals("search_for_the_questing_beast")) {
+			s.getTest().setMinBid(4);
+			s = new Stage(s.getTest());
 		}
 		//set battle points for the stage
 		if(s.getFoe() != null) 

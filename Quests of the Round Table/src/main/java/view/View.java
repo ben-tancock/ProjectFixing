@@ -272,14 +272,14 @@ public class View extends Application {
 			
 			player1Cards = playerCards(players.getPlayers().get(0), 0);	
 			player1Cards.setMinWidth(350);
-			player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+			player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface(), 0));
 			player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 			player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 			player1ShieldSurface.setMinWidth(337.5);
 			//player2Cards
 			player2Cards.getChildren().add(playerCards(players.getPlayers().get(1), 1));
 			player1Cards.setMinWidth(350);
-			player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+			player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
 			player2ShieldSurface.getChildren().add(shields(players.getPlayers().get(1), 1));
 			player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 			player2ShieldSurface.setMinHeight(140);
@@ -304,7 +304,7 @@ public class View extends Application {
 			grid.add(deckView.playerRank(players.getPlayers().get(1), 1),0, 0);
 			grid.add(storyDeckSpace, 2, 2);
 			
-			grid.setGridLinesVisible(true);
+			//grid.setGridLinesVisible(true);
 
 			//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
 			
@@ -345,20 +345,20 @@ public class View extends Application {
 		grid.setHgap(0);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 5);
-		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface(), 1));
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player1ShieldSurface.setMinWidth(337.5);
 		
 		//player2 variables
-		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
 		player2PlayingSurface.setMinWidth(275);
 		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
 		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player2ShieldSurface.setMinHeight(75);
 		
 		//player3 variables
-		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface()));
+		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface(), 2));
 		player3ShieldSurface.getChildren().add(shields(players.getPlayers().get(2), 2));
 		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player3ShieldSurface.setMinWidth(337.5);
@@ -416,7 +416,7 @@ public class View extends Application {
 		grid.setVgap(0);
 		grid.setHgap(0);
 		
-		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface()));
+		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface(), 0));
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player1ShieldSurface.setMinWidth(337.5);
@@ -437,7 +437,7 @@ public class View extends Application {
 		player4Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(3), 3));
 		
 		//player2 variables
-		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface()));
+		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
 		player2PlayingSurface.setMinWidth(125);
 		player2PlayingSurface.setMinHeight(175);
 		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
@@ -445,14 +445,14 @@ public class View extends Application {
 		player2ShieldSurface.setMinHeight(75);
 		
 		//player3 variables
-		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface()));
+		player3PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(2).getPlayingSurface(), 2));
 		player3PlayingSurface.setMinWidth(125);
 		player3ShieldSurface.getChildren().add(shields(players.getPlayers().get(2), 2));
 		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player3ShieldSurface.setMinWidth(337.5);
 		
 		//player4 variables
-		player4PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(3).getPlayingSurface()));
+		player4PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(3).getPlayingSurface(), 3));
 		player4PlayingSurface.setMinWidth(125);
 		player4ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(3), 3));
 		player4ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
@@ -580,7 +580,7 @@ public class View extends Application {
 	}
 	
 	
-	public HBox playedCards(List<Adventure> playingSurface) {
+	public HBox playedCards(List<Adventure> playingSurface, int index) {
 		HBox playedCards = new HBox(-50);
 		
 		for(Adventure a: playingSurface) {
@@ -590,8 +590,10 @@ public class View extends Application {
 			} else {
 				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
 			}
-			
 			ImageView theCard = new ImageView(card);
+			if(index == 1 || index == 2) {
+				theCard.setRotate(180);
+			}
 			playedCards.getChildren().add(theCard);
 		}
 		if(playedCards.getChildren().isEmpty()) {
@@ -1023,7 +1025,7 @@ public class View extends Application {
 	}
 	
 	public Player promptBid(int currBid, Player p) {
-		TextInputDialog dialog = new TextInputDialog("0");
+		TextInputDialog dialog = new TextInputDialog("" + currBid);
 		dialog.setTitle("Bid Dialog");
 		dialog.setHeaderText(p.getName() + " Bid Dialog");
 		dialog.setContentText("current bid: " + currBid + "\n" +

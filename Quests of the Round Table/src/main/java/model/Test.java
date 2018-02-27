@@ -23,6 +23,12 @@ public class Test extends Adventure{
 		return state;
 	}
 	
+	public void setMinBid(int b) {
+		if(name.equals("test_of_the_questing_beast")) {
+			minbid = b;
+		}
+	}
+	
 	public void setState(int s) {
 		state = s;
 	}
