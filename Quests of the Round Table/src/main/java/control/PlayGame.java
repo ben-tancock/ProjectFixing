@@ -342,7 +342,6 @@ public class PlayGame extends Application{
 		@Override
 		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 			QuestHandler qh = QuestHandler.getInstance();
-			System.out.println(p.getName() + " has drawn a card.");	
 			card.setState(CardStates.FACE_DOWN);
 			if(card instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), card);

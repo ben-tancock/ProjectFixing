@@ -252,7 +252,6 @@ public class View extends Application {
 			HBox storyDeckSpace = new HBox();
 			HBox questStageSpace = new HBox(-50);
 			if(quest != null) {
-				System.out.println("got here");
 				for(model.Stage stage : quest.getStages()) {
 					HBox stageSpace = new HBox();
 					List<Adventure> cards = new ArrayList<Adventure>();
