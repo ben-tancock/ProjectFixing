@@ -54,7 +54,11 @@ public class QuestHandler {
 		boolean seeCards = pg.getView().promptForStageSetup(sponsor.getName());
 		if(seeCards) {
 			sponsor.setHandState(CardStates.FACE_UP);
-		}/*
+		}
+		
+		
+		
+		/*
 		for(Adventure a : sponsor.getHand()) {
 			if(a instanceof Foe) {
 				sponsor.getHand().remove(a);
@@ -98,7 +102,10 @@ public class QuestHandler {
 				throw new Exception(e); // Exception for a quest only being able to have 1 test card in it.
 			}
 		}
-		pg.getView().prompt("Quest");
+		sponsor.setHandState(CardStates.FACE_DOWN);
+		pg.getView().rotate(pg);
+		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+		ArrayList<Player> participants = askForParticipants(sponsor);
 		/*
 		ArrayList<Player> participants = askForParticipants();
 		
@@ -192,24 +199,29 @@ public class QuestHandler {
 	
 	public Stage setupStage(Player sponsor) throws Exception {
 		PlayGame pg = PlayGame.getInstance();
-		
+		addedCards = new ArrayList<>();
 		boolean finished = pg.getView().promptAddCardToStage(sponsor);
+		
+		
 		if(finished) {
-			if(addedCards.get(0) instanceof Test)
-				return new Stage((Test)addedCards.get(0));
+			if(addedCards.get(0) instanceof Test) {
+				addedCards.get(0).setState(CardStates.FACE_DOWN);
+				return new Stage((Test)addedCards.get(0)); 
+			}
 			else if(addedCards.get(0) instanceof Foe) {
-				System.out.println("got here");
 				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
-				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor);
+				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor, new ArrayList<Weapon>());
 				if(fChoosingWeapons) {
 					for(Adventure a : addedCards) {
 						if(a instanceof Weapon) {
+							a.setState(CardStates.FACE_DOWN);
 							weapons.add((Weapon)a);
 						}
 					}
 					return new Stage((Foe)addedCards.get(0), weapons);
 				}
 			}
+		} else {
 		}
 		return null;
 	}
@@ -233,7 +245,10 @@ public class QuestHandler {
 		}
 	}
 	
-	public ArrayList<Player> askForParticipants() {
+	public ArrayList<Player> askForParticipants(Player sponsor) {
+		PlayGame pg = PlayGame.getInstance();
+		ArrayList<Player> participants = new ArrayList<>();
+		boolean result = pg.getView().prompt("Quest");
 		return null;
 	}
 	
@@ -243,17 +258,15 @@ public class QuestHandler {
 			QuestHandler qh = QuestHandler.getInstance();
 			PlayGame pg = PlayGame.getInstance();
 			p.remove(p.getHand(), qh.getAddedCards(), card);
-			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.card);
 		}
 		
 		@Override
-		public void onStageWeaponsPicked(Player p, ArrayList<Adventure> cards) {
+		public void onStageWeaponPicked(Player p, Weapon card) {
 			QuestHandler qh = QuestHandler.getInstance();
 			PlayGame pg = PlayGame.getInstance();
-			for(Adventure a : cards) {
-				p.remove(p.getHand(), qh.getAddedCards(), a);
-			}
-			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+			p.remove(p.getHand(), qh.getAddedCards(), card);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.card);
 		}
 	}
  	

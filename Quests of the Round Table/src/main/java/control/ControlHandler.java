@@ -8,6 +8,7 @@ import model.Adventure;
 import model.Event;
 import model.Player;
 import model.Story;
+import model.Weapon;
 //Possible abstract class for notifying the controllers?
 public abstract class ControlHandler {
 
@@ -71,7 +72,7 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onStageWeaponsPicked(Player p, ArrayList<Adventure> cards) {
+	public void onStageWeaponPicked(Player p, Weapon card) {
 		
 	}
 }

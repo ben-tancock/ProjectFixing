@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -26,12 +27,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
 // new stuff Ben added
@@ -771,70 +778,153 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean promptAddCardToStage(Player p) { // add either test or foe
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
-		alert.setTitle("Stage Dialog");
-		alert.setHeaderText("Add Foe/Test to Stage");
-		alert.setContentText("Please choose a Foe or Test to add to the stage and then click OK.");
-		
-		alert.initModality(Modality.NONE);
-		for(Node theCard :player1Cards.getChildren()) {
-			int index = player1Cards.getChildren().indexOf(theCard);
-			if(p.getHand().get(index) instanceof Foe || p.getHand().get(index) instanceof Test) {
-				theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-	
+	boolean cardClicked; 
+	boolean buttonClicked;
+	int cardIndex;
+	public boolean promptAddCardToStage(Player p) {
+		cardClicked = false;
+		cardIndex = 0;
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Please choose either a foe or a test");
+		VBox window = new VBox();
+		List<Button> cards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+			if(p.getHand().get(cardIndex) instanceof Foe || p.getHand().get(cardIndex) instanceof Test) {
+				Button button = new Button();
+				final int index = cardIndex;
+				BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+				button.setBackground(new Background(buttonBackground));
+				button.setMinWidth(75);
+				button.setMinHeight(100);
+				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
-					public void handle(MouseEvent event) {
-						//p.remove(p.getHand(), cards, p.getCard(index));
-						System.out.println("Picked card: " + p.getHand().get(index).getName());
+					public void handle(MouseEvent arg0) {
+						twoPlayerStage.getScene().getRoot().setEffect(null);
 						notifyStageCardChosen(p, p.getHand().get(index));
-						
+						cardClicked = true;
+						dialog.close();
 					}
-					
 				});
+				cards.add(button);
 			}
 		}
+		HBox foesAndTests = new HBox();
+		foesAndTests.getChildren().addAll(cards);
+		foesAndTests.setMaxHeight(100);
+		window.getChildren().addAll(foesAndTests);
+		window.setAlignment(Pos.CENTER);
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.initOwner(twoPlayerStage);
+		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
 		
-		Optional<ButtonType> result = alert.showAndWait();
-		if(result.get() == ButtonType.OK) {
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		dialog.showAndWait();
+		if(cardClicked) {
 			return true;
 		} else {
-			promptAddCardToStage(p);
 			return false;
 		}
 	}
-	
-	public boolean promptAddWeaponsToFoe(Player p) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
-		alert.setTitle("Stage Dialog");
-		alert.setHeaderText("Add Weapons to Stage");
-		alert.setContentText("Please choose weapons to add to the stage and then click OK.");
-		
-		ArrayList<Adventure> weapons = new ArrayList<>();
-		
-		alert.initModality(Modality.NONE);
-		for(Node theCard :player1Cards.getChildren()) {
-			int index = player1Cards.getChildren().indexOf(theCard);
-			if(p.getHand().get(index) instanceof Weapon) {
-				theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-	
+	class Delta { double x, y;}
+	public boolean promptAddWeaponsToFoe(Player p, ArrayList<Weapon> weapons) {
+		//ArrayList<Weapon> weapons = new ArrayList<>();
+		cardClicked = false;
+		buttonClicked = false;
+		cardIndex = 0;
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Please choose the weapons you wish to play");
+		VBox window = new VBox();
+		List<Button> cards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+			if(p.getHand().get(cardIndex) instanceof Weapon) {
+				Button button = new Button();
+				final int index = cardIndex;
+				BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+				button.setBackground(new Background(buttonBackground));
+				button.setMinWidth(75);
+				button.setMinHeight(100);
+				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
-					public void handle(MouseEvent event) {
-						weapons.add(p.getHand().get(index));
+					public void handle(MouseEvent arg0) {
+						weapons.add((Weapon)p.getHand().get(index));
+						notifyStageWeaponChosen(p, (Weapon)p.getHand().get(index));
+						dialog.close();
+						cardClicked = true;
 					}
-					
 				});
+				cards.add(button);
 			}
 		}
+		Button finishedButton = new Button();
+		finishedButton.setText("Done");
+		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				
+				twoPlayerStage.getScene().getRoot().setEffect(null);
+				dialog.close();
+				buttonClicked = true;
+			}
+		});
+		finishedButton.setAlignment(Pos.BASELINE_RIGHT);
+		HBox foesAndTests = new HBox();
+		cards.add(finishedButton);
+		foesAndTests.getChildren().addAll(cards);
+		foesAndTests.setMaxHeight(100);
+		window.getChildren().add(foesAndTests);
+		window.setAlignment(Pos.CENTER);
+		window.setMaxHeight(foesAndTests.getHeight());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.initOwner(twoPlayerStage);
+		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
 		
-		Optional<ButtonType> result = alert.showAndWait();
-		if(result.get() == ButtonType.OK) {
-			notifyStageWeaponsChosen(p, weapons);
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		dialog.showAndWait();
+		if(cardClicked) {
+			if(!buttonClicked) {
+				promptAddWeaponsToFoe(p, weapons);
+			}
 			return true;
 		} else {
-			promptAddWeaponsToFoe(p);
+			if(buttonClicked) {
+				return true;
+			}
 			return false;
 		}
 	}
@@ -960,9 +1050,9 @@ public class View extends Application {
 	}
 	
 	//notify when stage weapons are chosen
-	public void notifyStageWeaponsChosen(Player p, ArrayList<Adventure> cards) {
-		if(listeners.get(1) != null) {
-			listeners.get(1).onStageWeaponsPicked(p, cards);
+		public void notifyStageWeaponChosen(Player p, Weapon card) {
+			if(listeners.get(1) != null) {
+				listeners.get(1).onStageWeaponPicked(p, card);
+			}
 		}
-	}
 }
