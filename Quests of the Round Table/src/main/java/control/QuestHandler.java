@@ -2,6 +2,7 @@ package control;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import model.Adventure;
 import model.AdventureDeck;
@@ -47,7 +48,7 @@ public class QuestHandler {
 		if(sponsor == null) {
 			return true; //nobody sponsored so go back
 		}
-		card.setSponsor(sponsor);
+		getCard().setSponsor(sponsor);
 		int sponsorIndex = players.getPlayers().indexOf(sponsor);
 		
 		PlayGame pg = PlayGame.getInstance();
@@ -93,48 +94,60 @@ public class QuestHandler {
 		}*/
 		
 		
-		
-		for(int i = 0; i < card.getNumStages(); i++) {
+		int oldSize = sponsor.getHand().size();
+		for(int i = 0; i < getCard().getNumStages(); i++) {
 			try {
-				card.addStage(setupStage(sponsor));
-				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+				getCard().addStage(setupStage(sponsor));
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
 			} catch (Exception e) {
 				throw new Exception(e); // Exception for a quest only being able to have 1 test card in it.
 			}
 		}
+		int newSize = sponsor.getHand().size();
+		int numCardsUsed = oldSize - newSize;
 		sponsor.setHandState(CardStates.FACE_DOWN);
 		pg.getView().rotate(pg);
-		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
 		ArrayList<Player> participants = askForParticipants(sponsor, players.getPlayers().get(0));
-		/*
+		
 		for(int i = 0; i < card.getNumStages(); i++) {
 			//All participants draw a card for the first stage
 			for(Player p : participants) {
 				p.drawCard(1, deck);
 			}
+			System.out.println("Iter: " + i);
 			
 			if(card.getStages().get(i).getFoe() != null) {
 				//Focus moves to participants who choose their cards one at a time.
 				for(Player p : participants) {
 					promptPlayerToFightFoe(p);
+					p.setHandState(CardStates.FACE_DOWN);
+					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				}
-				/*
 				//Check player's battle points against Foe's battlepoints, if they are lower, they are kicked out
-				for(Player p : participants) {
+				for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
+					Player p = participantIterator.next();
 					if(p.getBattlePoints() < card.getStages().get(i).getBattlePoints()) {
-						participants.remove(p);
-						for(Weapon w : p.getWeapons()) {
+						participantIterator.remove();
+						
+						for(Iterator<Weapon> weaponsIter = p.getWeapons().iterator(); weaponsIter.hasNext();) {
+							Weapon w = weaponsIter.next();
 							p.remove(p.getWeapons(), discard, w);
 						}
+						
 					}	
 				}
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				//remaining participants discard the weapons in their playing field
 				for(Player p : participants) {
 					for(Weapon w : p.getWeapons()) {
 						p.remove(p.getWeapons(), discard, w);
 					}
+					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				}
-			} /*else if (card.getStages().get(i).getTest() != null){
+				
+				
+			} else if (card.getStages().get(i).getTest() != null){
 				//It's a test
 				int minBid = card.getStages().get(i).getBids();
 				int currBid = 0;
@@ -142,15 +155,17 @@ public class QuestHandler {
 					promptPlayerToBid(p, participants, minBid, currBid);
 				}
 			}
-		}*/
-		/*
+		}
+		
 		// Quest is over, Amours are all discarded.
 		for(Player p : players.getPlayers()) {
 			for(Amour a : p.getAmour()) {
 				p.remove(p.getAmour(), discard, a);
 			}
-		}*/
-		
+		}
+		//sponsor then draws back num cards used + numstages
+		sponsor.drawCard(numCardsUsed + card.getNumStages(), deck);
+		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		return true;
 	}
 	
@@ -230,6 +245,13 @@ public class QuestHandler {
 	
 	public void promptPlayerToFightFoe(Player p) {
 		//Force Player to only choose Weapon, Ally, or Amour
+		PlayGame pg = PlayGame.getInstance();
+		while(!players.getPlayers().get(0).equals(p)) {
+			pg.getView().rotate(pg);
+		}
+		p.setHandState(CardStates.FACE_UP);
+		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+		pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
 	}
 	
 	public void promptPlayerToBid(Player p, ArrayList<Player> ppts, int minBid, int currBid) {
@@ -248,7 +270,7 @@ public class QuestHandler {
 		ArrayList<Player> participants = new ArrayList<>();
 		int currentIndex = players.getPlayers().indexOf(start);
 		Player participant;
-		for(int i = 0; i < players.getPlayers().size(); i++) {	
+		for(int i = 0; i < (players.getPlayers().size() - 1); i++) {	// skip the quest sponsor
 			if(i > 0) {
 				pg.getView().rotate(pg);
 				if(pg.getView().switchPrompt("Participate", players.getPlayers().get((currentIndex + i) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + i) % players.getPlayers().size()))) {
@@ -274,6 +296,8 @@ public class QuestHandler {
 	
 	public Player askForParticipant(int i) {
 		PlayGame pg = PlayGame.getInstance();
+		players.getPlayers().get(i).setHandState(CardStates.FACE_UP);
+		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 		boolean isParticipant =  pg.getView().prompt("Quest");
 		if(isParticipant) {
 			System.out.println(players.getPlayers().get(i).getName() + " participates.");
@@ -286,13 +310,17 @@ public class QuestHandler {
 		return null;
 	}
 	
+	public Quest getCard() {
+		return card;
+	}
+
 	public static class QuestControlHandler extends ControlHandler {
 		@Override
 		public void onStageCardPicked(Player p, Adventure card) {
 			QuestHandler qh = QuestHandler.getInstance();
 			PlayGame pg = PlayGame.getInstance();
 			p.remove(p.getHand(), qh.getAddedCards(), card);
-			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.card);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
 		}
 		
 		@Override
@@ -300,7 +328,7 @@ public class QuestHandler {
 			QuestHandler qh = QuestHandler.getInstance();
 			PlayGame pg = PlayGame.getInstance();
 			p.remove(p.getHand(), qh.getAddedCards(), card);
-			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.card);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
 		}
 	}
  	

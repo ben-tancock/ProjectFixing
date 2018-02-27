@@ -98,15 +98,15 @@ public class TournamentHandler {
 	}
 	
 	public void playCards(Player p) {
-		pg.selectCards(p);
+		//pg.selectCards(p);
 		/*while(p.getHand().size() > 9){
 		    try {
 		       wait();
 		    } catch(InterruptedException e) {
 		    }
 		}*/
-		
-		pg.getView().playPrompt(p.getName(), p);
+		p.setHandState(CardStates.FACE_DOWN);
+		pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
 		//pg.getView().cardSelect(p);
 		
 		

@@ -328,6 +328,7 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
+			QuestHandler qh = QuestHandler.getInstance();
 			System.out.println(p.getName() + " has drawn a card.");			
 			if(card instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), card);
@@ -350,7 +351,11 @@ public class PlayGame extends Application{
 					p.remove(p.getHand(), p.getWeapons(), card);
 				}
 			}
-			view.update(event, players, sDeck, sDiscard, null);	
+			if(qh != null && qh.getCard() != null) {
+				view.update(event, players, sDeck, sDiscard, qh.getCard());
+			} else {
+				view.update(event, players, sDeck, sDiscard, null);
+			}
 		}
 		
 		@Override
@@ -376,7 +381,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-			view.update(event, players, sDeck, sDiscard, null);
+			QuestHandler qh = QuestHandler.getInstance();
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
 			}
@@ -396,6 +401,7 @@ public class PlayGame extends Application{
 		public void onQuestCardDraw(Player p) {
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			QuestHandler questHandler = new QuestHandler((Quest)topCard, players, p, aDeck, aDiscard);
+			view.update(null, players, sDeck, sDiscard, (Quest) topCard);
 			System.out.println("Quest: " + topCard.getName());
 			try {
 				questHandler.playQuest();

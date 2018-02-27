@@ -50,6 +50,7 @@ import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Ally;
+import model.Amour;
 import model.Card;
 import model.CardStates;
 import model.Foe;
@@ -935,39 +936,86 @@ public class View extends Application {
 		}
 	}*/
 	
-	public boolean playPrompt(String name, Player p) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
-		
-		alert.setTitle("Play Dialog");
-		alert.setHeaderText("Play Cards");
-		alert.setContentText("Please select the cards you wish to play, " + name + ". When you have switched, click 'done'.");
-		
-		alert.initModality(Modality.NONE);
-
-		ButtonType buttonTypeOk = new ButtonType("OK");
-		
-		/*for(Node theCard :player1Cards.getChildren()) {
-			int index = player1Cards.getChildren().indexOf(theCard);
-			if(p.getHand().get(index) instanceof Weapon) {
-				theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-	
+	public boolean playPrompt(String name, Player p, ArrayList<Adventure> playedCards) {
+		//ArrayList<Weapon> weapons = new ArrayList<>();
+		cardClicked = false;
+		buttonClicked = false;
+		cardIndex = 0;
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Please choose the cards you wish to play");
+		VBox window = new VBox();
+		List<Button> cards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+			if(p.getHand().get(cardIndex) instanceof Ally || p.getHand().get(cardIndex) instanceof Weapon || p.getHand().get(cardIndex) instanceof Amour) {
+				Button button = new Button();
+				final int index = cardIndex;
+				BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+				button.setBackground(new Background(buttonBackground));
+				button.setMinWidth(75);
+				button.setMinHeight(100);
+				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
-					public void handle(MouseEvent event) {
-						
+					public void handle(MouseEvent arg0) {
+						notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
+						dialog.close();
+						cardClicked = true;
 					}
-					
 				});
+				cards.add(button);
 			}
-		}*/
-		
-		
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == ButtonType.OK){
+		}
+		Button finishedButton = new Button();
+		finishedButton.setText("Done");
+		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {	
+				twoPlayerStage.getScene().getRoot().setEffect(null);
+				dialog.close();
+				buttonClicked = true;
+			}
+		});
+		finishedButton.setAlignment(Pos.BASELINE_RIGHT);
+		HBox foesAndTests = new HBox();
+		cards.add(finishedButton);
+		foesAndTests.getChildren().addAll(cards);
+		foesAndTests.setMaxHeight(100);
+		window.getChildren().add(foesAndTests);
+		window.setAlignment(Pos.CENTER);
+		window.setMaxHeight(foesAndTests.getHeight());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.initOwner(twoPlayerStage);
+		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
+				
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		dialog.showAndWait();
+		if(cardClicked) {
+			if(!buttonClicked) {
+				playPrompt(name, p, playedCards);
+			}
 			return true;
 		} else {
-		    // ... user chose CANCEL or closed the dialog
-			return true;
+			if(buttonClicked) {
+				return true;
+			}
+			return false;
 		}
 	}
 	
@@ -1016,7 +1064,7 @@ public class View extends Application {
 		}
 	}
 	
-	
+	/*
 	
 	public void cardSelect(Player p) { 
 		System.out.println("test submit btn");
@@ -1024,7 +1072,7 @@ public class View extends Application {
 		submitButton.setPrefSize(300, 100);
 		grid.add(submitButton, 0, 1);
 		
-	}
+	}*/
 	
 	
 	
