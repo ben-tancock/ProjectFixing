@@ -14,17 +14,18 @@ public abstract class Player {
 	private ArrayList<Ally> allies;
 	private List<Weapon> weapons;
 	private List<Amour> amour;
-	private List<Adventure> bidCards;
+	//private List<Adventure> bidCards;
+	private int bid;
 	
 	public Player() {
 		hand = new ArrayList<Adventure>();
 		allies = new ArrayList<Ally>();
 		weapons = new ArrayList<Weapon>();
 		amour = new ArrayList<Amour>();
-		bidCards = new ArrayList<Adventure>();
 		dealer = false;
 		focused = false;
 		rank = "";
+		bid = 0;
 	}
 	
 	// Getters and Setters --------------------------------
@@ -122,10 +123,10 @@ public abstract class Player {
 	public List<Amour> getAmour() {
 		return this.amour;
 	}
-	
+	/*
 	public List<Adventure> getBidCards() {
 		return this.bidCards;
-	}
+	}*/
 	
 	public Adventure getCard(int i) {
 		return hand.get(i);
@@ -153,6 +154,17 @@ public abstract class Player {
 			totalBP += amour.get(0).getBattlePoints();
 		}
 		return totalBP;
+	}
+	
+	public int getMaxBid() {
+		int totalBid = 0;
+		if(allies.size() > 0) {
+			for(Ally a : allies) {
+				totalBid += a.getBids();
+			}
+		}
+		totalBid += hand.size();
+		return totalBid;
 	}
 	
 	public void displayHand() {
@@ -217,7 +229,11 @@ public abstract class Player {
 	}
 	
 	public void bid(int b) {
-		
+		bid = b;
+	}
+	
+	public int getBid() {
+		return bid;
 	}
 	
 	public void drawCard(int j, AdventureDeck deck) { // to do: when player receives card from AD, remove card from AD

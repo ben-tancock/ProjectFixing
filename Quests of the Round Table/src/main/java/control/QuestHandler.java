@@ -151,10 +151,14 @@ public class QuestHandler {
 			} else if (card.getStages().get(i).getTest() != null){
 				//It's a test
 				int minBid = card.getStages().get(i).getBids();
-				int currBid = 0;
-				for(Player p : participants) {
-					promptPlayerToBid(p, participants, minBid, currBid);
+				
+				Player bidWinner = promptPlayerToBid(participants, minBid);
+				for(Player p : participants) { //remove everyone else that isn't the winner of the bid.
+					if(!p.equals(bidWinner)) {
+						participants.remove(p);
+					}
 				}
+				System.out.println("Amount of participants: (Should be 1 if player won bid)" + participants.size());
 			}
 		}
 		
@@ -261,15 +265,40 @@ public class QuestHandler {
 		pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
 	}
 	
-	public void promptPlayerToBid(Player p, ArrayList<Player> ppts, int minBid, int currBid) {
+	public Player promptPlayerToBid(ArrayList<Player> ppts, int minBid) {
 		//Force Player to make their bid, if Player cannot make the bid, remove them from the ppts list 
-		
-		//players discard all bided cards.
-		for(Player player : players.getPlayers()) {
-			for(Adventure a : player.getBidCards()) {
-				player.remove(player.getBidCards(), discard, a);
+		PlayGame pg = PlayGame.getInstance();
+		int currBid = minBid;
+		Player bidWinner = null;
+		for(Player p : ppts) {
+			while(!players.getPlayers().get(0).equals(p)) {
+				pg.getView().rotate(pg);
+			}
+			p.setHandState(CardStates.FACE_UP);
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+			Player bidP = pg.getView().promptBid(currBid, p);
+			if(bidP != null) {
+				p = bidP;
+				currBid = p.getBid();
+				p.setHandState(CardStates.FACE_DOWN);
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+				bidWinner = p;
+			} else {
+				ppts.remove(p);
+				p.setHandState(CardStates.FACE_DOWN);
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 			}
 		}
+		//winning player discards all bided cards.
+		if(bidWinner != null) {
+			ArrayList<Adventure> bidedCards = pg.getView().discardPrompt(bidWinner, bidWinner.getBid());// will get these from a discard prompt.
+			for(Adventure a : bidedCards) {
+				bidWinner.remove(bidWinner.getHand(), discard, a);
+			}
+			return bidWinner;
+		}
+		return null;
+		
 	}
 	
 	public ArrayList<Player> askForParticipants(Player sponsor, Player start) {

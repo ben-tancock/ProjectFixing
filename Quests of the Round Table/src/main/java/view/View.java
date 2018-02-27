@@ -8,6 +8,8 @@ import java.util.Optional;
 import control.ControlHandler;
 import control.PlayGame;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -19,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -1019,6 +1022,41 @@ public class View extends Application {
 		}
 	}
 	
+	public Player promptBid(int currBid, Player p) {
+		TextInputDialog dialog = new TextInputDialog("0");
+		dialog.setTitle("Bid Dialog");
+		dialog.setHeaderText(p.getName() + " Bid Dialog");
+		dialog.setContentText("current bid: " + currBid + "\n" +
+							  "Your maximum allowed bid: " + p.getMaxBid() + "\n" +
+							  "Please enter your bid: ");
+		
+		dialog.getEditor().textProperty().addListener(new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				// TODO Auto-generated method stub
+				if(!newValue.matches("\\d*")) {
+					dialog.getEditor().setText(newValue.replaceAll("[^\\d]", ""));
+				}
+			}
+		});
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+			int bid = Integer.parseInt(result.get());
+			p.bid(bid);
+			if(bid < p.getMaxBid() || bid > currBid) {
+				return p;
+			} else {
+				promptBid(currBid, p);
+				return null;
+			}
+		} else {
+			return null;
+		}
+		
+	}
+	
 	public void rotate(PlayGame game) {
 		// for now, will switch focus between just two players
 		System.out.println("test rotate");
@@ -1062,6 +1100,10 @@ public class View extends Application {
 		    // ... user chose CANCEL or closed the dialog
 			return true;
 		}
+	}
+	
+	public ArrayList<Adventure> discardPrompt(Player p, int cards) {
+		return null;
 	}
 	
 	/*
