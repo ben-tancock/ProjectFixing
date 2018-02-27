@@ -652,6 +652,10 @@ public class View extends Application {
 		return storyCards;
 	}
 	
+	public HBox getPlayerCards() {
+		return player1Cards;
+	}
+	
 	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {
 		VBox discardPile = new VBox(-99);
 		for(Story s: sDiscard) {
@@ -767,7 +771,7 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean promptAddCardToStage(Player p) {
+	public boolean promptAddCardToStage(Player p) { // add either test or foe
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
 		alert.setTitle("Stage Dialog");
@@ -835,6 +839,48 @@ public class View extends Application {
 		}
 	}
 	
+	/*public void listentoHand() {
+		for(Node theCard : player1Cards.getChildren()) {
+			
+		}
+	}*/
+	
+	public boolean playPrompt(String name, Player p) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		
+		alert.setTitle("Play Dialog");
+		alert.setHeaderText("Play Cards");
+		alert.setContentText("Please select the cards you wish to play, " + name + ". When you have switched, click 'done'.");
+		
+		alert.initModality(Modality.NONE);
+
+		ButtonType buttonTypeOk = new ButtonType("OK");
+		
+		/*for(Node theCard :player1Cards.getChildren()) {
+			int index = player1Cards.getChildren().indexOf(theCard);
+			if(p.getHand().get(index) instanceof Weapon) {
+				theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+	
+					@Override
+					public void handle(MouseEvent event) {
+						
+					}
+					
+				});
+			}
+		}*/
+		
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return true;
+		}
+	}
+	
 	public void rotate(PlayGame game) {
 		// for now, will switch focus between just two players
 		System.out.println("test rotate");
@@ -859,6 +905,38 @@ public class View extends Application {
 		// We should make either Players or PlayGame do this, I prefer PlayGame because it calls update from the view.
 		
 	}
+	
+	public boolean switchPrompt(String name, Player p) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		
+		alert.setTitle("Participant Dialog");
+		alert.setHeaderText("Switch Participant");
+		alert.setContentText("Please switch to " + name + ". When you have switched, click 'OK'.");
+
+		ButtonType buttonTypeOk = new ButtonType("OK");
+		
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return true;
+		}
+	}
+	
+	
+	
+	public void cardSelect(Player p) { 
+		System.out.println("test submit btn");
+		Button submitButton = new Button("Submit");
+		submitButton.setPrefSize(300, 100);
+		grid.add(submitButton, 0, 1);
+		
+	}
+	
+	
 	
 	
 	public void notifyStoryCardClicked(MouseEvent event, Story card) {

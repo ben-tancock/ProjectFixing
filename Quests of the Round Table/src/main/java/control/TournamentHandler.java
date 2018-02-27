@@ -8,6 +8,7 @@ import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Amour;
 import model.CardStates;
+import model.Person;
 import model.Player;
 import model.Players;
 import model.Quest;
@@ -52,7 +53,7 @@ public class TournamentHandler {
 			
 			if(i > 0) {
 				pg.getView().rotate(pg);
-				if(this.pg.getView().switchPrompt("Participant", players.getPlayers().get((currentIndex + i) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + i) % players.getPlayers().size()))) {
+				if(this.pg.getView().switchPrompt(players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()))) {
 					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
 					players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).setHandState(CardStates.FACE_UP);
 					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
@@ -82,14 +83,33 @@ public class TournamentHandler {
 		boolean join = this.pg.getView().prompt("Tournament"); 
 		if(join) {
 			System.out.println(players.getPlayers().get(i).getName() + " joins the tournament");
+			players.getPlayers().get(i).drawCard(1, deck);
 			this.tournament.addParticipant(players.getPlayers().get(i));
-			players.getPlayers().get(i).setHandState(CardStates.FACE_DOWN);
+			players.getPlayers().get(i).setHandState(CardStates.FACE_UP);
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
+			playCards(players.getPlayers().get(i));
+			
 		}
 		else {
 			System.out.println(players.getPlayers().get(i).getName() + " does not join the tournament");
 		}
 		// Yes --> Tournament.addParticipant(player)
 		// No --> ?
+	}
+	
+	public void playCards(Player p) {
+		pg.selectCards(p);
+		/*while(p.getHand().size() > 9){
+		    try {
+		       wait();
+		    } catch(InterruptedException e) {
+		    }
+		}*/
+		
+		pg.getView().playPrompt(p.getName(), p);
+		//pg.getView().cardSelect(p);
+		
+		
 	}
 
 }

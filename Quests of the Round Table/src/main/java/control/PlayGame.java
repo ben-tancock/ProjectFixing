@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 //import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -69,6 +70,11 @@ public class PlayGame extends Application{
 		
 		aDeck.shuffle();
 		sDeck.shuffle();
+		for(int i = 0; i < sDeck.size(); i++) {
+			if(sDeck.get(i) instanceof Tournament) {
+				sDeck.set(0, sDeck.get(i));
+			}
+		}
 		//logger.info("Shuffled the decks.");
 		
 		view.start(arg0);
@@ -248,6 +254,37 @@ public class PlayGame extends Application{
 		
 	}
 	
+	public void selectCards(Player p) {
+		System.out.println("test SC");
+		for(Node theCard :view.getPlayerCards().getChildren()) {
+			int index = view.getPlayerCards().getChildren().indexOf(theCard);
+			//if(p.getHand().get(index) instanceof Weapon) {
+			theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent event) {
+					System.out.println("test click");
+					if(p.getHand().get(index) instanceof Weapon) {
+						p.remove(p.getHand(), p.getWeapons(), p.getHand().get(index));
+						//view.update(null, players, sDeck, sDiscard, null);
+					}
+					else if(p.getHand().get(index) instanceof Ally) {
+						p.remove(p.getHand(), p.getAllies(), p.getHand().get(index));
+						//view.update(null, players, sDeck, sDiscard, null);
+					}
+					else if(p.getHand().get(index) instanceof Amour) {
+						p.remove(p.getHand(), p.getAmour(), p.getHand().get(index));
+						//view.update(null, players, sDeck, sDiscard, null);
+					}
+					view.update(null, players, sDeck, sDiscard, null);
+					selectCards(p);
+				}
+				
+			});
+			//}
+		}
+	}
+	
 	
 	
 	//Used to rotate between players to emulate a "focus on current player" feel so that the drawing of a story card and "turns" can be simulated.
@@ -284,6 +321,7 @@ public class PlayGame extends Application{
 			for(int i = 0; i < p.getHand().size(); i++) {
 				if(p.getHand().get(i).getClass().getSimpleName().equals("Ally") && p.getHand().size() > 12) {
 					p.remove(p.getHand(), p.getAllies(), p.getHand().get(i));
+					view.update(null, players, sDeck, sDiscard, null);	
 				}
 			}
 		}
@@ -389,6 +427,9 @@ public class PlayGame extends Application{
 				e.printStackTrace();
 			}
 		}
+		
+		
+		
 		
 		@Override
 		public void onRankSet(Player p) {

@@ -23,6 +23,10 @@ public class Tournament extends Story{
 		return state;
 	}
 	
+	public ArrayList<Player> getParticipants(){
+		return participants;
+	}
+	
 	public void setState(int s) {
 		state = s;
 	}
