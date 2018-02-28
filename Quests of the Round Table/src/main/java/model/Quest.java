@@ -37,14 +37,7 @@ public class Quest extends Story {
 		return state;
 	}
 	
-	public void addStage(Stage s) throws Exception {
-		for(Stage stage : stages) {
-			//Check if the Quest already has a test in it.
-			if(stage.getTest() != null && s.getTest() != null) {
-				throw new Exception("Only one test is allowed.");
-			}	
-		}
-		
+	public void addStage(Stage s) {	
 		//Check to see if the test of the questing beast is played in the search for the questing beast.
 		if(s.getTest() != null && s.getTest().getName().equals("test_of_the_questing_beast") && name.equals("search_for_the_questing_beast")) {
 			s.getTest().setMinBid(4);

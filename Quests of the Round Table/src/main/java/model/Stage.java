@@ -14,10 +14,10 @@ public class Stage {
 		bids = t.getMinbid();
 	}
 	
-	public Stage(Foe f, ArrayList<Weapon> weapons) throws Exception {
+	public Stage(Foe f, ArrayList<Weapon> weapons) {
 		for (Weapon w : weapons) {
 			f.addWeapon(w);
-		}
+		} 
 		foe = f;
 	}
 	

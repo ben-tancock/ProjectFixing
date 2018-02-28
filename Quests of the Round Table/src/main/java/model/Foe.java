@@ -49,20 +49,8 @@ public class Foe extends Adventure{
 		return bp2 + weaponBp;
 	}
 	
-	public void addWeapon(Weapon w) throws Exception {
-		boolean distinct = true;
-		
-		for(Weapon weapon : weapons) {
-			if(w.getName().equals(weapon.getName())) {
-				distinct = false;
-			}
-		}
-		
-		if(!distinct) {
-			throw new Exception("Foe can only have distinct weapons.");
-		} else {
-			weapons.add(w);
-		}
+	public void addWeapon(Weapon w){
+		weapons.add(w);
 	}
 
 	public void setState(int s) {

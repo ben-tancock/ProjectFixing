@@ -870,10 +870,20 @@ public class View extends Application {
 				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
-						weapons.add((Weapon)p.getHand().get(index));
-						notifyStageWeaponChosen(p, (Weapon)p.getHand().get(index));
-						dialog.close();
-						cardClicked = true;
+						boolean dup = false;
+						for(Weapon w : weapons) {
+							if(w.getName().equals(p.getHand().get(index).getName())) {
+								dup = true;
+							}
+						}
+						if(!dup) {
+							weapons.add((Weapon)p.getHand().get(index));
+							notifyStageWeaponChosen(p, (Weapon)p.getHand().get(index));
+							dialog.close();
+							cardClicked = true; 
+						} else {
+							promptWeaponDuplicate();
+						}
 					}
 				});
 				cards.add(button);
@@ -939,6 +949,15 @@ public class View extends Application {
 		alert.setTitle("Stage Error Dialog");
 		alert.setHeaderText("Error: Not enough BP");
 		alert.setContentText("The Foe and it's weapons do not have enough battle points to be added.");
+
+		alert.showAndWait();
+	}
+	
+	public void promptWeaponDuplicate() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Stage Error Dialog");
+		alert.setHeaderText("Error: Weapon Duplicate");
+		alert.setContentText("Foe already has this weapon! Please choose a different one!");
 
 		alert.showAndWait();
 	}

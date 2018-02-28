@@ -43,7 +43,7 @@ public class QuestHandler {
 		return instance;
 	}
 
-	public boolean playQuest() throws Exception {
+	public boolean playQuest() {
 		//Ask for the sponsor and move focus to them.
 		Player sponsor = askForSponsor(player);
 		System.out.println("Starting quest...");
@@ -101,8 +101,8 @@ public class QuestHandler {
 			try {
 				getCard().addStage(setupStage(sponsor));
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
-			} catch (Exception e) {
-				throw new Exception(e); // Exception for a quest only being able to have 1 test card in it.
+			} catch (NullPointerException e) {
+				return false;
 			}
 		}
 		int newSize = sponsor.getHand().size();
@@ -222,7 +222,7 @@ public class QuestHandler {
 		return null;
 	}
 	
-	public Stage setupStage(Player sponsor) throws Exception {
+	public Stage setupStage(Player sponsor) {
 		PlayGame pg = PlayGame.getInstance();
 		addedCards = new ArrayList<>();
 		boolean finished = pg.getView().promptAddCardToStage(sponsor);
@@ -241,7 +241,7 @@ public class QuestHandler {
 					for(Adventure a : addedCards) {
 						if(a instanceof Weapon) {
 							a.setState(CardStates.FACE_DOWN);
-							weapons.add((Weapon)a);
+							weapons.add((Weapon)a); 
 						}
 					}
 					Stage stage = new Stage((Foe)addedCards.get(0), weapons);
