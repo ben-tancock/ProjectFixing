@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import control.ControlHandler;
 import control.PlayGame;
+import control.QuestHandler;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -882,7 +883,7 @@ public class View extends Application {
 							dialog.close();
 							cardClicked = true; 
 						} else {
-							promptWeaponDuplicate();
+							promptWeaponDuplicate("Foe");
 						}
 					}
 				});
@@ -900,13 +901,13 @@ public class View extends Application {
 			}
 		});
 		finishedButton.setAlignment(Pos.BASELINE_RIGHT);
-		HBox foesAndTests = new HBox();
+		HBox weaponsBox = new HBox();
 		cards.add(finishedButton);
-		foesAndTests.getChildren().addAll(cards);
-		foesAndTests.setMaxHeight(100);
-		window.getChildren().add(foesAndTests);
+		weaponsBox.getChildren().addAll(cards);
+		weaponsBox.setMaxHeight(100);
+		window.getChildren().add(weaponsBox);
 		window.setAlignment(Pos.CENTER);
-		window.setMaxHeight(foesAndTests.getHeight());
+		window.setMaxHeight(weaponsBox.getHeight());
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.initOwner(twoPlayerStage);
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
@@ -953,20 +954,14 @@ public class View extends Application {
 		alert.showAndWait();
 	}
 	
-	public void promptWeaponDuplicate() {
+	public void promptWeaponDuplicate(String type) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Stage Error Dialog");
 		alert.setHeaderText("Error: Weapon Duplicate");
-		alert.setContentText("Foe already has this weapon! Please choose a different one!");
+		alert.setContentText(type + " already has this weapon! Please choose a different one!");
 
 		alert.showAndWait();
 	}
-	
-	/*public void listentoHand() {
-		for(Node theCard : player1Cards.getChildren()) {
-			
-		}
-	}*/
 	
 	public boolean playPrompt(String name, Player p, ArrayList<Adventure> playedCards) {
 		//ArrayList<Weapon> weapons = new ArrayList<>();
@@ -988,6 +983,7 @@ public class View extends Application {
 				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
+						p.getHand().get(index).setState(CardStates.FACE_DOWN);
 						notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
 						dialog.close();
 						cardClicked = true;
@@ -1007,13 +1003,13 @@ public class View extends Application {
 			}
 		});
 		finishedButton.setAlignment(Pos.BASELINE_RIGHT);
-		HBox foesAndTests = new HBox();
+		HBox alliesWeaponsAndAmour = new HBox();
 		cards.add(finishedButton);
-		foesAndTests.getChildren().addAll(cards);
-		foesAndTests.setMaxHeight(100);
-		window.getChildren().add(foesAndTests);
+		alliesWeaponsAndAmour.getChildren().addAll(cards);
+		alliesWeaponsAndAmour.setMaxHeight(100);
+		window.getChildren().add(alliesWeaponsAndAmour);
 		window.setAlignment(Pos.CENTER);
-		window.setMaxHeight(foesAndTests.getHeight());
+		window.setMaxHeight(alliesWeaponsAndAmour.getHeight());
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.initOwner(twoPlayerStage);
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
@@ -1114,13 +1110,9 @@ public class View extends Application {
 	public boolean switchPrompt(String name, Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
-		
 		alert.setTitle("Participant Dialog");
 		alert.setHeaderText("Switch Participant");
 		alert.setContentText("Please switch to " + name + ". When you have switched, click 'OK'.");
-
-		ButtonType buttonTypeOk = new ButtonType("OK");
-		
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
@@ -1211,6 +1203,163 @@ public class View extends Application {
 		}
 	}
 	
+	public boolean cardOverflowPrompt(Player p, int numCards) {
+		cardClicked = false;
+		buttonClicked = false;
+		cardIndex = 0;
+		System.out.println(numCards);
+		PlayGame pg = PlayGame.getInstance();
+		QuestHandler qh = QuestHandler.getInstance();
+		p.setHandState(CardStates.FACE_UP);
+		if(qh != null && qh.getCard() != null) { 
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+		} else {
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+		}
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Card OverFlow");
+		VBox window = new VBox();
+		Label discardCountLabel = new Label();
+		discardCountLabel.setText("Number of cards to play or discard: " + numCards);
+		List<Button> allyAmourCards = new ArrayList<>();
+		List<Button> otherCards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+			if(qh != null && qh.getCard() != null) {
+				if(p.getHand().get(cardIndex) instanceof Ally || (p.getHand().get(cardIndex) instanceof Amour && p.getAmour().size() == 0)) {
+					Button button = new Button();
+					final int index = cardIndex;
+					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+					button.setBackground(new Background(buttonBackground));
+					button.setMinWidth(75);
+					button.setMinHeight(100);
+					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+						@Override
+						public void handle(MouseEvent arg0) {
+							p.getHand().get(index).setState(CardStates.FACE_UP);
+							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
+							dialog.close();
+							cardClicked = true;
+						}
+					});
+					allyAmourCards.add(button);
+				} else {
+					Button button = new Button();
+					final int index = cardIndex;
+					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+					button.setBackground(new Background(buttonBackground));
+					button.setMinWidth(75);
+					button.setMinHeight(100);
+					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+						@Override
+						public void handle(MouseEvent arg0) {
+							notifyPlayerCardDiscarded(p, p.getHand().get(index));
+							dialog.close();
+							cardClicked = true;
+						}
+					});
+					otherCards.add(button);
+				}
+			}
+			else {
+				if(p.getHand().get(cardIndex) instanceof Ally) {
+					Button button = new Button();
+					final int index = cardIndex;
+					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+					button.setBackground(new Background(buttonBackground));
+					button.setMinWidth(75);
+					button.setMinHeight(100);
+					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+						@Override
+						public void handle(MouseEvent arg0) {
+							p.getHand().get(index).setState(CardStates.FACE_UP);
+							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
+							dialog.close();
+							cardClicked = true;
+						}
+					});
+					allyAmourCards.add(button);
+				} else {
+					Button button = new Button();
+					final int index = cardIndex;
+					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+					button.setBackground(new Background(buttonBackground));
+					button.setMinWidth(75);
+					button.setMinHeight(100);
+					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+						@Override
+						public void handle(MouseEvent arg0) {
+							notifyPlayerCardDiscarded(p, p.getHand().get(index));
+							dialog.close();
+							cardClicked = true;
+						}
+					});
+					otherCards.add(button);
+				}
+			}
+		}
+		HBox firstCardButtons = new HBox();
+		//cards.add(finishedButton);
+		firstCardButtons.getChildren().addAll(allyAmourCards);
+		firstCardButtons.setMaxHeight(100);
+		HBox secondCardButtons = new HBox();
+		secondCardButtons.getChildren().addAll(otherCards);
+		secondCardButtons.setMaxHeight(100);
+		window.getChildren().add(discardCountLabel);
+		window.getChildren().add(firstCardButtons);
+		window.getChildren().add(secondCardButtons);
+		window.setAlignment(Pos.CENTER);
+		window.setMaxHeight(discardCountLabel.getHeight() + firstCardButtons.getHeight() + secondCardButtons.getHeight());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.initOwner(twoPlayerStage);
+		Scene scene = new Scene(window, (75 * (allyAmourCards.size() + otherCards.size())) + 100, 250, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
+				
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		dialog.showAndWait();
+		if(cardClicked) {
+			if(numCards > 1) {
+				cardOverflowPrompt(p, numCards-= 1);
+			}
+			p.setHandState(CardStates.FACE_DOWN);
+			if(qh != null && qh.getCard() != null) { 
+				update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+			} else {
+				update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void promptTooManyAmour() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Too Many Amour Error Dialog");
+		alert.setHeaderText("Error: Too Many Amour");
+		alert.setContentText("Amour is already played, choose something else!");
+
+		alert.showAndWait();
+	}
+	
+	
+	
 	/*
 	
 	public void cardSelect(Player p) { 
@@ -1234,6 +1383,12 @@ public class View extends Application {
 	public void notifyPlayerCardPlayed(MouseEvent event,Player p, Adventure card) {
 		if(listeners.get(0) != null) {
 			listeners.get(0).onAdventureCardPlayed(p,card, event);
+		}
+	}
+	
+	public void notifyPlayerCardDiscarded(Player p, Adventure card) {
+		if(listeners.get(0) != null) {
+			listeners.get(0).onDiscardCard(p, card);
 		}
 	}
 	

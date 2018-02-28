@@ -79,4 +79,8 @@ public abstract class ControlHandler {
 	public void onBidCardPicked(Player p, Adventure card) {
 		
 	}
+	
+	public void onDiscardCard(Player p, Adventure card) {
+		
+	}
 }

@@ -102,6 +102,7 @@ public class QuestHandler {
 				getCard().addStage(setupStage(sponsor));
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
 			} catch (NullPointerException e) {
+				//Need to change this so that it gives the sponser their cards back before continuing
 				return false;
 			}
 		}
@@ -164,11 +165,7 @@ public class QuestHandler {
 			}
 		}
 		
-		// Quest is over, Amours are all discarded.
-		for(Iterator<Player> playerIterator = players.getPlayers().iterator(); playerIterator.hasNext();) {
-			Player p = playerIterator.next();
-			p.getAmour().removeAll(p.getAmour());
-		}
+		
 		//Winning participants get shields
 		for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
 			Player p = participantIterator.next();
@@ -176,6 +173,12 @@ public class QuestHandler {
 		}
 		//sponsor then draws back num cards used + numstages
 		sponsor.drawCard(numCardsUsed + card.getNumStages(), deck);
+		
+		// Quest is over, Amours are all discarded.
+		for(Iterator<Player> playerIterator = players.getPlayers().iterator(); playerIterator.hasNext();) {
+			Player p = playerIterator.next();
+			p.getAmour().removeAll(p.getAmour());
+		}
 		
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		return true;
@@ -245,10 +248,15 @@ public class QuestHandler {
 						}
 					}
 					Stage stage = new Stage((Foe)addedCards.get(0), weapons);
+					
 					boolean enoughBP = true;
-					for(Stage s :  card.getStages()) {
-						if(s.getFoe() != null && s.getBattlePoints() > stage.getBattlePoints()) {
-							enoughBP = false;
+					if(stage.getFoe() != null) {
+						setStageBP(stage, card.getSpecialFoes());
+						for(Stage s :  card.getStages()) {
+							if(s.getFoe() != null && s.getBattlePoints() > stage.getBattlePoints()) {
+								enoughBP = false;
+							}
+							
 						}
 					}
 					if(enoughBP) {
@@ -267,6 +275,22 @@ public class QuestHandler {
 		} else {
 		}
 		return null;
+	}
+	
+	public void setStageBP(Stage s, String specialFoes) {
+		if(specialFoes.equals("all")) {
+			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
+		} else if(specialFoes.equals("all_saxons")) {
+			if(s.getFoe().getName().contains("saxon")) {
+				s.setBattlePoints(s.getFoe().getHigherBattlePoints());
+			} else {
+				s.setBattlePoints(s.getFoe().getLowerBattlePoints());
+			}
+		} else if(s.getFoe().getName().equals(specialFoes)) {
+			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
+		} else {
+			s.setBattlePoints(s.getFoe().getLowerBattlePoints());
+		}
 	}
 	
 	public ArrayList<Adventure> getAddedCards() {

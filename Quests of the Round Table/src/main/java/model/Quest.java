@@ -37,15 +37,16 @@ public class Quest extends Story {
 		return state;
 	}
 	
+	public String getSpecialFoes() {
+		return specialFoes;
+	}
+	
 	public void addStage(Stage s) {	
 		//Check to see if the test of the questing beast is played in the search for the questing beast.
 		if(s.getTest() != null && s.getTest().getName().equals("test_of_the_questing_beast") && name.equals("search_for_the_questing_beast")) {
 			s.getTest().setMinBid(4);
 			s = new Stage(s.getTest());
 		}
-		//set battle points for the stage
-		if(s.getFoe() != null) 
-			setStageBP(s);
 		
 		stages.add(s);
 	}
@@ -60,22 +61,6 @@ public class Quest extends Story {
 	
 	public void addParticipant(Player p) {
 		participants.add(p);
-	}
-	
-	public void setStageBP(Stage s) {
-		if(specialFoes.equals("all")) {
-			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
-		} else if(specialFoes.equals("all_saxons")) {
-			if(s.getFoe().getName().contains("saxon")) {
-				s.setBattlePoints(s.getFoe().getHigherBattlePoints());
-			} else {
-				s.setBattlePoints(s.getFoe().getLowerBattlePoints());
-			}
-		} else if(s.getFoe().getName().equals(specialFoes)) {
-			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
-		} else {
-			s.setBattlePoints(s.getFoe().getLowerBattlePoints());
-		}
 	}
 	
 	public String toString() {

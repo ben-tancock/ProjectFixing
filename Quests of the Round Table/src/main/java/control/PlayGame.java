@@ -70,12 +70,13 @@ public class PlayGame extends Application{
 	public void start(Stage arg0) throws Exception {
 		primStage = arg0; // for restarting the game after win.
 		
-		/*
+		
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Tournament) {
+			if(sDeck.get(i) instanceof Quest) {
 				sDeck.set(0, sDeck.get(i));
+				sDeck.remove(i);
 			}
-		}*/
+		}
 		//logger.info("Shuffled the decks.");
 		
 		view.start(arg0);
@@ -101,7 +102,7 @@ public class PlayGame extends Application{
 				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
 				// have to wait for everything to be set up before we can start rotating i think
 				//view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
-				 
+				 /*
 				 try {
 				 	players.getPlayers().get(0).drawCard(aDeck, "test_of_the_questing_beast");
 				 } catch (Exception e) {
@@ -109,12 +110,12 @@ public class PlayGame extends Application{
 				 	e.printStackTrace();
 				 }
 				 players.getPlayers().get(0).drawCard(11, aDeck);
-				 players.getPlayers().get(1).drawCard(12, aDeck);
+				 players.getPlayers().get(1).drawCard(12, aDeck);*/
 				 
-				/*
+				
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
-				}*/
+				}
 				 // current player is the dealer
 				view.update(arg0, players, sDeck, sDiscard, null);
 				currentPlayer = 0;//(currentPlayer + 1) % 2;
@@ -328,26 +329,25 @@ public class PlayGame extends Application{
 
 		@Override
 		public void onCardOverflow(Player p) {
-			System.out.println(p.getName() + " has too many cards, must either discard or play an ally.");
-			for(int i = 0; i < p.getHand().size(); i++) {
-				if(p.getHand().get(i).getClass().getSimpleName().equals("Ally") && p.getHand().size() > 12) {
-					p.getHand().get(i).setState(CardStates.FACE_UP);
-					p.remove(p.getHand(), p.getAllies(), p.getHand().get(i));
-					
-					view.update(null, players, sDeck, sDiscard, null);	
-				}
+			
+			while(p.getName() != players.getPlayers().get(0).getName()) {
+				view.rotate(PlayGame.getInstance());
+			}
+			boolean cardsRemoved = view.cardOverflowPrompt(p, p.getHand().size() - 12);
+			if(!cardsRemoved) {
+				onCardOverflow(p);
 			}
 		}
 		
 		@Override
 		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 			QuestHandler qh = QuestHandler.getInstance();
-			card.setState(CardStates.FACE_DOWN);
+			//card.setState(CardStates.FACE_DOWN);
 			if(card instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), card);
 			} else if (card instanceof Amour) {
 				if(p.getAmour().size() >= 1) {
-					//show an error alert
+					view.promptTooManyAmour();
 				}else {
 					p.remove(p.getHand(), p.getAmour(), card);
 				} 
@@ -359,7 +359,7 @@ public class PlayGame extends Application{
 					}
 				}
 				if(dup) {
-					System.out.println("Duplicate!!" + card.getName());
+					view.promptWeaponDuplicate(p.getName() + "'s playing field");
 				} else {
 					p.remove(p.getHand(), p.getWeapons(), card);
 				}
@@ -393,8 +393,8 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
-			players.getPlayers().get(0).drawCard(sDeck, sDiscard, "search_for_the_questing_beast");
-			//players.getPlayers().get(0).drawCard(sDeck, sDiscard);
+			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "search_for_the_questing_beast");
+			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			QuestHandler qh = QuestHandler.getInstance();
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
@@ -448,7 +448,17 @@ public class PlayGame extends Application{
 			}
 		}
 		
-		
+		@Override
+		public void onDiscardCard(Player p, Adventure card) {
+			QuestHandler qh = QuestHandler.getInstance();
+			if(qh != null && qh.getCard() != null) {
+				p.remove(p.getHand(), aDiscard, card);
+				view.update(null, players, sDeck, sDiscard, qh.getCard());
+			} else {
+				p.remove(p.getHand(), aDiscard, card);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+		}
 		
 		
 		@Override
