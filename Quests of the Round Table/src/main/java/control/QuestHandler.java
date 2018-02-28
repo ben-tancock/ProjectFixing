@@ -25,6 +25,7 @@ public class QuestHandler {
 	private Players players;
 	private Player player;
 	private ArrayList<Adventure> addedCards;
+	private ArrayList<Adventure> bidedCards;
 	private static QuestHandler instance;
 	
 	public QuestHandler(Quest c, Players p, Player pr, AdventureDeck d, AdventureDiscard di) {
@@ -34,6 +35,7 @@ public class QuestHandler {
 		players = p;
 		player = pr;
 		addedCards = new ArrayList<>();
+		bidedCards = new ArrayList<>();
 		instance = this;
 	}
 	
@@ -254,6 +256,10 @@ public class QuestHandler {
 		return addedCards;
 	}
 	
+	public ArrayList<Adventure> getBidedCards() {
+		return bidedCards;
+	}
+	
 	public void promptPlayerToFightFoe(Player p) {
 		//Force Player to only choose Weapon, Ally, or Amour
 		PlayGame pg = PlayGame.getInstance();
@@ -292,9 +298,14 @@ public class QuestHandler {
 		//winning player discards all bided cards.
 		if(bidWinner != null) {
 			if(bidWinner.getBid() > 0) {
-				ArrayList<Adventure> bidedCards = pg.getView().discardPrompt(bidWinner, bidWinner.getBid());// will get these from a discard prompt.
-				for(Adventure a : bidedCards) {
-					bidWinner.remove(bidWinner.getHand(), discard, a);
+				bidWinner.setHandState(CardStates.FACE_UP);
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+				bidedCards = pg.getView().bidDiscardPrompt(bidWinner, bidWinner.getBid(), true);// will get these from a discard prompt.
+				if(bidedCards != null) {
+					discard.addAll(bidedCards);
+					bidedCards.removeAll(bidedCards);
+				} else {
+					bidWinner = null; // prevent player from winning if they don't bid cards
 				}
 			}
 			return bidWinner;
@@ -366,6 +377,14 @@ public class QuestHandler {
 			QuestHandler qh = QuestHandler.getInstance();
 			PlayGame pg = PlayGame.getInstance();
 			p.remove(p.getHand(), qh.getAddedCards(), card);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+		}
+		
+		@Override
+		public void onBidCardPicked(Player p, Adventure card) {
+			PlayGame pg = PlayGame.getInstance();
+			QuestHandler qh = QuestHandler.getInstance();
+			p.remove(p.getHand(), qh.getBidedCards(), card);
 			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
 		}
 	}

@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -1103,8 +1104,84 @@ public class View extends Application {
 		}
 	}
 	
-	public ArrayList<Adventure> discardPrompt(Player p, int cards) {
-		return null;
+	
+	public ArrayList<Adventure> bidDiscardPrompt(Player p, int numCards, boolean firstTime) {
+		ArrayList<Adventure> discardedCards = new ArrayList<>();
+		cardClicked = false;
+		buttonClicked = false;
+		cardIndex = 0;
+		if(firstTime) {
+			if(p.getAllies().size() > 0) { //this is to lessen the required discard count if allies are in play that have bids
+				for(Ally a : p.getAllies()) {
+					numCards -= a.getBids();
+				}
+			}
+		}
+		System.out.println(numCards);
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Please choose the cards you wish to discard");
+		VBox window = new VBox();
+		Label discardCountLabel = new Label();
+		discardCountLabel.setText("Number of cards to discard: " + numCards);
+		List<Button> cards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+			Button button = new Button();
+			final int index = cardIndex;
+			BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			button.setBackground(new Background(buttonBackground));
+			button.setMinWidth(75);
+			button.setMinHeight(100);
+			button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					discardedCards.add(p.getHand().get(index));
+					notifyBidCardChosen(p, p.getHand().get(index));
+					dialog.close();
+					cardClicked = true;
+				}
+			});
+			cards.add(button);
+		}
+		HBox cardButtons = new HBox();
+		//cards.add(finishedButton);
+		cardButtons.getChildren().addAll(cards);
+		cardButtons.setMaxHeight(100);
+		window.getChildren().add(discardCountLabel);
+		window.getChildren().add(cardButtons);
+		window.setAlignment(Pos.CENTER);
+		window.setMaxHeight(cardButtons.getHeight());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		dialog.initOwner(twoPlayerStage);
+		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
+				
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		dialog.showAndWait();
+		if(cardClicked) {
+			if(numCards > 1) {
+				bidDiscardPrompt(p, numCards-= 1, false);
+			}
+			return discardedCards;
+		} else {
+			return null;
+		}
 	}
 	
 	/*
@@ -1141,9 +1218,16 @@ public class View extends Application {
 	}
 	
 	//notify when stage weapons are chosen
-		public void notifyStageWeaponChosen(Player p, Weapon card) {
-			if(listeners.get(1) != null) {
-				listeners.get(1).onStageWeaponPicked(p, card);
-			}
+	public void notifyStageWeaponChosen(Player p, Weapon card) {
+		if(listeners.get(1) != null) {
+			listeners.get(1).onStageWeaponPicked(p, card);
 		}
+	}
+		
+	//notify card chosen for discard in quest
+	public void notifyBidCardChosen(Player p, Adventure card) {
+		if(listeners.get(1) != null) {
+			listeners.get(1).onBidCardPicked(p, card);
+		}
+	}
 }

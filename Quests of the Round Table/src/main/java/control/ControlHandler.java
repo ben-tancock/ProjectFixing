@@ -75,4 +75,8 @@ public abstract class ControlHandler {
 	public void onStageWeaponPicked(Player p, Weapon card) {
 		
 	}
+	
+	public void onBidCardPicked(Player p, Adventure card) {
+		
+	}
 }

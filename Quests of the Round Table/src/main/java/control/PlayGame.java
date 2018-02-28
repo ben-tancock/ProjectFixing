@@ -101,20 +101,20 @@ public class PlayGame extends Application{
 				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
 				// have to wait for everything to be set up before we can start rotating i think
 				//view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
-				/* for hacking purposes
-				 *try {
-				 *	players.getPlayers().get(0).drawCard(aDeck, "test_of_the_questing_beast");
-				 *} catch (Exception e) {
-				 *	// TODO Auto-generated catch block
-				 *	e.printStackTrace();
-				 *}
-				 *players.getPlayers().get(0).drawCard(11, aDeck);
-				 *players.getPlayers().get(1).drawCard(12, aDeck);
-				 */
-				
+				 
+				 try {
+				 	players.getPlayers().get(0).drawCard(aDeck, "test_of_the_questing_beast");
+				 } catch (Exception e) {
+				 	// TODO Auto-generated catch block
+				 	e.printStackTrace();
+				 }
+				 players.getPlayers().get(0).drawCard(11, aDeck);
+				 players.getPlayers().get(1).drawCard(12, aDeck);
+				 
+				/*
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
-				}
+				}*/
 				 // current player is the dealer
 				view.update(arg0, players, sDeck, sDiscard, null);
 				currentPlayer = 0;//(currentPlayer + 1) % 2;
@@ -393,8 +393,8 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
-			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "search_for_the_questing_beast"); for hacking purposes
-			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
+			players.getPlayers().get(0).drawCard(sDeck, sDiscard, "search_for_the_questing_beast");
+			//players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			QuestHandler qh = QuestHandler.getInstance();
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
