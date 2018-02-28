@@ -244,7 +244,24 @@ public class QuestHandler {
 							weapons.add((Weapon)a);
 						}
 					}
-					return new Stage((Foe)addedCards.get(0), weapons);
+					Stage stage = new Stage((Foe)addedCards.get(0), weapons);
+					boolean enoughBP = true;
+					for(Stage s :  card.getStages()) {
+						if(s.getFoe() != null && s.getBattlePoints() > stage.getBattlePoints()) {
+							enoughBP = false;
+						}
+					}
+					if(enoughBP) {
+						return stage;
+					} else {
+						for(Adventure a : addedCards) {
+							a.setState(CardStates.FACE_UP);
+						}
+						sponsor.getHand().addAll(addedCards);
+						pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+						pg.getView().promptNotEnoughBP();
+						setupStage(sponsor);
+					}
 				}
 			}
 		} else {
@@ -338,8 +355,6 @@ public class QuestHandler {
 			currentIndex += 1 % players.getPlayers().size();
 			
 		}
-		
-		//boolean result = pg.getView().prompt("Quest");
 		return participants;
 	}
 	

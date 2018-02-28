@@ -884,7 +884,6 @@ public class View extends Application {
 		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent arg0) {
-				
 				twoPlayerStage.getScene().getRoot().setEffect(null);
 				dialog.close();
 				buttonClicked = true;
@@ -933,6 +932,15 @@ public class View extends Application {
 			}
 			return false;
 		}
+	}
+	
+	public void promptNotEnoughBP() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Stage Error Dialog");
+		alert.setHeaderText("Error: Not enough BP");
+		alert.setContentText("The Foe and it's weapons do not have enough battle points to be added.");
+
+		alert.showAndWait();
 	}
 	
 	/*public void listentoHand() {
