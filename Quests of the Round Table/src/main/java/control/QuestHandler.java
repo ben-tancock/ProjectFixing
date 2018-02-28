@@ -50,11 +50,13 @@ public class QuestHandler {
 		if(sponsor == null) {
 			return true; //nobody sponsored so go back
 		}
+		
 		getCard().setSponsor(sponsor);
 		int sponsorIndex = players.getPlayers().indexOf(sponsor);
 		
 		PlayGame pg = PlayGame.getInstance();
 		boolean seeCards = pg.getView().promptForStageSetup(sponsor.getName());
+		
 		if(seeCards) {
 			sponsor.setHandState(CardStates.FACE_UP);
 		}
@@ -106,6 +108,7 @@ public class QuestHandler {
 				return false;
 			}
 		}
+		
 		int newSize = sponsor.getHand().size();
 		int numCardsUsed = oldSize - newSize;
 		sponsor.setHandState(CardStates.FACE_DOWN);
@@ -228,6 +231,7 @@ public class QuestHandler {
 	public Stage setupStage(Player sponsor) {
 		PlayGame pg = PlayGame.getInstance();
 		addedCards = new ArrayList<>();
+		
 		boolean finished = pg.getView().promptAddCardToStage(sponsor);
 		
 		

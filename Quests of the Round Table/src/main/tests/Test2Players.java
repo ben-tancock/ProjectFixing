@@ -1,9 +1,16 @@
 import static org.junit.Assert.*;
-
+import control.PlayGame.PlayGameControlHandler;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
 
+import javax.swing.SwingUtilities;
+
+import org.junit.Rule;
 import org.junit.Test;
 
+import control.PlayGame;
+import javafx.application.Application;
+import javafx.embed.swing.JFXPanel;
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
@@ -18,6 +25,7 @@ public class Test2Players {
 	 * At the start of a game every player is given 12 Adventure Cards to their hand
 	 */
 	
+	@Rule public JavaFXThreadingRule javafxRule = new JavaFXThreadingRule();
 	@Test
 	public void testGameStart() {
 		//create 2 players and assign a player as the dealer
@@ -27,7 +35,7 @@ public class Test2Players {
 		players.addHuman();
 		System.out.print("test\n");
 		
-		
+		players.addListener(new PlayGameControlHandler());
 		players.getPlayers().get(0).setDealer(true); // player 1 (index 0) is set to dealer
 		
 		//Check if dealer has been properly assigned
@@ -63,12 +71,28 @@ public class Test2Players {
 			person.drawCard(12, adventureDeck);
 			person.displayHand();
 		} 
-		
+		//Application.launch("");
+		/*final CountDownLatch latch = new CountDownLatch(1);
+		SwingUtilities.invokeLater(new Runnable() {
+		    public void run() {
+		        new JFXPanel(); // initializes JavaFX environment
+		        latch.countDown();
+		    }
+		});
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		PlayGame playGame = new PlayGame(players, adventureDeck, adventureDiscard, storyDeck, storyDiscard);
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
+		playGame.doTurn(playGame.getPlayers().getPlayers().get(0));
 		assertEquals(0, storyDiscard.size());
 		//Player to left of dealer starts by drawing first Story card
-		players.getPlayers().get(1).drawCard(storyDeck, storyDiscard);
-		assertEquals(27, storyDeck.size());
-		assertEquals(1, storyDiscard.size());
+		playGame.getPlayers().getPlayers().get(1).drawCard(playGame.getSDeck(), playGame.getSDiscard());
+		assertEquals(27, playGame.getSDeck().size());
+		assertEquals(1, playGame.getSDiscard().size());
 		//Drawn card event is handled and something happens.
 		
 		//fail("Not yet implemented");

@@ -311,7 +311,12 @@ public class View extends Application {
 			
 			//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 			if(firstTime) {
-				twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+				if(primStage != null) {
+					primStage.close();
+				}
+			
+				twoPlayerStage = new Stage(StageStyle.DECORATED);
+			//	twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				firstTime = false;
 			}
 			twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
@@ -333,7 +338,7 @@ public class View extends Application {
 		HBox storyDeckSpace = new HBox();
 		HBox questStageSpace = new HBox(-50);
 		
-		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
+		player1Cards = playerCards(players.getPlayers().get(0), 0);			
 			
 		//player2Cards
 		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(1), 1));
@@ -387,7 +392,12 @@ public class View extends Application {
 		//grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
-			threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+			if(primStage != null) {
+				primStage.close();
+			}
+		
+			threePlayerStage = new Stage(StageStyle.DECORATED);
+		//	threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			firstTime = false;
 		}
 		threePlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
@@ -762,10 +772,22 @@ public class View extends Application {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-			primStage.close();
+			if(players.getPlayers().size() == 2) {
+				twoPlayerStage.close();
+			}if(players.getPlayers().size() == 3) {
+				threePlayerStage.close();
+			}if(players.getPlayers().size() == 4) {
+				fourPlayerStage.close();
+			}
 			return true;
 		} else {
-		    primStage.close();
+			if(players.getPlayers().size() == 2) {
+				twoPlayerStage.close();
+			}if(players.getPlayers().size() == 3) {
+				threePlayerStage.close();
+			}if(players.getPlayers().size() == 4) {
+				fourPlayerStage.close();
+			}
 			return false;
 		}
 	}
@@ -806,7 +828,13 @@ public class View extends Application {
 				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
-						twoPlayerStage.getScene().getRoot().setEffect(null);
+						if(twoPlayerStage != null) {
+							twoPlayerStage.getScene().getRoot().setEffect(null);
+						} else if(threePlayerStage != null) {
+							threePlayerStage.getScene().getRoot().setEffect(null);
+						} else if(fourPlayerStage != null) {
+							fourPlayerStage.getScene().getRoot().setEffect(null);
+						}
 						notifyStageCardChosen(p, p.getHand().get(index));
 						cardClicked = true;
 						dialog.close();
@@ -842,7 +870,13 @@ public class View extends Application {
 				dialog.setY(event.getScreenY() - dragDelta.y);
 			}
 		});
-		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
 		dialog.showAndWait();
 		if(cardClicked) {
 			return true;
@@ -895,7 +929,13 @@ public class View extends Application {
 		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent arg0) {
-				twoPlayerStage.getScene().getRoot().setEffect(null);
+				if(twoPlayerStage != null) {
+					twoPlayerStage.getScene().getRoot().setEffect(null);
+				} else if(threePlayerStage != null) {
+					threePlayerStage.getScene().getRoot().setEffect(null);
+				} else if(fourPlayerStage != null) {
+					fourPlayerStage.getScene().getRoot().setEffect(null);
+				}
 				dialog.close();
 				buttonClicked = true;
 			}
@@ -930,7 +970,13 @@ public class View extends Application {
 				dialog.setY(event.getScreenY() - dragDelta.y);
 			}
 		});
-		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
 		dialog.showAndWait();
 		if(cardClicked) {
 			if(!buttonClicked) {
@@ -1101,7 +1147,14 @@ public class View extends Application {
 		reversed.setPlayers(persons);
 
 	//	reversed.setPlayers(Collections.reverse(reversed.getPlayers()));
-		setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard(), null);
+		
+		if(twoPlayerStage != null) {
+			setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard(), null);
+		} else if(threePlayerStage != null) {
+			setUpFor3Players(null, reversed, game.getSDeck(), game.getSDiscard());
+		} else if(fourPlayerStage != null) {
+			setUpFor4Players(null, reversed, game.getSDeck(), game.getSDiscard());
+		}
 		
 		// We should make either Players or PlayGame do this, I prefer PlayGame because it calls update from the view.
 		
@@ -1331,7 +1384,13 @@ public class View extends Application {
 				dialog.setY(event.getScreenY() - dragDelta.y);
 			}
 		});
-		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
 		dialog.showAndWait();
 		if(cardClicked) {
 			if(numCards > 1) {

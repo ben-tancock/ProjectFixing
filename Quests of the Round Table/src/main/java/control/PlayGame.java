@@ -55,6 +55,20 @@ public class PlayGame extends Application{
 		sDeck.shuffle();
 	}
 	
+	public PlayGame(Players riggedPlayers, AdventureDeck riggedDeck, AdventureDiscard riggedDiscard, StoryDeck storyDeck, StoryDiscard storyDiscard ) {
+		players = riggedPlayers;
+		
+		aDeck = riggedDeck;
+		aDiscard = riggedDiscard;
+		sDeck = storyDeck;
+		sDiscard = storyDiscard;
+		//Application.launch("");
+		view = new View();
+		winners = new ArrayList<Player>();
+		
+	}
+	
+	
 	public static void main(String[] args) {
 		//logger.info("Game Menu starting!");
 		Application.launch(args);
