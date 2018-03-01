@@ -2,10 +2,12 @@ package control;
 
 import model.Tournament;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
+import model.Ally;
 import model.Amour;
 import model.CardStates;
 import model.Person;
@@ -100,9 +102,27 @@ public class TournamentHandler {
 			else if(tournament.getParticipants().get(i).getBattlePoints() - tournament.getParticipants().get(i).getABP() > max.getBattlePoints() - max.getABP()) {
 				max = tournament.getParticipants().get(i);
 			}
-			else {
-				//tournament.getParticipants().get(i)
+			
+			for(Iterator<Weapon> weaponsIterator = tournament.getParticipants().get(i).getWeapons().iterator(); weaponsIterator.hasNext();) {
+				Weapon w = weaponsIterator.next();
+				weaponsIterator.remove();
+				discard.add(w);
 			}
+			
+			for(Iterator<Ally> allyIterator = tournament.getParticipants().get(i).getAllies().iterator(); allyIterator.hasNext();) {
+				Ally a = allyIterator.next();
+				allyIterator.remove();
+				discard.add(a);
+			}
+			
+			for(Iterator<Amour> amourIterator = tournament.getParticipants().get(i).getAmour().iterator(); amourIterator.hasNext();) {
+				Amour a = amourIterator.next();
+				amourIterator.remove();
+				discard.add(a);
+			}
+			
+		
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		}
 		
 		

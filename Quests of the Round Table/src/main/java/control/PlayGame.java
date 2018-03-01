@@ -83,13 +83,13 @@ public class PlayGame extends Application{
 	public void start(Stage arg0) throws Exception {
 		primStage = arg0; // for restarting the game after win.
 		
-		/*
+		
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Quest) {
+			if(sDeck.get(i) instanceof Tournament) {
 				sDeck.set(0, sDeck.get(i));
 				sDeck.remove(i);
 			}
-		}*/
+		}
 		//logger.info("Shuffled the decks.");
 		
 		view.start(arg0);
