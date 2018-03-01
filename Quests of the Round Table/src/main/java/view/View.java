@@ -237,9 +237,9 @@ public class View extends Application {
 		if(players.getPlayers().size() == 2) {
 			setupFor2Players(event, players, sDeck, sDiscard, quest);
 		} else if (players.getPlayers().size() == 3) {
-			setUpFor3Players(event, players,sDeck, sDiscard);
+			setUpFor3Players(event, players,sDeck, sDiscard, quest);
 		} else {
-			setUpFor4Players(event, players, sDeck, sDiscard);
+			setUpFor4Players(event, players, sDeck, sDiscard, quest);
 		}
 	}
 	
@@ -325,7 +325,7 @@ public class View extends Application {
 		}
 	// -----------------------------------------------------------------------------------------------------------------------
 	
-	public void setUpFor3Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+	public void setUpFor3Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
 		player1Cards = new HBox();
 		player2Cards = new HBox();
 		player3Cards = new HBox();
@@ -337,14 +337,31 @@ public class View extends Application {
 		HBox player3ShieldSurface = new HBox();
 		HBox storyDeckSpace = new HBox();
 		HBox questStageSpace = new HBox(-50);
+		if(quest != null) {
+			for(model.Stage stage : quest.getStages()) {
+				HBox stageSpace = new HBox();
+				List<Adventure> cards = new ArrayList<Adventure>();
+				if(stage.getTest() != null) {
+					cards.add(stage.getTest());
+					stageSpace.getChildren().add(stageCards(cards));
+				}
+				if(stage.getFoe() != null) {
+					cards.add(stage.getFoe());
+					cards.addAll(stage.getFoe().getWeapons());
+					stageSpace.getChildren().add(stageCards(cards));
+				}
+				questStageSpace.getChildren().add(stageSpace);
+			}
+			questStageSpace.setMinWidth(187.5);
+		}
 		
 		player1Cards = playerCards(players.getPlayers().get(0), 0);			
 			
 		//player2Cards
-		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(1), 1));
+		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(2), 1));
 		
 		//player3 cards
-		player3Cards.getChildren().add(playerCards(players.getPlayers().get(2), 2));
+		player3Cards.getChildren().add(playerCards(players.getPlayers().get(1), 2));
 		
 		grid = new GridPane();
 		grid.setVgap(0);
@@ -357,10 +374,10 @@ public class View extends Application {
 		player1ShieldSurface.setMinWidth(337.5);
 		
 		//player2 variables
-		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
+		player2PlayingSurface.getChildren().add(verticalPlayedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
 		player2PlayingSurface.setMinWidth(275);
 		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
-		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player2ShieldSurface.setAlignment(Pos.CENTER_RIGHT);
 		player2ShieldSurface.setMinHeight(75);
 		
 		//player3 variables
@@ -406,7 +423,7 @@ public class View extends Application {
 	}
 	
 	//4 player game setup
-	public void setUpFor4Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard) {
+	public void setUpFor4Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
 		player1Cards = new HBox();
 		player2Cards = new HBox();
 		player3Cards = new HBox();
@@ -422,6 +439,23 @@ public class View extends Application {
 		VBox player4PlayingSurface = new VBox();
 		HBox storyDeckSpace = new HBox();
 		HBox questStageSpace = new HBox(-50);
+		if(quest != null) {
+			for(model.Stage stage : quest.getStages()) {
+				HBox stageSpace = new HBox();
+				List<Adventure> cards = new ArrayList<Adventure>();
+				if(stage.getTest() != null) {
+					cards.add(stage.getTest());
+					stageSpace.getChildren().add(stageCards(cards));
+				}
+				if(stage.getFoe() != null) {
+					cards.add(stage.getFoe());
+					cards.addAll(stage.getFoe().getWeapons());
+					stageSpace.getChildren().add(stageCards(cards));
+				}
+				questStageSpace.getChildren().add(stageSpace);
+			}
+			questStageSpace.setMinWidth(187.5);
+		}
 		
 		grid = new GridPane();
 		grid.setVgap(0);
@@ -436,7 +470,7 @@ public class View extends Application {
 		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
 		storyDeckSpace.getChildren().add(questStageSpace);
 		
-		player1Cards.getChildren().add(playerCards(players.getPlayers().get(0), 0));			
+		player1Cards = playerCards(players.getPlayers().get(0), 0);			
 		
 		//player2Cards
 		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(1), 1));
@@ -448,11 +482,11 @@ public class View extends Application {
 		player4Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(3), 3));
 		
 		//player2 variables
-		player2PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
+		player2PlayingSurface.getChildren().add(verticalPlayedCards(players.getPlayers().get(1).getPlayingSurface(), 1));
 		player2PlayingSurface.setMinWidth(125);
 		player2PlayingSurface.setMinHeight(175);
 		player2ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(1), 1));
-		player2ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player2ShieldSurface.setAlignment(Pos.CENTER_RIGHT);
 		player2ShieldSurface.setMinHeight(75);
 		
 		//player3 variables
@@ -463,15 +497,16 @@ public class View extends Application {
 		player3ShieldSurface.setMinWidth(337.5);
 		
 		//player4 variables
-		player4PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(3).getPlayingSurface(), 3));
+		player4PlayingSurface.getChildren().add(verticalPlayedCards(players.getPlayers().get(3).getPlayingSurface(), 3));
 		player4PlayingSurface.setMinWidth(125);
 		player4ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(3), 3));
-		player4ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
+		player4ShieldSurface.setAlignment(Pos.CENTER_LEFT);
 		player4ShieldSurface.setMinWidth(100);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 1, 4);
 		grid.add(player1ShieldSurface, 2, 4);
 		grid.add(player1Cards, 3, 4);
+		grid.add(player1PlayingSurface, 3, 3);
 		
 		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 5, 3);
 		grid.add(player2ShieldSurface, 5, 2);
@@ -486,19 +521,25 @@ public class View extends Application {
 		
 		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(3), 3), 0, 3);
 		grid.add(player4ShieldSurface, 0, 2);
+		
 		//player4PlayingSurface.setMinWidth(175);
 		grid.add(player4Cards, 0, 1);
 		grid.add(player4PlayingSurface, 1, 1);
 		
 		grid.add(storyDeckSpace, 3, 2);
 		
-		//grid.setGridLinesVisible(true);
+		grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
-			fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+			if(primStage != null) {
+				primStage.close();
+			}
+		
+			fourPlayerStage = new Stage(StageStyle.DECORATED);
+		//	fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			firstTime = false;
 		}
-		fourPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
+		fourPlayerStage.setScene(new Scene(grid, 1120, 800,Color.AQUA));
 		fourPlayerStage.getScene().setRoot(grid);
 		fourPlayerStage.show();
 		
@@ -519,19 +560,6 @@ public class View extends Application {
 			if(index == 1 || index == 2) {
 				theCard.setRotate(180);
 			}
-			/* This should only be called in the controllers when appropriate, otherwise we run into issues.
-			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					// TODO Auto-generated method stub
-					System.out.println( "This is a " + a.getName());
-					//player.playCard(a, true);
-					//notifyPlayerCardPlayed(event,player,a); this should only be called w
-					//notify other players
-				}
-				
-			});*/
 			playerCards.getChildren().add(theCard);
 		
 		}
@@ -549,19 +577,11 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			theCard.setRotate(270);
-			if(index == 0) {
-				theCard.setRotate(180);
-			}/* This should only be called in the controller when appropriate, otherwise we have issues.
-			theCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					// TODO Auto-generated method stub
-					System.out.println( "This is a " + a.getName());
-				}
-				
-			});*/
+			if(index == 1) {
+				theCard.setRotate(270);
+			} else if (index ==  3) {
+				theCard.setRotate(90);
+			}
 			playerCards.getChildren().add(theCard);
 		
 		}
@@ -613,6 +633,28 @@ public class View extends Application {
 		return playedCards;
 	}
 	
+	public VBox verticalPlayedCards(List<Adventure> playingSurface, int index) {
+		VBox playerCards = new VBox(-90);
+		for(Adventure a : playingSurface) {
+			Image card;
+			if(a.getState() == CardStates.FACE_UP) {
+				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+			} else {
+				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
+			}
+			
+			ImageView theCard = new ImageView(card);
+			if(index == 1) {
+				theCard.setRotate(270);
+			} else if (index ==  3) {
+				theCard.setRotate(90);
+			}
+			playerCards.getChildren().add(theCard);
+		
+		}
+		return playerCards;
+	}
+	
 	public HBox shields(Player p, int pIndex) {
 		HBox shields = new HBox(-50);
 		for(int i = 0; i < p.getShields(); i++) {
@@ -632,7 +674,7 @@ public class View extends Application {
 	}
 	
 	public VBox verticalPlayerShields(Player p, int pIndex) {
-		VBox shields = new VBox(-50);
+		VBox shields = new VBox(-80);
 		for(int i = 0; i < p.getShields(); i++) {
 			if(pIndex == 0) {
 				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
@@ -642,7 +684,7 @@ public class View extends Application {
 				shields.getChildren().add(theCard);
 			}else if (pIndex == 3){
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_4.jpg", 75, 100, true, true));
-				theCard.setRotate(270);
+				theCard.setRotate(90);
 				shields.getChildren().add(theCard);
 			}
 		}
@@ -849,7 +891,13 @@ public class View extends Application {
 		window.getChildren().addAll(foesAndTests);
 		window.setAlignment(Pos.CENTER);
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(twoPlayerStage);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
 		dialog.setScene(scene);
 		dialog.centerOnScreen();
@@ -949,7 +997,13 @@ public class View extends Application {
 		window.setAlignment(Pos.CENTER);
 		window.setMaxHeight(weaponsBox.getHeight());
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(twoPlayerStage);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
 		dialog.setScene(scene);
 		dialog.centerOnScreen();
@@ -1043,7 +1097,13 @@ public class View extends Application {
 		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent arg0) {	
-				twoPlayerStage.getScene().getRoot().setEffect(null);
+				if(twoPlayerStage != null) {
+					twoPlayerStage.getScene().getRoot().setEffect(null);
+				} else if(threePlayerStage != null) {
+					threePlayerStage.getScene().getRoot().setEffect(null);
+				} else if(fourPlayerStage != null) {
+					fourPlayerStage.getScene().getRoot().setEffect(null);
+				}
 				dialog.close();
 				buttonClicked = true;
 			}
@@ -1057,7 +1117,13 @@ public class View extends Application {
 		window.setAlignment(Pos.CENTER);
 		window.setMaxHeight(alliesWeaponsAndAmour.getHeight());
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(twoPlayerStage);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if (threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if (fourPlayerStage != null) { 
+			dialog.initOwner(twoPlayerStage);
+		}
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
 		dialog.setScene(scene);
 		dialog.centerOnScreen();
@@ -1078,7 +1144,13 @@ public class View extends Application {
 				dialog.setY(event.getScreenY() - dragDelta.y);
 			}
 		});
-		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
 		dialog.showAndWait();
 		if(cardClicked) {
 			if(!buttonClicked) {
@@ -1151,9 +1223,9 @@ public class View extends Application {
 		if(twoPlayerStage != null) {
 			setupFor2Players(null, reversed, game.getSDeck(), game.getSDiscard(), null);
 		} else if(threePlayerStage != null) {
-			setUpFor3Players(null, reversed, game.getSDeck(), game.getSDiscard());
+			setUpFor3Players(null, reversed, game.getSDeck(), game.getSDiscard(), null);
 		} else if(fourPlayerStage != null) {
-			setUpFor4Players(null, reversed, game.getSDeck(), game.getSDiscard());
+			setUpFor4Players(null, reversed, game.getSDeck(), game.getSDiscard(), null);
 		}
 		
 		// We should make either Players or PlayGame do this, I prefer PlayGame because it calls update from the view.
@@ -1223,7 +1295,13 @@ public class View extends Application {
 		window.setAlignment(Pos.CENTER);
 		window.setMaxHeight(cardButtons.getHeight());
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(twoPlayerStage);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
 		dialog.setScene(scene);
 		dialog.centerOnScreen();
@@ -1244,7 +1322,13 @@ public class View extends Application {
 				dialog.setY(event.getScreenY() - dragDelta.y);
 			}
 		});
-		twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
 		dialog.showAndWait();
 		if(cardClicked) {
 			if(numCards > 1) {
@@ -1363,7 +1447,13 @@ public class View extends Application {
 		window.setAlignment(Pos.CENTER);
 		window.setMaxHeight(discardCountLabel.getHeight() + firstCardButtons.getHeight() + secondCardButtons.getHeight());
 		dialog.initModality(Modality.APPLICATION_MODAL);
-		dialog.initOwner(twoPlayerStage);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
 		Scene scene = new Scene(window, (75 * (allyAmourCards.size() + otherCards.size())) + 100, 250, Color.AQUA);
 		dialog.setScene(scene);
 		dialog.centerOnScreen();

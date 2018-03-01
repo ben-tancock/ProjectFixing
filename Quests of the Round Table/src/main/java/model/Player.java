@@ -248,7 +248,7 @@ public abstract class Player {
 	}
 	
 	//draws a specific card from the AD
-	public void drawCard(AdventureDeck deck, String name) throws Exception{
+	public void drawCard(AdventureDeck deck, String name) throws Exception {
 		hand.add(deck.findAndDraw(name));
 		
 		if(hand.size() > 12) {

@@ -60,9 +60,6 @@ public class QuestHandler {
 		if(seeCards) {
 			sponsor.setHandState(CardStates.FACE_UP);
 		}
-		
-		
-		
 		/*
 		for(Adventure a : sponsor.getHand()) {
 			if(a instanceof Foe) {
@@ -96,7 +93,6 @@ public class QuestHandler {
 				break;
 			}
 		}*/
-		
 		
 		int oldSize = sponsor.getHand().size();
 		for(int i = 0; i < getCard().getNumStages(); i++) {
@@ -159,9 +155,10 @@ public class QuestHandler {
 				int minBid = card.getStages().get(i).getBids();
 				
 				Player bidWinner = promptPlayerToBid(participants, minBid);
-				for(Player p : participants) { //remove everyone else that isn't the winner of the bid.
+				for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
+					Player p = participantIterator.next(); //remove everyone else that isn't the winner of the bid.
 					if(!p.equals(bidWinner)) {
-						participants.remove(p);
+						participantIterator.remove();
 					}
 				}
 				System.out.println("Amount of participants: (Should be 1 if player won bid)" + participants.size());
@@ -172,7 +169,7 @@ public class QuestHandler {
 		//Winning participants get shields
 		for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
 			Player p = participantIterator.next();
-			p.setShields(p.getShields() + numParticipants + card.getNumStages());
+			p.setShields(p.getShields() + card.getNumStages());
 		}
 		//sponsor then draws back num cards used + numstages
 		sponsor.drawCard(numCardsUsed + card.getNumStages(), deck);
@@ -367,11 +364,6 @@ public class QuestHandler {
 		for(int i = 0; i < (players.getPlayers().size() - 1); i++) {	// skip the quest sponsor
 			if(i > 0) {
 				pg.getView().rotate(pg);
-				if(pg.getView().switchPrompt("Participate", players.getPlayers().get((currentIndex + i) % players.getPlayers().size()).getName(), players.getPlayers().get((currentIndex + i) % players.getPlayers().size()))) {
-					//this.pg.focusPlayer(players.getPlayers().get(currentIndex + i));
-					players.getPlayers().get((currentIndex + 1) % players.getPlayers().size()).setHandState(CardStates.FACE_UP);
-					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
-				}
 			}
 			
 			if(!players.getPlayers().get(0).equals(sponsor)) {
@@ -388,7 +380,10 @@ public class QuestHandler {
 	
 	public Player askForParticipant(int i) {
 		PlayGame pg = PlayGame.getInstance();
-		players.getPlayers().get(i).setHandState(CardStates.FACE_UP);
+		boolean seeCards = pg.getView().seeCardPrompt(players.getPlayers().get(i));
+		if(seeCards) {
+			players.getPlayers().get(i).setHandState(CardStates.FACE_UP);
+		}
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 		boolean isParticipant =  pg.getView().prompt("Quest");
 		if(isParticipant) {

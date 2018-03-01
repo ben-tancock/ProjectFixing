@@ -101,7 +101,7 @@ public class Test3Players {
 		}
 		PlayGame playGame = new PlayGame(players, adventureDeck, adventureDiscard, storyDeck, storyDiscard);
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
-		playGame.doTurn(playGame.getPlayers().getPlayers().get(0));
+		//playGame.doTurn(playGame.getPlayers().getPlayers().get(0));
 		//playGame.getView().rotate(playGame);
 		//it becomes Player B's turn(left of dealer), Player B draws King's Recognition.
 		playerB.drawCard(storyDeck, storyDiscard, "king's_recognition");

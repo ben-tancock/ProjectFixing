@@ -80,10 +80,11 @@ public class DeckView extends HBox {
 		}
 		ImageView theCard = new ImageView(card);
 		//for 2 players for now.
-		if(index == 1 || index == 3) {
-			theCard.setRotate(180);
+		if(index == 1) {
+			theCard.setRotate(270);
+		} else if (index == 3) {
+			theCard.setRotate(90);
 		}
-		theCard.setRotate(270);
 		hbox.getChildren().add(theCard);
 		return hbox;
 	}

@@ -84,13 +84,13 @@ public class PlayGame extends Application{
 	public void start(Stage arg0) throws Exception {
 		primStage = arg0; // for restarting the game after win.
 		
-		
+		/*
 		for(int i = 0; i < sDeck.size(); i++) {
 			if(sDeck.get(i) instanceof Quest) {
 				sDeck.set(0, sDeck.get(i));
 				sDeck.remove(i);
 			}
-		}
+		}*/
 		//logger.info("Shuffled the decks.");
 		
 		view.start(arg0);
@@ -192,7 +192,7 @@ public class PlayGame extends Application{
 				players.getPlayers().get(0).setShields(1);
 				players.getPlayers().get(1).setShields(1);
 				players.getPlayers().get(2).setShields(1);
-				players.getPlayers().get(3).setShields(1);
+				players.getPlayers().get(3).setShields(22);
 				
 				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
