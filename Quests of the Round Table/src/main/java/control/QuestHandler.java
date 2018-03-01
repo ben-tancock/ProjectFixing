@@ -131,21 +131,56 @@ public class QuestHandler {
 					Player p = participantIterator.next();
 					if(p.getBattlePoints() < card.getStages().get(i).getBattlePoints()) {
 						participantIterator.remove();
+						for(Iterator<Adventure> playerSurfaceIterator = p.getPlayingSurface().iterator(); playerSurfaceIterator.hasNext();) {
+							Adventure a = playerSurfaceIterator.next();
+							a.setState(CardStates.FACE_UP);
+						}
+						card.getStages().get(i).getFoe().setState(CardStates.FACE_UP);
+						if(card.getStages().get(i).getFoe().getWeapons().size() > 0) {
+							for(Iterator<Weapon> weaponsIterator = card.getStages().get(i).getFoe().getWeapons().iterator(); weaponsIterator.hasNext();) {
+								Weapon w = weaponsIterator.next();
+								w.setState(CardStates.FACE_UP);
+							}
+						}
+						pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+						ArrayList<Adventure> stageCards = new ArrayList<>();
+						stageCards.add(card.getStages().get(i).getFoe());
+						stageCards.addAll(card.getStages().get(i).getFoe().getWeapons());
+						pg.getView().promptPlayerLost(card.getStages().get(i).getFoe().getName(), stageCards, p, card.getStages().get(i).getBattlePoints());
 						
 						p.getWeapons().removeAll(p.getWeapons());
 						discard.addAll(p.getWeapons());
 						//player lost
 					} else {
 						//player won
+						for(Iterator<Adventure> playerSurfaceIterator = p.getPlayingSurface().iterator(); playerSurfaceIterator.hasNext();) {
+							Adventure a = playerSurfaceIterator.next();
+							a.setState(CardStates.FACE_UP);
+						}
+						card.getStages().get(i).getFoe().setState(CardStates.FACE_UP);
+						if(card.getStages().get(i).getFoe().getWeapons().size() > 0) {
+							for(Iterator<Weapon> weaponsIterator = card.getStages().get(i).getFoe().getWeapons().iterator(); weaponsIterator.hasNext();) {
+								Weapon w = weaponsIterator.next();
+								w.setState(CardStates.FACE_UP);
+							}
+						}
+						ArrayList<Adventure> stageCards = new ArrayList<>();
+						stageCards.add(card.getStages().get(i).getFoe());
+						stageCards.addAll(card.getStages().get(i).getFoe().getWeapons());
+						System.out.println(card.getStages().get(i).getFoe().getName());
+						pg.getView().promptPlayerWon(card.getStages().get(i).getFoe().getName(), stageCards, p, card.getStages().get(i).getBattlePoints());
+						p.getWeapons().removeAll(p.getWeapons());
+						discard.addAll(p.getWeapons());
 					}
+					
 				}
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				//remaining participants discard the weapons in their playing field
-				for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
-					Player p = participantIterator.next();
+				for(Iterator<Player> participantIterator1 = participants.iterator(); participantIterator1.hasNext();) {
+					Player p1 = participantIterator1.next();
 					
-					p.getWeapons().removeAll(p.getWeapons());
-					discard.addAll(p.getWeapons());
+					p1.getWeapons().removeAll(p1.getWeapons());
+					discard.addAll(p1.getWeapons());
 					pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 				}
 				
@@ -244,7 +279,6 @@ public class QuestHandler {
 				if(fChoosingWeapons) {
 					for(Adventure a : addedCards) {
 						if(a instanceof Weapon) {
-							a.setState(CardStates.FACE_DOWN);
 							weapons.add((Weapon)a); 
 						}
 					}

@@ -97,6 +97,9 @@ public class Test4Players {
 		if(qh != null && qh.getCard() != null) {
 			playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), qh.getCard());
 		}
+		
+		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "prosperity_throughout_the_realm");
+		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "chivalrous_deed");
 	}
 	
 	@Test

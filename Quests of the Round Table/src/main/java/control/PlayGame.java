@@ -255,6 +255,7 @@ public class PlayGame extends Application{
 						System.out.println("Congratulations " + winners.get(0).getName() + "! You Win!");
 						boolean gameRestart = view.promptGameEnd(winners.get(0));
 						if(gameRestart) {
+							primStage.close();
 							try {
 								PlayGame playGame = new PlayGame();
 								playGame.start(primStage);
@@ -264,6 +265,7 @@ public class PlayGame extends Application{
 								e.printStackTrace();
 							}
 						} else {
+							primStage.close();
 							return;
 						}
 					} else if (winners.size() > 1) {
@@ -343,10 +345,22 @@ public class PlayGame extends Application{
 
 		@Override
 		public void onCardOverflow(Player p) {
-			
+			QuestHandler qh = QuestHandler.getInstance();
 			while(p.getName() != players.getPlayers().get(0).getName()) {
 				view.rotate(PlayGame.getInstance());
 			}
+			boolean seeCards = view.seeCardPrompt(p);
+			if(seeCards) {
+				p.setHandState(CardStates.FACE_UP);
+				if(qh != null && qh.getCard() != null) {
+					view.update(null, players, sDeck, sDiscard, qh.getCard());
+				} else {
+					view.update(null, players, sDeck, sDiscard, null);
+				}
+			} else {
+				view.seeCardPrompt(p);
+			}
+			
 			boolean cardsRemoved = view.cardOverflowPrompt(p, p.getHand().size() - 12);
 			if(!cardsRemoved) {
 				onCardOverflow(p);
@@ -373,6 +387,7 @@ public class PlayGame extends Application{
 					}
 				}
 				if(dup) {
+					card.setState(CardStates.FACE_UP);
 					view.promptWeaponDuplicate(p.getName() + "'s playing field");
 				} else {
 					p.remove(p.getHand(), p.getWeapons(), card);

@@ -109,7 +109,8 @@ public class View extends Application {
 	private HBox player1Cards;
 	private HBox player2Cards;
 	private HBox player3Cards;
-	private VBox player4Cards;
+	private HBox stageSpace;
+	private HBox player1PlayingSurface;
 	
 	private static List<ControlHandler> listeners = new ArrayList<ControlHandler>();
 	
@@ -247,7 +248,7 @@ public class View extends Application {
 		private void setupFor2Players(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
 			player1Cards = new HBox();
 			player2Cards = new HBox();
-			HBox player1PlayingSurface = new HBox();
+			player1PlayingSurface = new HBox();
 			HBox player2PlayingSurface = new HBox();
 			HBox player1ShieldSurface = new HBox();
 			HBox player2ShieldSurface = new HBox();
@@ -255,16 +256,16 @@ public class View extends Application {
 			HBox questStageSpace = new HBox(-50);
 			if(quest != null) {
 				for(model.Stage stage : quest.getStages()) {
-					HBox stageSpace = new HBox();
+					stageSpace = new HBox();
 					List<Adventure> cards = new ArrayList<Adventure>();
 					if(stage.getTest() != null) {
 						cards.add(stage.getTest());
-						stageSpace.getChildren().add(stageCards(cards));
+						stageSpace = stageCards(cards);
 					}
 					if(stage.getFoe() != null) {
 						cards.add(stage.getFoe());
 						cards.addAll(stage.getFoe().getWeapons());
-						stageSpace.getChildren().add(stageCards(cards));
+						stageSpace = stageCards(cards);
 					}
 					questStageSpace.getChildren().add(stageSpace);
 				}
@@ -273,7 +274,7 @@ public class View extends Application {
 			
 			player1Cards = playerCards(players.getPlayers().get(0), 0);	
 			player1Cards.setMinWidth(350);
-			player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface(), 0));
+			player1PlayingSurface = playedCards(players.getPlayers().get(0).getPlayingSurface(), 0);
 			player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 			player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 			player1ShieldSurface.setMinWidth(337.5);
@@ -329,7 +330,7 @@ public class View extends Application {
 		player1Cards = new HBox();
 		player2Cards = new HBox();
 		player3Cards = new HBox();
-		HBox player1PlayingSurface = new HBox();
+		player1PlayingSurface = new HBox();
 		HBox player1ShieldSurface = new HBox();
 		VBox player2PlayingSurface = new VBox();
 		VBox player2ShieldSurface = new VBox();
@@ -339,16 +340,16 @@ public class View extends Application {
 		HBox questStageSpace = new HBox(-50);
 		if(quest != null) {
 			for(model.Stage stage : quest.getStages()) {
-				HBox stageSpace = new HBox();
+				stageSpace = new HBox();
 				List<Adventure> cards = new ArrayList<Adventure>();
 				if(stage.getTest() != null) {
 					cards.add(stage.getTest());
-					stageSpace.getChildren().add(stageCards(cards));
+					stageSpace = stageCards(cards);
 				}
 				if(stage.getFoe() != null) {
 					cards.add(stage.getFoe());
 					cards.addAll(stage.getFoe().getWeapons());
-					stageSpace.getChildren().add(stageCards(cards));
+					stageSpace = stageCards(cards);
 				}
 				questStageSpace.getChildren().add(stageSpace);
 			}
@@ -368,7 +369,7 @@ public class View extends Application {
 		grid.setHgap(0);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 5);
-		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface(), 1));
+		player1PlayingSurface = playedCards(players.getPlayers().get(0).getPlayingSurface(), 1);
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player1ShieldSurface.setMinWidth(337.5);
@@ -429,7 +430,7 @@ public class View extends Application {
 		player3Cards = new HBox();
 		VBox player4Cards = new VBox();
 		
-		HBox player1PlayingSurface = new HBox();
+		player1PlayingSurface = new HBox();
 		HBox player1ShieldSurface = new HBox();
 		VBox player2PlayingSurface = new VBox();
 		VBox player2ShieldSurface = new VBox();
@@ -441,16 +442,16 @@ public class View extends Application {
 		HBox questStageSpace = new HBox(-50);
 		if(quest != null) {
 			for(model.Stage stage : quest.getStages()) {
-				HBox stageSpace = new HBox();
+				stageSpace = new HBox();
 				List<Adventure> cards = new ArrayList<Adventure>();
 				if(stage.getTest() != null) {
 					cards.add(stage.getTest());
-					stageSpace.getChildren().add(stageCards(cards));
+					stageSpace = stageCards(cards);
 				}
 				if(stage.getFoe() != null) {
 					cards.add(stage.getFoe());
 					cards.addAll(stage.getFoe().getWeapons());
-					stageSpace.getChildren().add(stageCards(cards));
+					stageSpace = stageCards(cards);
 				}
 				questStageSpace.getChildren().add(stageSpace);
 			}
@@ -461,7 +462,7 @@ public class View extends Application {
 		grid.setVgap(0);
 		grid.setHgap(0);
 		
-		player1PlayingSurface.getChildren().add(playedCards(players.getPlayers().get(0).getPlayingSurface(), 0));
+		player1PlayingSurface = playedCards(players.getPlayers().get(0).getPlayingSurface(), 0);
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player1ShieldSurface.setMinWidth(337.5);
@@ -961,11 +962,13 @@ public class View extends Application {
 						}
 						if(!dup) {
 							weapons.add((Weapon)p.getHand().get(index));
+							p.getHand().get(index).setState(CardStates.FACE_DOWN);
 							notifyStageWeaponChosen(p, (Weapon)p.getHand().get(index));
 							dialog.close();
 							cardClicked = true; 
 						} else {
 							promptWeaponDuplicate("Foe");
+							p.getHand().get(index).setState(CardStates.FACE_UP);
 						}
 					}
 				});
@@ -1248,6 +1251,226 @@ public class View extends Application {
 		}
 	}
 	
+	public void promptPlayerLost(String name, ArrayList<Adventure> stageCards, Player p, int foeBP) {
+		buttonClicked = false;
+		cardIndex = 0;
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle(p.getName() + " has lost!");
+		VBox window = new VBox();
+		Label foePointsCount = new Label();
+		Label playerPointsCount = new Label();
+		List<Button> foeWeaponCards = new ArrayList<>();
+		for(Adventure a : stageCards) {
+			a.setState(CardStates.FACE_UP);
+		}
+		for(Adventure a : p.getPlayingSurface()) {
+			a.setState(CardStates.FACE_UP);
+		}
+		PlayGame pg = PlayGame.getInstance();
+		QuestHandler qh = QuestHandler.getInstance();
+		if(qh != null && qh.getCard() != null) {
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+		} else {
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+		}
+		for(cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
+			Button button = new Button();
+			stageCards.get(cardIndex).setState(CardStates.FACE_UP);
+			BackgroundImage buttonBackground;
+			if(cardIndex == 0) {
+				Image image = new Image("/playingCards/" + name + ".jpg", 75, 100, true, true);
+				buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			} else {
+				buttonBackground = new BackgroundImage(((ImageView)stageSpace.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			}
+			button.setBackground(new Background(buttonBackground));
+			button.setMinWidth(75);
+			button.setMinHeight(100);
+			foeWeaponCards.add(button);
+		}
+		List<Button> playerSurfaceCards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
+			Button button = new Button();
+			BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1PlayingSurface.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			button.setBackground(new Background(buttonBackground));
+			button.setMinWidth(75);
+			button.setMinHeight(100);
+			playerSurfaceCards.add(button);
+		}
+		Button finishedButton = new Button();
+		finishedButton.setText("done");
+		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				dialog.close();
+			}
+		});
+		HBox stageCardButtons = new HBox();
+		//cards.add(finishedButton);
+		stageCardButtons.getChildren().addAll(foeWeaponCards);
+		stageCardButtons.setMaxHeight(100);
+		HBox playerSurfaceButtons = new HBox();
+		//cards.add(finishedButton);
+		playerSurfaceButtons.getChildren().addAll(playerSurfaceCards);
+		playerSurfaceButtons.setMaxHeight(100);
+		foePointsCount.setText("Number of foe battlepoints: " + foeBP);
+		playerPointsCount.setText("Number of player battlepoints: " + p.getBattlePoints());
+		window.getChildren().add(foePointsCount);
+		window.getChildren().add(stageCardButtons);
+		window.getChildren().add(playerPointsCount);
+		window.getChildren().add(playerSurfaceButtons);
+		window.setAlignment(Pos.CENTER);
+		window.setMaxHeight(stageCardButtons.getHeight() + foePointsCount.getHeight() + playerSurfaceButtons.getHeight() + playerPointsCount.getHeight());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
+		Scene scene = new Scene(window, (75 * 10) + 100, 250, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
+				
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
+		dialog.showAndWait();
+	}
+	
+	public void promptPlayerWon(String name, ArrayList<Adventure> stageCards, Player p, int foeBP) {
+		buttonClicked = false;
+		cardIndex = 0;
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle(p.getName() + " has won!");
+		VBox window = new VBox();
+		Label foePointsCount = new Label();
+		Label playerPointsCount = new Label();
+		List<Button> foeWeaponCards = new ArrayList<>();
+		for(Adventure a : stageCards) {
+			a.setState(CardStates.FACE_UP);
+		}
+		for(Adventure a : p.getPlayingSurface()) {
+			a.setState(CardStates.FACE_UP);
+		}
+		PlayGame pg = PlayGame.getInstance();
+		QuestHandler qh = QuestHandler.getInstance();
+		if(qh != null && qh.getCard() != null) {
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+		} else {
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+		}
+		System.out.println("Stage Cards size: " + stageCards.size());
+		for(cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
+			Button button = new Button();
+			stageCards.get(cardIndex).setState(CardStates.FACE_UP);
+			BackgroundImage buttonBackground;
+			if(cardIndex == 0) {
+				
+				System.out.println(stageCards.get(0).getName());
+				Image image = new Image("/playingCards/" + name + ".jpg", 75, 100, true, true);
+				buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			} else {
+				buttonBackground = new BackgroundImage(((ImageView)stageSpace.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			}
+			button.setBackground(new Background(buttonBackground));
+			button.setMinWidth(75);
+			button.setMinHeight(100);
+			foeWeaponCards.add(button);
+		}
+		List<Button> playerSurfaceCards = new ArrayList<>();
+		for(cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
+			Button button = new Button();
+			BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1PlayingSurface.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			button.setBackground(new Background(buttonBackground));
+			button.setMinWidth(75);
+			button.setMinHeight(100);
+			playerSurfaceCards.add(button);
+		}
+		Button finishedButton = new Button();
+		finishedButton.setText("done");
+		finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				dialog.close();
+			}
+		});
+		HBox stageCardButtons = new HBox();
+		//cards.add(finishedButton);
+		stageCardButtons.getChildren().addAll(foeWeaponCards);
+		stageCardButtons.setMaxHeight(100);
+		HBox playerSurfaceButtons = new HBox();
+		//cards.add(finishedButton);
+		playerSurfaceButtons.getChildren().addAll(playerSurfaceCards);
+		playerSurfaceButtons.setMaxHeight(100);
+		foePointsCount.setText("Number of foe battlepoints: " + foeBP);
+		playerPointsCount.setText("Number of player battlepoints: " + p.getBattlePoints());
+		window.getChildren().add(foePointsCount);
+		window.getChildren().add(stageCardButtons);
+		window.getChildren().add(playerPointsCount);
+		window.getChildren().add(playerSurfaceButtons);
+		window.setAlignment(Pos.CENTER);
+		window.setMaxHeight(stageCardButtons.getHeight());
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
+		Scene scene = new Scene(window, (75 * 10) + 100, 250, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
+				
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
+		dialog.showAndWait();
+	}
 	
 	public ArrayList<Adventure> bidDiscardPrompt(Player p, int numCards, boolean firstTime) {
 		ArrayList<Adventure> discardedCards = new ArrayList<>();
@@ -1347,12 +1570,6 @@ public class View extends Application {
 		System.out.println(numCards);
 		PlayGame pg = PlayGame.getInstance();
 		QuestHandler qh = QuestHandler.getInstance();
-		p.setHandState(CardStates.FACE_UP);
-		if(qh != null && qh.getCard() != null) { 
-			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-		} else {
-			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
-		}
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle("Card OverFlow");
 		VBox window = new VBox();
@@ -1373,6 +1590,7 @@ public class View extends Application {
 						@Override
 						public void handle(MouseEvent arg0) {
 							p.getHand().get(index).setState(CardStates.FACE_UP);
+							update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
 							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
 							dialog.close();
 							cardClicked = true;
@@ -1409,6 +1627,7 @@ public class View extends Application {
 						@Override
 						public void handle(MouseEvent arg0) {
 							p.getHand().get(index).setState(CardStates.FACE_UP);
+							update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
 							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
 							dialog.close();
 							cardClicked = true;
