@@ -16,6 +16,7 @@ public abstract class Player {
 	private List<Amour> amour;
 	//private List<Adventure> bidCards;
 	private int bid;
+	private int aBP;
 	
 	public Player() {
 		hand = new ArrayList<Adventure>();
@@ -26,6 +27,7 @@ public abstract class Player {
 		focused = false;
 		rank = "";
 		bid = 0;
+		aBP = 0;
 	}
 	
 	// Getters and Setters --------------------------------
@@ -57,6 +59,37 @@ public abstract class Player {
 		} else {
 			return 22;
 		}
+	}
+	
+	public int getRankBP() {
+		if (rank.equals("squire")) {
+			return 5;
+		}
+		else if (rank.equals("knight")) {
+			return 10;
+		}
+		else if (rank.equals("champion_knight")) {
+			return 20;
+		}
+		return 0;
+	}
+	
+	public void setAllyBp(int x) {
+		aBP = x;
+	}
+	
+	public int getABP() {
+		return aBP;
+	}
+	
+	public int getAllyBp() {
+		int setABp = 0;
+		if(allies.size() > 0) {
+			for(Ally a : allies) {
+				setABp += a.getBattlePoints();
+			}
+		}
+		return setABp;
 	}
 	
 	public String getRankString() {

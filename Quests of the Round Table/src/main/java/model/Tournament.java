@@ -35,5 +35,9 @@ public class Tournament extends Story{
 		participants.add(p);
 	}
 	
+	public int getBonus() {
+		return bonus;
+	}
+	
 	//public void askPlayer()
 }

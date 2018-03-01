@@ -35,7 +35,7 @@ public class TournamentHandler {
 	
 	public boolean playTournament() throws Exception {
 		askToJoin(player);
-		
+		getWinner();
 		return true;
 	}
 	
@@ -64,22 +64,13 @@ public class TournamentHandler {
 			currentIndex += 1 % players.getPlayers().size();
 		}
 		
-		/*if(!pr.isFocused()) { 
-			for(Player p : players.getPlayers()) {
-				p.setFocused(false);
-			}
-			pr.setFocused(true);
-		}*/
-		//pr.setHandState(CardStates.FACE_UP);
+	
 		return null;
 	}
 	
 	public void ask(int i){
-		// there'll be a whole lot more stuff here, for now just say yes
 		//System.out.println(players.getPlayers().get(i).getName() + " joins the tournament \n");
 		
-		// TO DO:
-		// prompt the player: "join tourney?" (Y/N)
 		boolean join = this.pg.getView().prompt("Tournament"); 
 		if(join) {
 			System.out.println(players.getPlayers().get(i).getName() + " joins the tournament");
@@ -93,23 +84,33 @@ public class TournamentHandler {
 		else {
 			System.out.println(players.getPlayers().get(i).getName() + " does not join the tournament");
 		}
-		// Yes --> Tournament.addParticipant(player)
-		// No --> ?
 	}
 	
 	public void playCards(Player p) {
-		//pg.selectCards(p);
-		/*while(p.getHand().size() > 9){
-		    try {
-		       wait();
-		    } catch(InterruptedException e) {
-		    }
-		}*/
-		p.setHandState(CardStates.FACE_DOWN);
+		p.setAllyBp(p.getAllyBp());
 		pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
-		//pg.getView().cardSelect(p);
+	}
+	
+	public void getWinner() {
+		Player max = null;
+		for(int i = 0; i < tournament.getParticipants().size(); i++) {
+			if(max == null) {
+				max = tournament.getParticipants().get(0);
+			}	
+			else if(tournament.getParticipants().get(i).getBattlePoints() - tournament.getParticipants().get(i).getABP() > max.getBattlePoints() - max.getABP()) {
+				max = tournament.getParticipants().get(i);
+			}
+			else {
+				//tournament.getParticipants().get(i)
+			}
+		}
 		
 		
+		System.out.println(max.getName() + " wins the tournament with " + max.getBattlePoints() + " battlepoints!" );
+		System.out.println(tournament.getBonus());
+		System.out.println(tournament.getParticipants().size());
+		System.out.println(max.getName() + " shields increased by " + (tournament.getParticipants().size() + tournament.getBonus()));
+		max.setShields(max.getShields() + tournament.getParticipants().size() + tournament.getBonus());
 	}
 
 }
