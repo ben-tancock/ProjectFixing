@@ -3,8 +3,13 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import control.PlayGame;
+
 public abstract class Player {
-	
+	private static final Logger logger = LogManager.getLogger(Player.class);
 	private String name;
 	private String rank;
 	private boolean dealer;
@@ -59,37 +64,6 @@ public abstract class Player {
 		} else {
 			return 22;
 		}
-	}
-	
-	public int getRankBP() {
-		if (rank.equals("squire")) {
-			return 5;
-		}
-		else if (rank.equals("knight")) {
-			return 10;
-		}
-		else if (rank.equals("champion_knight")) {
-			return 20;
-		}
-		return 0;
-	}
-	
-	public void setAllyBp(int x) {
-		aBP = x;
-	}
-	
-	public int getABP() {
-		return aBP;
-	}
-	
-	public int getAllyBp() {
-		int setABp = 0;
-		if(allies.size() > 0) {
-			for(Ally a : allies) {
-				setABp += a.getBattlePoints();
-			}
-		}
-		return setABp;
 	}
 	
 	public String getRankString() {
@@ -190,7 +164,38 @@ public abstract class Player {
 		} if(amour.size() > 0) {
 			totalBP += amour.get(0).getBattlePoints();
 		}
-		return totalBP;
+		return totalBP + getRankBP();
+	}
+	
+	public int getRankBP() {
+		if (rank.equals("squire")) {
+			return 5;
+		}
+		else if (rank.equals("knight")) {
+			return 10;
+		}
+		else if (rank.equals("champion_knight")) {
+			return 20;
+		}
+		return 0;
+	}
+	
+	public void setAllyBp(int x) {
+		aBP = x;
+	}
+	
+	public int getABP() {
+		return aBP;
+	}
+	
+	public int getAllyBp() {
+		int setABp = 0;
+		if(allies.size() > 0) {
+			for(Ally a : allies) {
+				setABp += a.getBattlePoints();
+			}
+		}
+		return setABp;
 	}
 	
 	public int getMaxBid() {
@@ -304,6 +309,8 @@ public abstract class Player {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		logger.info("Story card drawn: " + storyDiscard.get(current).getName());
+		logger.info("Story Deck Count: " + storyDeck.size() + " Story Discard Pile Count: " + storyDiscard.size());
 		if (storyDiscard.get(current) instanceof Quest) {
 			Players.notifyListeners("quest drawn", this);
 		}
@@ -329,6 +336,8 @@ public abstract class Player {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		logger.info("Story card drawn: " + storyDiscard.get(current).getName());
+		logger.info("Story Deck Count: " + storyDeck.size() + " Story Discard Pile Count: " + storyDiscard.size());
 		if (storyDiscard.get(current) instanceof Quest) {
 			Players.notifyListeners("quest drawn", this);
 		}

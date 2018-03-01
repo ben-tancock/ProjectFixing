@@ -4,6 +4,9 @@ import java.awt.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
@@ -18,7 +21,7 @@ import model.Test;
 import model.Weapon;
 
 public class QuestHandler {
-	
+	private static final Logger logger = LogManager.getLogger(QuestHandler.class);
 	private Quest card;
 	private AdventureDeck deck;
 	private AdventureDiscard discard;
@@ -52,7 +55,7 @@ public class QuestHandler {
 		}
 		
 		getCard().setSponsor(sponsor);
-		int sponsorIndex = players.getPlayers().indexOf(sponsor);
+		
 		
 		PlayGame pg = PlayGame.getInstance();
 		boolean seeCards = pg.getView().promptForStageSetup(sponsor.getName());
@@ -60,39 +63,6 @@ public class QuestHandler {
 		if(seeCards) {
 			sponsor.setHandState(CardStates.FACE_UP);
 		}
-		/*
-		for(Adventure a : sponsor.getHand()) {
-			if(a instanceof Foe) {
-				sponsor.getHand().remove(a);
-				Stage stage = new Stage((Foe)a, new ArrayList<Weapon>());
-				stage.displayStage();
-				card.addStage(stage);
-				break;
-			}
-		}
-		for(Adventure a : sponsor.getHand()) {
-			if(a instanceof Test) {
-				sponsor.getHand().remove(a);
-				card.addStage(new Stage((Test)a));
-				break;
-			}
-		}
-		for(Adventure a : sponsor.getHand()) {
-			if(a instanceof Foe) {
-				sponsor.getHand().remove(a);
-				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
-				for(Adventure ad : sponsor.getHand()) {
-					if(ad instanceof Weapon) {
-						weapons.add((Weapon)ad);
-						break;
-					}
-				}
-				Stage stage = new Stage((Foe)a, weapons);
-				stage.displayStage();
-				card.addStage(stage);
-				break;
-			}
-		}*/
 		
 		int oldSize = sponsor.getHand().size();
 		for(int i = 0; i < getCard().getNumStages(); i++) {
@@ -238,6 +208,7 @@ public class QuestHandler {
 			sponsor = askSponsor(0);
 			currentIndex += 1 % players.getPlayers().size();
 			if(sponsor != null) {
+				logger.info(card.getName() + "'s sponsor is: " + sponsor.getName());
 				return sponsor;
 			}
 		}
@@ -407,6 +378,10 @@ public class QuestHandler {
 			}
 			currentIndex += 1 % players.getPlayers().size();
 			
+		}
+		logger.info("List of participants: ");
+		for(Player part : participants) {
+			logger.info(part.getName());
 		}
 		return participants;
 	}
