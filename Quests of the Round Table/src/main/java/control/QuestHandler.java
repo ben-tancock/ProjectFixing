@@ -111,7 +111,6 @@ public class QuestHandler {
 		pg.getView().rotate(pg);
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
 		ArrayList<Player> participants = askForParticipants(sponsor, players.getPlayers().get(0));
-		int numParticipants = participants.size();
 		for(int i = 0; i < card.getNumStages(); i++) {
 			//All participants draw a card for the first stage
 			for(Player p : participants) {

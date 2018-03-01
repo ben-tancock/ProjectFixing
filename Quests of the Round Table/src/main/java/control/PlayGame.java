@@ -32,7 +32,7 @@ import view.View;
 
 public class PlayGame extends Application{
 	
-	//private static final Logger logger = LogManager.getLogger(PlayGame.class);
+	private static final Logger logger = LogManager.getLogger(PlayGame.class);
 	private static AdventureDeck aDeck;
 	private static AdventureDiscard aDiscard;
 	private static StoryDeck sDeck;
@@ -62,7 +62,6 @@ public class PlayGame extends Application{
 		aDiscard = riggedDiscard;
 		sDeck = storyDeck;
 		sDiscard = storyDiscard;
-		//Application.launch("");
 		view = new View();
 		winners = new ArrayList<Player>();
 		
@@ -70,7 +69,7 @@ public class PlayGame extends Application{
 	
 	
 	public static void main(String[] args) {
-		//logger.info("Game Menu starting!");
+		logger.info("Game Menu starting!");
 		Application.launch(args);
 	}
 	
@@ -235,12 +234,19 @@ public class PlayGame extends Application{
 	
 	// DO TURN ------------------------------------------------------------------------------------------------------------
 	public void doTurn(Player p) { // a repurposed focus method 
+		logger.info(p.getName() + "'s turn.");
 		boolean seeCards = view.seeCardPrompt(p);
 		if(seeCards) {
-			System.out.println("setting " + p.getName() + " hand to face up");
 			p.setHandState(CardStates.FACE_UP);
+			logger.info("setting " + p.getName() + "'s cards to face up.");
 		} else {
 			doTurn(p);
+		}
+		for(Player pr : players.getPlayers()) {
+			logger.info(pr.getName() + "'s number of cards: " + pr.getHand().size());
+			logger.info(pr.getName() + "'s rank: " + pr.getRankString());
+			logger.info(pr.getName() + "'s shields: " + pr.getShields());
+			logger.info(pr.getName() + "'s hand: " + pr.getHand());
 		}
 		view.update(null, players, sDeck, sDiscard, null);
 		if(sDeck.size() > 0) {
@@ -314,35 +320,8 @@ public class PlayGame extends Application{
 	}
 	
 	
-	
-	//Used to rotate between players to emulate a "focus on current player" feel so that the drawing of a story card and "turns" can be simulated.
-	/*public void focusPlayer(Player p) {
-		p.setFocused(true);
-		p.setHandState(CardStates.FACE_UP);
-		view.update(null, players, sDeck, sDiscard);
-		//PlayGame game = this;
-		if(sDeck.size() > 0) {
-			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent arg0) {
-					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
-					
-					//Code should not execute until everything else is handled. Turns off the focus after activity is finished.
-					p.setFocused(false);
-					//p.setHandState(CardStates.FACE_DOWN);
-					view.update(null, players, sDeck, sDiscard);
-					//Set next focused player.
-					currentPlayer = (currentPlayer + 1) % 2;
-					focusPlayer(players.getPlayers().get(currentPlayer));
-				}
-			}); 
-		}
-		
-		
-	}*/
-	
 	public static class PlayGameControlHandler extends ControlHandler {
-
+		
 		@Override
 		public void onCardOverflow(Player p) {
 			QuestHandler qh = QuestHandler.getInstance();

@@ -59,6 +59,10 @@ public abstract class Player {
 		}
 	}
 	
+	public String getRankString() {
+		return rank;
+	}
+	
 	public void setRank(String s) {
 		rank = s;
 		if(rank.equals("knight_of_the_round_table")) {
