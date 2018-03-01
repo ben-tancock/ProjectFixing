@@ -218,9 +218,9 @@ public class QuestHandler {
 	
 	public Player askSponsor(int i) {
 		PlayGame pg = PlayGame.getInstance();
+		logger.info(players.getPlayers().get(i).getName() + "asked to sponsor.");
 		boolean isSponsor =  pg.getView().sponsorPrompt();
 		if(isSponsor) {
-			System.out.println(players.getPlayers().get(i).getName() + " sponsors.");
 			players.getPlayers().get(i).setHandState(CardStates.FACE_DOWN);
 			return players.getPlayers().get(i);
 		}

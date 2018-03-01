@@ -100,6 +100,7 @@ public class Test4Players {
 		
 		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "prosperity_throughout_the_realm");
 		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "chivalrous_deed");
+		player4.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "journey_through_the_enchanted_forest");
 	}
 	
 	@Test

@@ -529,7 +529,7 @@ public class View extends Application {
 		
 		grid.add(storyDeckSpace, 3, 2);
 		
-		grid.setGridLinesVisible(true);
+		//grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
 			if(primStage != null) {

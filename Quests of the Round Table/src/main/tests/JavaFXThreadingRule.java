@@ -11,7 +11,7 @@
 import org.junit.runner.Description;
 	import org.junit.runners.model.Statement;
 
-	/**
+	/** borrowed from Andrew Till - http://andrewtill.blogspot.ca/2012/10/junit-rule-for-javafx-controller-testing.html
 	 * A JUnit {@link Rule} for running tests on the JavaFX thread and performing
 	 * JavaFX initialisation.  To include in your test case, add the following code:
 	 * 
