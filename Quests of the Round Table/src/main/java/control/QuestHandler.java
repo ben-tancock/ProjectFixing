@@ -348,24 +348,29 @@ public class QuestHandler {
 		PlayGame pg = PlayGame.getInstance();
 		int currBid = minBid;
 		Player bidWinner = null;
-		for(Player p : ppts) {
+		ArrayList<Player> pptsClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
+		pptsClone.addAll(ppts);
+		int iter = 0;
+		for(Player p : pptsClone) {
 			while(!players.getPlayers().get(0).equals(p)) {
 				pg.getView().rotate(pg);
 			}
 			pg.doTurn(p);
 			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
-			Player bidP = pg.getView().promptBid(currBid, p);
+			Player bidP = pg.getView().promptBid(currBid, p, iter);
 			if(bidP != null) {
 				p = bidP;
 				currBid = p.getBid();
 				p.setHandState(CardStates.FACE_DOWN);
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+				logger.info("current bid (" + p.getName() + "): " + currBid);
 				bidWinner = p;
 			} else {
 				ppts.remove(p);
 				p.setHandState(CardStates.FACE_DOWN);
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 			}
+			iter++;
 		}
 		//winning player discards all bided cards.
 		if(bidWinner != null) {

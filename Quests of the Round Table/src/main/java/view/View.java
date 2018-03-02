@@ -412,7 +412,7 @@ public class View extends Application {
 		storyDeckSpace.getChildren().add(questStageSpace);
 		grid.add(storyDeckSpace, 3, 2);
 		
-		grid.setGridLinesVisible(true);
+		//grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
 			if(primStage != null) {
@@ -1139,7 +1139,7 @@ public class View extends Application {
 		}
 	}
 	
-	public Player promptBid(int currBid, Player p) {
+	public Player promptBid(int currBid, Player p, int iter) {
 		TextInputDialog dialog = new TextInputDialog("" + currBid);
 		dialog.setTitle("Bid Dialog");
 		dialog.setHeaderText(p.getName() + " Bid Dialog");
@@ -1162,16 +1162,27 @@ public class View extends Application {
 		if (result.isPresent()){
 			int bid = Integer.parseInt(result.get());
 			p.bid(bid);
-			if(bid < p.getMaxBid() || bid > currBid) {
+			if(bid <= p.getMaxBid() && bid >= currBid && iter == 0) {
+				return p;
+			} else if(bid <= p.getMaxBid() && bid > currBid) {
 				return p;
 			} else {
-				promptBid(currBid, p);
+				promptBidNotHighEnough(p);
 				return null;
 			}
 		} else {
 			return null;
 		}
 		
+	}
+	
+	public void promptBidNotHighEnough(Player p) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Test Card Error Dialog");
+		alert.setHeaderText("Error: Bid not high enough.");
+		alert.setContentText(p.getName() + " either bid too much, or did not bid high enough, they can no longer participate in the quest.");
+
+		alert.showAndWait();
 	}
 	
 	public void rotate(PlayGame game) {
