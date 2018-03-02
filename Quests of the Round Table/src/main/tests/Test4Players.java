@@ -33,15 +33,15 @@ public class Test4Players {
 			players.addHuman();
 		}
 		
-		players.getPlayers().get(1).setDealer(true);
+		players.getPlayers().get(3).setDealer(true);
 		
 		Player player1 = players.getPlayers().get(0);
 		player1.setName("Player 1");
-		Player player2 = players.getPlayers().get(3);
+		Player player2 = players.getPlayers().get(1);
 		player2.setName("Player 2");
 		Player player3 = players.getPlayers().get(2);
 		player3.setName("Player 3");
-		Player player4 = players.getPlayers().get(1);
+		Player player4 = players.getPlayers().get(3);
 		player4.setName("Player 4");
 		
 		//Check for all players, check names.
@@ -92,73 +92,41 @@ public class Test4Players {
 		
 		PlayGame playGame = new PlayGame(players, aDeck, aDiscard, sDeck, sDiscard);
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
-		boolean seeCards = playGame.getView().seeCardPrompt(player1);
-		if(seeCards) {
-			player1.setHandState(CardStates.FACE_UP);
-			playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
-		}
+		playGame.doTurn(players.getPlayers().get(0));
 		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "boar_hunt");
+		for(Player p : players.getPlayers()) { //this is handled in PlayGame after a story card is played all the way through, so we put it here to catch it.
+			p.setHandState(CardStates.FACE_DOWN);
+		}
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
 		assertEquals(playGame.getSDeck().size(), 27);
 		assertEquals(playGame.getSDiscard().size(), 1);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
 		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "prosperity_throughout_the_realm");
+		for(Player p : players.getPlayers()) {
+			p.setHandState(CardStates.FACE_DOWN);
+		}
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
 		assertEquals(playGame.getSDeck().size(), 26);
 		assertEquals(playGame.getSDiscard().size(), 2);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
 		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "chivalrous_deed");
+		for(Player p : players.getPlayers()) {
+			p.setHandState(CardStates.FACE_DOWN);
+		}
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
 		assertEquals(playGame.getSDeck().size(), 25);
 		assertEquals(playGame.getSDiscard().size(), 3);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
 		player4.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "journey_through_the_enchanted_forest");
+		for(Player p : players.getPlayers()) {
+			p.setHandState(CardStates.FACE_DOWN);
+		}
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
 		assertEquals(playGame.getSDeck().size(), 24);
 		assertEquals(playGame.getSDiscard().size(), 4);
-	}
-	
-	@Test
-	public void testScenario2() {
-		//create 4 players and assign a player as the dealer
-				Players players = new Players();
-						
-				for(int i = 0; i < 4; i++) {
-					players.addHuman();
-				}
-						
-				players.getPlayers().get(3).setDealer(true);
-				
-				Player player1 = players.getPlayers().get(0);
-				player1.setName("Player 1");
-				Player player2 = players.getPlayers().get(1);
-				player2.setName("Player 2");
-				Player player3 = players.getPlayers().get(2);
-				player3.setName("Player 3");
-				Player player4 = players.getPlayers().get(3);
-				player4.setName("Player 4");
-				
-				//Check for all players, check names
-				assertEquals(players.getPlayers().size(), 4);
-				assertEquals(player1.getName(), "Player 1");
-				assertEquals(player2.getName(), "Player 2");
-				assertEquals(player3.getName(), "Player 3");
-				assertEquals(player4.getName(), "Player 4");
-						
-				//check dealer
-				assertFalse(player1.getDealer());
-				assertFalse(player2.getDealer());
-				assertFalse(player3.getDealer());
-				assertTrue(player4.getDealer());
-				
-				//Players are dealt cards and Adventure and Story Decks are setup.
-				AdventureDeck aDeck = new AdventureDeck();
-				aDeck.shuffle();
-				AdventureDiscard aDiscard = new AdventureDiscard();
-				StoryDeck sDeck = new StoryDeck();
-				sDeck.shuffle();
-				StoryDiscard sDiscard = new StoryDiscard();
-				//test overflow error
-				player1.drawCard(12, aDeck);
-				player2.drawCard(12, aDeck);
-				player3.drawCard(12, aDeck);
-				player4.drawCard(12, aDeck);
-				
-				PlayGame playGame = new PlayGame(players, aDeck, aDiscard, sDeck, sDiscard);
-				playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
 	}
 
 }

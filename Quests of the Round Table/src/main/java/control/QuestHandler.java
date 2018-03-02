@@ -117,11 +117,11 @@ public class QuestHandler {
 						ArrayList<Adventure> stageCards = new ArrayList<>();
 						stageCards.add(card.getStages().get(i).getFoe());
 						stageCards.addAll(card.getStages().get(i).getFoe().getWeapons());
+						logger.info(p.getName() + "(" + p.getBattlePoints() + ")" + " has lost the battle against " + card.getStages().get(i) + "(" + card.getStages().get(i).getBattlePoints() + "), calling the GUI...");
 						pg.getView().promptPlayerLost(stageCards, p, card.getStages().get(i).getBattlePoints());
 						pg.getADiscard().addAll(p.getWeapons());
 						p.getWeapons().removeAll(p.getWeapons());
 					} else {
-						//player won
 						for(Iterator<Adventure> playerSurfaceIterator = p.getPlayingSurface().iterator(); playerSurfaceIterator.hasNext();) {
 							Adventure a = playerSurfaceIterator.next();
 							a.setState(CardStates.FACE_UP);
@@ -130,6 +130,7 @@ public class QuestHandler {
 						stageCards.add(card.getStages().get(i).getFoe());
 						stageCards.addAll(card.getStages().get(i).getFoe().getWeapons());
 						System.out.println(card.getStages().get(i).getFoe().getName());
+						logger.info(p.getName() + "(" + p.getBattlePoints() + ")" + " has won the battle against " + card.getStages().get(i) + "(" + card.getStages().get(i).getBattlePoints() + "), calling the GUI...");
 						pg.getView().promptPlayerWon(stageCards, p, card.getStages().get(i).getBattlePoints());
 						pg.getADiscard().addAll(p.getWeapons());
 						p.getWeapons().removeAll(p.getWeapons());
@@ -174,6 +175,7 @@ public class QuestHandler {
 		//Winning participants get shields
 		for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
 			Player p = participantIterator.next();
+			logger.info(p.getName() + " has successfully completed the quest " + card.getName() + " and has been awarded " + card.getNumStages() + " shields.");
 			p.setShields(p.getShields() + card.getNumStages());
 		}
 		//sponsor then draws back num cards used + numstages
@@ -186,7 +188,7 @@ public class QuestHandler {
 			p.getAmour().removeAll(p.getAmour());
 		}
 		
-		logger.info("Tacking all adventure card amounts:");
+		logger.info("Tackling all adventure card amounts:");
 		int totalAmountOfCards = 0;
 		for(Iterator<Player> playerIterator = players.getPlayers().iterator(); playerIterator.hasNext();) {
 			Player p = playerIterator.next();
@@ -201,6 +203,7 @@ public class QuestHandler {
 		totalAmountOfCards += pg.getADiscard().size();
 		logger.info("Adventure Discard card count: " + pg.getADiscard().size());
 		logger.info("Total amount of Adventure Cards accounted for: " + totalAmountOfCards);
+		card = null;
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		return true;
 	}

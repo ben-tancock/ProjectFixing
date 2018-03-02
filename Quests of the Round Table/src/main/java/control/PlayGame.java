@@ -340,6 +340,7 @@ public class PlayGame extends Application{
 				p.remove(p.getHand(), p.getAllies(), card);
 			} else if (card instanceof Amour) {
 				if(p.getAmour().size() >= 1) {
+					card.setState(CardStates.FACE_UP);
 					view.promptTooManyAmour();
 				}else {
 					p.remove(p.getHand(), p.getAmour(), card);

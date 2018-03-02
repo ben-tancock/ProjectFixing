@@ -13,6 +13,25 @@ public class Ally extends Adventure{
 		state = CardStates.FACE_DOWN;
 	}
 	
+	public void playAlly() {
+		switch(name) {
+			case "king_pellinore":
+				break;
+			case "merlin":
+				break;
+			case "queen_iseult":
+				break;
+			case "sir_gawain":
+				break;
+			case "sir_lancelot":
+				break;
+			case "sir_percival":
+				break;
+			case "sir_tristan":
+				break;
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -31,5 +50,13 @@ public class Ally extends Adventure{
 	
 	public void setState(int s) {
 		state = s;
+	}
+	
+	public void setBattlePoints(int b) {
+		bp = b;
+	}
+	
+	public void setBids(int b) {
+		bids = b;
 	}
 }

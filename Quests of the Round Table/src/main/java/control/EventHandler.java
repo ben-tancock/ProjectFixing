@@ -9,14 +9,20 @@ import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Ally;
+import model.CardStates;
 import control.PlayGame.PlayGameControlHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class EventHandler {
+	private static final Logger logger = LogManager.getLogger(EventHandler.class);
 	//Note that the Player in this case is the one that drew the card.
 	private static List<ControlHandler> listeners = new ArrayList<ControlHandler>();
 	public EventHandler(Event e, Player p, Players pr, AdventureDeck aDeck, AdventureDiscard aDiscard) {
@@ -34,7 +40,7 @@ public class EventHandler {
 			case "pox":
 				pox(pr, p);
 				break;
-			case "prosperity":
+			case "prosperity_throughout_the_realm":
 				prosperity(pr, aDeck);
 				break;
 			case "queen's_favor":
@@ -63,22 +69,23 @@ public class EventHandler {
 		}
 	}
 	
-	public void chivalrousDeed(Players p) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
-		//	boolean lower = false; 
-			Integer pShields[] =  p.getPlayers().stream().map(Player::getShields).toArray(Integer[]::new);
-			int minS = Collections.min(Arrays.asList(pShields));
+	public void chivalrousDeed(Players p) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields 
+		logger.info("Chivalrous Deed triggered, player(s) with BOTH lowest rank and least amount of shields receive 3 shields.");
+		Integer pShields[] =  p.getPlayers().stream().map(Player::getShields).toArray(Integer[]::new);
+		int minS = Collections.min(Arrays.asList(pShields));
 			
-			Integer pRanks[] =  p.getPlayers().stream().map(Player::getRank).toArray(Integer[]::new);
-			int minR = Collections.min(Arrays.asList(pRanks));
+		Integer pRanks[] =  p.getPlayers().stream().map(Player::getRank).toArray(Integer[]::new);
+		int minR = Collections.min(Arrays.asList(pRanks));
 			
-			int min = minR + minS;
+		int min = minR + minS;
 			
-			for(Player pr : p.getPlayers()) { // scenario: squire w/ 4 shields and knight w/ 3 shields --> squire, not knight
-				if(pr.getRank() + pr.getShields() <= min) {
-					pr.setShields(pr.getShields() + 3);
-				}
+		for(Player pr : p.getPlayers()) { // scenario: squire w/ 4 shields and knight w/ 3 shields --> squire, not knight
+			if(pr.getRank() + pr.getShields() <= min) {
+				logger.info(pr.getName() + " receives 3 shields.");
+				pr.setShields(pr.getShields() + 3);
 			}
 		}
+	}
 	
 	public void pox(Players p, Player pr) { // all players except drawer lose a shield
 		for (Player ele : p.getPlayers()) {
@@ -91,9 +98,16 @@ public class EventHandler {
 	}
 	
 	public void prosperity(Players p, AdventureDeck d) { // all players must draw two cards
-		for(Player pr : p.getPlayers()) {
-			pr.drawCard(2, d);
+		logger.info("Prosperity throughout the realm triggered, all players must draw 2 cards.");
+		PlayGame pg = PlayGame.getInstance();
+		ArrayList<Player> prClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
+		prClone.addAll(pg.getPlayers().getPlayers());
+		for(int i = 0; i < prClone.size(); i++) {
+			prClone.get(i).drawCard(2, d);
+			prClone.get(i).setHandState(CardStates.FACE_DOWN);
+			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
 		}
+		pg.getPlayers().setPlayers(prClone);
 	}
 	
 	public void queensFavor(Players p, AdventureDeck d) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields

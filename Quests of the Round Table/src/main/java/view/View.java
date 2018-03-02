@@ -1132,6 +1132,7 @@ public class View extends Application {
 			return true;
 		} else {
 			if(buttonClicked) {
+				logger.info(p.getName() + " played 0 cards.");
 				return true;
 			}
 			return false;
@@ -1223,6 +1224,7 @@ public class View extends Application {
 	
 	public void promptPlayerLost(ArrayList<Adventure> stageCards, Player p, int foeBP) {
 		buttonClicked = false;
+		logger.info("GUI showing that " + p.getName() + "(" + p.getBattlePoints() + ")" + " has lost the battle against " + stageCards.get(0).getName() + "(" + foeBP + ")");
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle(p.getName() + " has lost!");
 		VBox window = new VBox();
@@ -1313,6 +1315,7 @@ public class View extends Application {
 	}
 	
 	public void promptPlayerWon(ArrayList<Adventure> stageCards, Player p, int foeBP) {
+		logger.info("GUI showing that " + p.getName() + "(" + p.getBattlePoints() + ")" + " has won the battle against " + stageCards.get(0).getName() + "(" + foeBP + ")");
 		buttonClicked = false;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle(p.getName() + " has won!");
