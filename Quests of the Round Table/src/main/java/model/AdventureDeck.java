@@ -53,7 +53,7 @@ public class AdventureDeck extends ArrayList<Adventure>{
 		addWeapon(8, "battle-ax", 15);
 		
 		
-		addFoe(7, "robber_Knight", 15, 15);
+		addFoe(7, "robber_knight", 15, 15);
 		addFoe(5, "saxons", 10, 20);
 		addFoe(4, "boar", 5, 15);
 		addFoe(8, "thieves", 5, 5);
