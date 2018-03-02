@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import control.ControlHandler;
 import control.PlayGame;
 import control.QuestHandler;
@@ -72,6 +75,7 @@ import control.QuestHandler.QuestControlHandler;
 
 public class View extends Application {
 	
+	private static final Logger logger = LogManager.getLogger(View.class);
 	private BorderPane border;
 	
 	// NEW THING I ADDED V WEEKY DEEKY
@@ -368,7 +372,7 @@ public class View extends Application {
 		grid.setVgap(0);
 		grid.setHgap(0);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 0, 5);
+		
 		player1PlayingSurface = playedCards(players.getPlayers().get(0).getPlayingSurface(), 1);
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
@@ -387,27 +391,28 @@ public class View extends Application {
 		player3ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player3ShieldSurface.setMinWidth(337.5);
 		
-		grid.add(player1ShieldSurface, 1, 5);
-		grid.add(player1Cards, 2, 5);
-		grid.add(player1PlayingSurface, 2, 4);
+		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 1, 4);
+		grid.add(player1ShieldSurface, 2, 4);
+		grid.add(player1Cards, 3, 4);
+		grid.add(player1PlayingSurface, 3, 3);
 		
-		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 5, 4);
-		grid.add(player2ShieldSurface, 5, 3);
-		grid.add(player2Cards, 5, 1);
-		grid.add(player2PlayingSurface, 4, 2);
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 0, 3);
+		grid.add(player2ShieldSurface, 0, 2);
+		grid.add(player2Cards, 0, 1);
+		grid.add(player2PlayingSurface, 1, 2);
 		
-		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 0, 0);
-		grid.add(player3ShieldSurface, 1, 0);
-		grid.add(player3Cards, 2, 0);
-		grid.add(player3PlayingSurface, 2, 1);
+		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 1, 0);
+		grid.add(player3ShieldSurface, 2, 0);
+		grid.add(player3Cards, 3, 0);
+		grid.add(player3PlayingSurface, 3, 1);
 		
 		
 		//Story deck space
 		storyDeckSpace = storyDeckSpace(sDeck, sDiscard);
 		storyDeckSpace.getChildren().add(questStageSpace);
-		grid.add(storyDeckSpace, 2, 2);
+		grid.add(storyDeckSpace, 3, 2);
 		
-		//grid.setGridLinesVisible(true);
+		grid.setGridLinesVisible(true);
 		
 		if(firstTime) {
 			if(primStage != null) {
@@ -509,10 +514,10 @@ public class View extends Application {
 		grid.add(player1Cards, 3, 4);
 		grid.add(player1PlayingSurface, 3, 3);
 		
-		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 5, 3);
-		grid.add(player2ShieldSurface, 5, 2);
-		grid.add(player2Cards, 5, 1);
-		grid.add(player2PlayingSurface, 4, 2);
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 0, 3);
+		grid.add(player2ShieldSurface, 0, 2);
+		grid.add(player2Cards, 0, 1);
+		grid.add(player2PlayingSurface, 1, 2);
 		
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 1, 0);
@@ -520,12 +525,12 @@ public class View extends Application {
 		grid.add(player3Cards, 3, 0);
 		grid.add(player3PlayingSurface, 3, 1);
 		
-		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(3), 3), 0, 3);
-		grid.add(player4ShieldSurface, 0, 2);
+		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(3), 3), 5, 3);
+		grid.add(player4ShieldSurface, 5, 2);
 		
 		//player4PlayingSurface.setMinWidth(175);
-		grid.add(player4Cards, 0, 1);
-		grid.add(player4PlayingSurface, 1, 1);
+		grid.add(player4Cards, 5, 1);
+		grid.add(player4PlayingSurface, 4, 1);
 		
 		grid.add(storyDeckSpace, 3, 2);
 		
@@ -578,9 +583,9 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			if(index == 1) {
+			if(index == 3) {
 				theCard.setRotate(270);
-			} else if (index ==  3) {
+			} else if (index ==  1) {
 				theCard.setRotate(90);
 			}
 			playerCards.getChildren().add(theCard);
@@ -645,9 +650,9 @@ public class View extends Application {
 			}
 			
 			ImageView theCard = new ImageView(card);
-			if(index == 1) {
+			if(index == 3) {
 				theCard.setRotate(270);
-			} else if (index ==  3) {
+			} else if (index ==  1) {
 				theCard.setRotate(90);
 			}
 			playerCards.getChildren().add(theCard);
@@ -679,11 +684,11 @@ public class View extends Application {
 		for(int i = 0; i < p.getShields(); i++) {
 			if(pIndex == 0) {
 				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
-			} else if(pIndex == 1) {
+			} else if(pIndex == 3) {
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
 				theCard.setRotate(270);
 				shields.getChildren().add(theCard);
-			}else if (pIndex == 3){
+			}else if (pIndex == 1){
 				ImageView theCard = new ImageView(new Image("/playingCards/shield_4.jpg", 75, 100, true, true));
 				theCard.setRotate(90);
 				shields.getChildren().add(theCard);
@@ -788,23 +793,6 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean switchPrompt(String type, String name, Player p) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
-		
-		alert.setTitle(type + " Dialog");
-		alert.setHeaderText("Switch " + type);
-		alert.setContentText("Please switch to " + name + ". When you have switched, click 'OK'.");
-		
-		Optional<ButtonType> result = alert.showAndWait();
-		if (result.get() == ButtonType.OK){
-			return true;
-		} else {
-		    // ... user chose CANCEL or closed the dialog
-			return true;
-		}
-	}
-	
 	public boolean promptGameEnd(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
@@ -835,32 +823,15 @@ public class View extends Application {
 		}
 	}
 	
-	public boolean promptForStageSetup(String name) {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-	
-		alert.setTitle("Stage Dialog");
-		alert.setHeaderText("Stage setup");
-		alert.setContentText("Please press OK to let "+ name + "view their cards for stage setup.");
-		
-		Optional<ButtonType> result = alert.showAndWait();
-		if(result.get() == ButtonType.OK) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	boolean cardClicked; 
 	boolean buttonClicked;
-	int cardIndex;
 	public boolean promptAddCardToStage(Player p) {
 		cardClicked = false;
-		cardIndex = 0;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle("Please choose either a foe or a test");
 		VBox window = new VBox();
 		List<Button> cards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(p.getHand().get(cardIndex) instanceof Foe || p.getHand().get(cardIndex) instanceof Test) {
 				Button button = new Button();
 				final int index = cardIndex;
@@ -878,6 +849,7 @@ public class View extends Application {
 						} else if(fourPlayerStage != null) {
 							fourPlayerStage.getScene().getRoot().setEffect(null);
 						}
+						p.getHand().get(index).setState(CardStates.FACE_DOWN);
 						notifyStageCardChosen(p, p.getHand().get(index));
 						cardClicked = true;
 						dialog.close();
@@ -938,12 +910,11 @@ public class View extends Application {
 		//ArrayList<Weapon> weapons = new ArrayList<>();
 		cardClicked = false;
 		buttonClicked = false;
-		cardIndex = 0;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle("Please choose the weapons you wish to play");
 		VBox window = new VBox();
 		List<Button> cards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(p.getHand().get(cardIndex) instanceof Weapon) {
 				Button button = new Button();
 				final int index = cardIndex;
@@ -958,6 +929,7 @@ public class View extends Application {
 						for(Weapon w : weapons) {
 							if(w.getName().equals(p.getHand().get(index).getName())) {
 								dup = true;
+								logger.info("Weapon Duplicate Caught! (Caught in UI)");
 							}
 						}
 						if(!dup) {
@@ -1053,7 +1025,7 @@ public class View extends Application {
 		alert.setTitle("Stage Error Dialog");
 		alert.setHeaderText("Error: Not enough BP");
 		alert.setContentText("The Foe and it's weapons do not have enough battle points to be added.");
-
+		logger.info("Not enough BP enforced by UI.");
 		alert.showAndWait();
 	}
 	
@@ -1067,15 +1039,13 @@ public class View extends Application {
 	}
 	
 	public boolean playPrompt(String name, Player p, ArrayList<Adventure> playedCards) {
-		//ArrayList<Weapon> weapons = new ArrayList<>();
 		cardClicked = false;
 		buttonClicked = false;
-		cardIndex = 0;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle("Please choose the cards you wish to play");
 		VBox window = new VBox();
 		List<Button> cards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(p.getHand().get(cardIndex) instanceof Ally || p.getHand().get(cardIndex) instanceof Weapon || p.getHand().get(cardIndex) instanceof Amour) {
 				Button button = new Button();
 				final int index = cardIndex;
@@ -1213,9 +1183,9 @@ public class View extends Application {
 		// we should probably make Players have methods that do this???
 		List<Player> persons = new ArrayList<Player>();
 		persons = game.getPlayers().getPlayers(); // this is really weird...
-		Player temp = persons.get(persons.size()-1);
-		persons.add(0, temp);
-		persons.remove(persons.size()-1);
+		Player temp = persons.get(0);
+		persons.add(temp);
+		persons.remove(0);
 		
 		//Collections.reverse(persons);
 		
@@ -1251,47 +1221,29 @@ public class View extends Application {
 		}
 	}
 	
-	public void promptPlayerLost(String name, ArrayList<Adventure> stageCards, Player p, int foeBP) {
+	public void promptPlayerLost(ArrayList<Adventure> stageCards, Player p, int foeBP) {
 		buttonClicked = false;
-		cardIndex = 0;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle(p.getName() + " has lost!");
 		VBox window = new VBox();
 		Label foePointsCount = new Label();
 		Label playerPointsCount = new Label();
 		List<Button> foeWeaponCards = new ArrayList<>();
-		for(Adventure a : stageCards) {
-			a.setState(CardStates.FACE_UP);
-		}
-		for(Adventure a : p.getPlayingSurface()) {
-			a.setState(CardStates.FACE_UP);
-		}
-		PlayGame pg = PlayGame.getInstance();
-		QuestHandler qh = QuestHandler.getInstance();
-		if(qh != null && qh.getCard() != null) {
-			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-		} else {
-			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
-		}
-		for(cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
 			Button button = new Button();
-			stageCards.get(cardIndex).setState(CardStates.FACE_UP);
 			BackgroundImage buttonBackground;
-			if(cardIndex == 0) {
-				Image image = new Image("/playingCards/" + name + ".jpg", 75, 100, true, true);
-				buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
-			} else {
-				buttonBackground = new BackgroundImage(((ImageView)stageSpace.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
-			}
+			Image image = new Image("/playingCards/" + stageCards.get(cardIndex).getName() + ".jpg", 75, 100, true, true);
+			buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 			button.setBackground(new Background(buttonBackground));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
 			foeWeaponCards.add(button);
 		}
 		List<Button> playerSurfaceCards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
 			Button button = new Button();
-			BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1PlayingSurface.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			Image image = new Image("/playingCards/" + p.getPlayingSurface().get(cardIndex).getName() + ".jpg", 75, 100, true, true);
+			BackgroundImage buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 			button.setBackground(new Background(buttonBackground));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
@@ -1360,50 +1312,31 @@ public class View extends Application {
 		dialog.showAndWait();
 	}
 	
-	public void promptPlayerWon(String name, ArrayList<Adventure> stageCards, Player p, int foeBP) {
+	public void promptPlayerWon(ArrayList<Adventure> stageCards, Player p, int foeBP) {
 		buttonClicked = false;
-		cardIndex = 0;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
 		dialog.setTitle(p.getName() + " has won!");
 		VBox window = new VBox();
 		Label foePointsCount = new Label();
 		Label playerPointsCount = new Label();
 		List<Button> foeWeaponCards = new ArrayList<>();
-		for(Adventure a : stageCards) {
-			a.setState(CardStates.FACE_UP);
-		}
-		for(Adventure a : p.getPlayingSurface()) {
-			a.setState(CardStates.FACE_UP);
-		}
-		PlayGame pg = PlayGame.getInstance();
-		QuestHandler qh = QuestHandler.getInstance();
-		if(qh != null && qh.getCard() != null) {
-			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-		} else {
-			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
-		}
 		System.out.println("Stage Cards size: " + stageCards.size());
-		for(cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
 			Button button = new Button();
 			stageCards.get(cardIndex).setState(CardStates.FACE_UP);
 			BackgroundImage buttonBackground;
-			if(cardIndex == 0) {
-				
-				System.out.println(stageCards.get(0).getName());
-				Image image = new Image("/playingCards/" + name + ".jpg", 75, 100, true, true);
-				buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
-			} else {
-				buttonBackground = new BackgroundImage(((ImageView)stageSpace.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
-			}
+			Image image = new Image("/playingCards/" + stageCards.get(cardIndex).getName() + ".jpg", 75, 100, true, true);
+			buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 			button.setBackground(new Background(buttonBackground));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
 			foeWeaponCards.add(button);
 		}
 		List<Button> playerSurfaceCards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
 			Button button = new Button();
-			BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1PlayingSurface.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+			Image image = new Image("/playingCards/" + p.getPlayingSurface().get(cardIndex) + ".jpg", 75, 100, true, true);
+			BackgroundImage buttonBackground = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 			button.setBackground(new Background(buttonBackground));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
@@ -1476,7 +1409,6 @@ public class View extends Application {
 		ArrayList<Adventure> discardedCards = new ArrayList<>();
 		cardClicked = false;
 		buttonClicked = false;
-		cardIndex = 0;
 		if(firstTime) {
 			if(p.getAllies().size() > 0) { //this is to lessen the required discard count if allies are in play that have bids
 				for(Ally a : p.getAllies()) {
@@ -1491,7 +1423,7 @@ public class View extends Application {
 		Label discardCountLabel = new Label();
 		discardCountLabel.setText("Number of cards to discard: " + numCards);
 		List<Button> cards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			Button button = new Button();
 			final int index = cardIndex;
 			BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
@@ -1566,7 +1498,6 @@ public class View extends Application {
 	public boolean cardOverflowPrompt(Player p, int numCards) {
 		cardClicked = false;
 		buttonClicked = false;
-		cardIndex = 0;
 		System.out.println(numCards);
 		PlayGame pg = PlayGame.getInstance();
 		QuestHandler qh = QuestHandler.getInstance();
@@ -1575,10 +1506,16 @@ public class View extends Application {
 		VBox window = new VBox();
 		Label discardCountLabel = new Label();
 		discardCountLabel.setText("Number of cards to play or discard: " + numCards);
+		if(qh != null && qh.getCard() != null) {
+			logger.info("view of card overflow invoked with acive quest, " + p.getName() + " must now discard a card or play an Ally/Amour.");
+		} else {
+			logger.info("view of card overflow invoked, " + p.getName() + " must now discard a card or play an Ally.");
+		}
 		List<Button> allyAmourCards = new ArrayList<>();
 		List<Button> otherCards = new ArrayList<>();
-		for(cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
+		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(qh != null && qh.getCard() != null) {
+				
 				if(p.getHand().get(cardIndex) instanceof Ally || (p.getHand().get(cardIndex) instanceof Amour && p.getAmour().size() == 0)) {
 					Button button = new Button();
 					final int index = cardIndex;
@@ -1591,6 +1528,7 @@ public class View extends Application {
 						public void handle(MouseEvent arg0) {
 							p.getHand().get(index).setState(CardStates.FACE_UP);
 							update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+							logger.info("Controller notified that " + p.getName() + " played an Ally or Amour.");
 							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
 							dialog.close();
 							cardClicked = true;
@@ -1607,6 +1545,7 @@ public class View extends Application {
 					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent arg0) {
+							logger.info("Controller notified that " + p.getName() + " discarded a card.");
 							notifyPlayerCardDiscarded(p, p.getHand().get(index));
 							dialog.close();
 							cardClicked = true;
@@ -1616,6 +1555,7 @@ public class View extends Application {
 				}
 			}
 			else {
+				logger.info("view of card overflow invoked, " + p.getName() + " must now discard or play an Ally.");
 				if(p.getHand().get(cardIndex) instanceof Ally) {
 					Button button = new Button();
 					final int index = cardIndex;
@@ -1628,6 +1568,7 @@ public class View extends Application {
 						public void handle(MouseEvent arg0) {
 							p.getHand().get(index).setState(CardStates.FACE_UP);
 							update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+							logger.info("Controller notified that" + p.getName() + " played an Ally.");
 							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
 							dialog.close();
 							cardClicked = true;
@@ -1644,6 +1585,7 @@ public class View extends Application {
 					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent arg0) {
+							logger.info("Controller notified that " + p.getName() + "discarded a card.");
 							notifyPlayerCardDiscarded(p, p.getHand().get(index));
 							dialog.close();
 							cardClicked = true;
@@ -1704,12 +1646,6 @@ public class View extends Application {
 		if(cardClicked) {
 			if(numCards > 1) {
 				cardOverflowPrompt(p, numCards-= 1);
-			}
-			p.setHandState(CardStates.FACE_DOWN);
-			if(qh != null && qh.getCard() != null) { 
-				update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-			} else {
-				update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
 			}
 			return true;
 		} else {

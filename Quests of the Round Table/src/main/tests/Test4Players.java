@@ -1,15 +1,20 @@
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.Rule;
 import org.junit.Test;
 
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.CardStates;
+import model.Foe;
 import model.Player;
 import model.Players;
+import model.Stage;
 import model.StoryDeck;
 import model.StoryDiscard;
+import model.Weapon;
 import control.PlayGame;
 import control.QuestHandler;
 import control.PlayGame.PlayGameControlHandler;
@@ -82,6 +87,8 @@ public class Test4Players {
 		assertEquals(player2.getHand().size(), 12);
 		assertEquals(player3.getHand().size(), 12);
 		assertEquals(player4.getHand().size(), 12);
+		assertEquals(aDeck.size(), 77);
+		assertEquals(aDiscard.size(), 0);
 		
 		PlayGame playGame = new PlayGame(players, aDeck, aDiscard, sDeck, sDiscard);
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
@@ -91,16 +98,17 @@ public class Test4Players {
 			playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
 		}
 		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "boar_hunt");
-		
-		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
-		QuestHandler qh = QuestHandler.getInstance();
-		if(qh != null && qh.getCard() != null) {
-			playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), qh.getCard());
-		}
-		
+		assertEquals(playGame.getSDeck().size(), 27);
+		assertEquals(playGame.getSDiscard().size(), 1);
 		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "prosperity_throughout_the_realm");
+		assertEquals(playGame.getSDeck().size(), 26);
+		assertEquals(playGame.getSDiscard().size(), 2);
 		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "chivalrous_deed");
+		assertEquals(playGame.getSDeck().size(), 25);
+		assertEquals(playGame.getSDiscard().size(), 3);
 		player4.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "journey_through_the_enchanted_forest");
+		assertEquals(playGame.getSDeck().size(), 24);
+		assertEquals(playGame.getSDiscard().size(), 4);
 	}
 	
 	@Test

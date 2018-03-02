@@ -284,7 +284,11 @@ public abstract class Player {
 			//notifyListeners("draw", this.getCard(this.hand.size()-1)); // element in the hand at the end of the list is what was added
 		}
 		
+		logger.info(j + " card(s) drawn by " + getName() + " from Adventure Deck.");
+		logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
+		
 		if(hand.size() > 12) {
+			logger.info(name + " has too many cards! Notifying the controller!");
 			Players.notifyListeners("card overflow", this);
 		}
 	}
@@ -293,7 +297,11 @@ public abstract class Player {
 	public void drawCard(AdventureDeck deck, String name) throws Exception {
 		hand.add(deck.findAndDraw(name));
 		
+		logger.info(name + " card drawn by " + getName() + " from Adventure Deck.");
+		logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
+		
 		if(hand.size() > 12) {
+			logger.info(name + " has too many cards! Notifying the controller!");
 			Players.notifyListeners("card overflow", this);
 		}
 	}
@@ -309,7 +317,7 @@ public abstract class Player {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		logger.info("Story card drawn: " + storyDiscard.get(current).getName());
+		logger.info("Story card drawn by " + getName() + ": " + storyDiscard.get(current).getName());
 		logger.info("Story Deck Count: " + storyDeck.size() + " Story Discard Pile Count: " + storyDiscard.size());
 		if (storyDiscard.get(current) instanceof Quest) {
 			Players.notifyListeners("quest drawn", this);
@@ -319,10 +327,6 @@ public abstract class Player {
 		}
 		else if (storyDiscard.get(current) instanceof Tournament) {
 			Players.notifyListeners("tournament drawn", this);
-		}
-		
-		if(hand.size() > 12) {
-			Players.notifyListeners("card overflow", this);
 		}
 	}
 	
@@ -336,7 +340,7 @@ public abstract class Player {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		logger.info("Story card drawn: " + storyDiscard.get(current).getName());
+		logger.info("Story card drawn by " + getName() + ": " + storyDiscard.get(current).getName());
 		logger.info("Story Deck Count: " + storyDeck.size() + " Story Discard Pile Count: " + storyDiscard.size());
 		if (storyDiscard.get(current) instanceof Quest) {
 			Players.notifyListeners("quest drawn", this);
@@ -346,10 +350,6 @@ public abstract class Player {
 		}
 		else if (storyDiscard.get(current) instanceof Tournament) {
 			Players.notifyListeners("tournament drawn", this);
-		}
-		
-		if(hand.size() > 12) {
-			Players.notifyListeners("card overflow", this);
 		}
 	}
 	

@@ -83,24 +83,25 @@ public class PlayGame extends Application{
 	public void start(Stage arg0) throws Exception {
 		primStage = arg0; // for restarting the game after win.
 		
-		
+		/* this changes the amount of actual cards in story deck...
 		for(int i = 0; i < sDeck.size(); i++) {
 			if(sDeck.get(i) instanceof Tournament) {
 				sDeck.set(0, sDeck.get(i));
 				sDeck.remove(i);
 			}
-		}
-		//logger.info("Shuffled the decks.");
-		
+		}*/
+		logger.info("Shuffled the decks.");
+		logger.info("Story Deck Count: " + sDeck.size());
+		logger.info("Adventure Deck Count: " + aDeck.size());
 		view.start(arg0);
-		//logger.info("Started the view.");
+		logger.info("Started the view.");
 		
 		view.twoPlayerButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent arg0) {
 				players.addListener(new PlayGameControlHandler());
-				//logger.info("Started the 2 player game.");
+				logger.info("Started the 2 player game.");
 				
 				for(int i = 0; i < 2; i++) {
 					players.addHuman();
@@ -235,6 +236,15 @@ public class PlayGame extends Application{
 	// DO TURN ------------------------------------------------------------------------------------------------------------
 	public void doTurn(Player p) { // a repurposed focus method 
 		logger.info(p.getName() + "'s turn.");
+		QuestHandler qh = QuestHandler.getInstance();
+		for(Player pl : players.getPlayers()) {
+			pl.setHandState(CardStates.FACE_DOWN);
+			if(qh != null && qh.getCard() != null) {
+				view.update(null, players, sDeck, sDiscard, qh.getCard());
+			} else { 
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+		}
 		boolean seeCards = view.seeCardPrompt(p);
 		if(seeCards) {
 			p.setHandState(CardStates.FACE_UP);
@@ -248,7 +258,11 @@ public class PlayGame extends Application{
 			logger.info(pr.getName() + "'s shields: " + pr.getShields());
 			logger.info(pr.getName() + "'s hand: " + pr.getHand());
 		}
-		view.update(null, players, sDeck, sDiscard, null);
+		if(qh != null && qh.getCard() != null) {
+			view.update(null, players, sDeck, sDiscard, qh.getCard());
+		} else { 
+			view.update(null, players, sDeck, sDiscard, null);
+		}
 		if(sDeck.size() > 0) {
 			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
@@ -277,7 +291,11 @@ public class PlayGame extends Application{
 					} else if (winners.size() > 1) {
 						//begin final tournament!
 					}
-					view.update(null, players, sDeck, sDiscard, null);
+					if(qh != null && qh.getCard() != null) {
+						view.update(null, players, sDeck, sDiscard, qh.getCard());
+					} else { 
+						view.update(null, players, sDeck, sDiscard, null);
+					}
 					view.rotate(PlayGame.getInstance());
 					
 					doTurn(players.getPlayers().get(0));
@@ -286,37 +304,6 @@ public class PlayGame extends Application{
 		}
 	// ---------------------------------------------------------------------------------------------------------------------	
 		
-	}
-	
-	public void selectCards(Player p) {
-		System.out.println("test SC");
-		for(Node theCard :view.getPlayerCards().getChildren()) {
-			int index = view.getPlayerCards().getChildren().indexOf(theCard);
-			//if(p.getHand().get(index) instanceof Weapon) {
-			theCard.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-
-				@Override
-				public void handle(MouseEvent event) {
-					System.out.println("test click");
-					if(p.getHand().get(index) instanceof Weapon) {
-						p.remove(p.getHand(), p.getWeapons(), p.getHand().get(index));
-						//view.update(null, players, sDeck, sDiscard, null);
-					}
-					else if(p.getHand().get(index) instanceof Ally) {
-						p.remove(p.getHand(), p.getAllies(), p.getHand().get(index));
-						//view.update(null, players, sDeck, sDiscard, null);
-					}
-					else if(p.getHand().get(index) instanceof Amour) {
-						p.remove(p.getHand(), p.getAmour(), p.getHand().get(index));
-						//view.update(null, players, sDeck, sDiscard, null);
-					}
-					view.update(null, players, sDeck, sDiscard, null);
-					selectCards(p);
-				}
-				
-			});
-			//}
-		}
 	}
 	
 	
@@ -339,7 +326,7 @@ public class PlayGame extends Application{
 			} else {
 				view.seeCardPrompt(p);
 			}
-			
+			logger.info("card overflow notification received by controller. Invoking the View.");
 			boolean cardsRemoved = view.cardOverflowPrompt(p, p.getHand().size() - 12);
 			if(!cardsRemoved) {
 				onCardOverflow(p);
@@ -349,7 +336,6 @@ public class PlayGame extends Application{
 		@Override
 		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
 			QuestHandler qh = QuestHandler.getInstance();
-			//card.setState(CardStates.FACE_DOWN);
 			if(card instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), card);
 			} else if (card instanceof Amour) {
@@ -372,6 +358,8 @@ public class PlayGame extends Application{
 					p.remove(p.getHand(), p.getWeapons(), card);
 				}
 			}
+			logger.info(p.getName() + " played " + card.getName() + " to their playing surface.");
+			logger.info(p.getName() + "'s hand count: " + p.getHand().size() + " Adventure Deck Count: " + aDeck.size());
 			if(qh != null && qh.getCard() != null) {
 				view.update(event, players, sDeck, sDiscard, qh.getCard());
 			} else {
@@ -401,9 +389,8 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
-			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "search_for_the_questing_beast");
-			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-			QuestHandler qh = QuestHandler.getInstance();
+			players.getPlayers().get(0).drawCard(sDeck, sDiscard, "boar_hunt");
+			//players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
 			}
@@ -411,12 +398,17 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onStoryDeckEmpty() {
+			QuestHandler qh = QuestHandler.getInstance();
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			sDeck = new StoryDeck();
 			sDiscard = new StoryDiscard();
 			sDiscard.add(topCard);
 			sDeck.shuffle();
-			view.update(null, players, sDeck, sDiscard, null);
+			if(qh != null && qh.getCard() != null) {
+				view.update(null, players, sDeck, sDiscard, qh.getCard());
+			} else { 
+				view.update(null, players, sDeck, sDiscard, null);
+			}
 		}
 		
 		@Override
@@ -459,13 +451,15 @@ public class PlayGame extends Application{
 		@Override
 		public void onDiscardCard(Player p, Adventure card) {
 			QuestHandler qh = QuestHandler.getInstance();
+			p.remove(p.getHand(), aDiscard, card);
+			card.setState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {
-				p.remove(p.getHand(), aDiscard, card);
 				view.update(null, players, sDeck, sDiscard, qh.getCard());
 			} else {
-				p.remove(p.getHand(), aDiscard, card);
 				view.update(null, players, sDeck, sDiscard, null);
 			}
+			logger.info(p.getName() + " discarded a card.");
+			logger.info(p.getName() + "'s hand count: " + p.getHand().size() + " Adventure Deck Count: " + aDeck.size() + " Adventure Discard Count: " + aDiscard);
 		}
 		
 		
