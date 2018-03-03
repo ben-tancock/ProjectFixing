@@ -428,15 +428,21 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onEventCardDraw(Player p) {
+			PlayGame pg = PlayGame.getInstance();
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			EventHandler eventHandler = new EventHandler((Event)topCard, p, players, aDeck, aDiscard);
 			view.update(null, players, sDeck, sDiscard, null);
 			System.out.println("Event: " + topCard.getName());
+			//so that the view rotates back to the player who drew the tournament card for the game to resume to the player on the left.
+			while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
+				pg.getView().rotate(pg);
+			}
 		}
 		
 		@Override
 		public void onTournamentCardDraw(Player p) {
 			//System.out.println("test tourn draw");
+			PlayGame pg = PlayGame.getInstance();
 			view.update(null, players, sDeck, sDiscard, null);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
@@ -446,6 +452,10 @@ public class PlayGame extends Application{
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+			//so that the view rotates back to the player who drew the tournament card for the game to resume to the player on the left.
+			while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
+				pg.getView().rotate(pg);
 			}
 		}
 		

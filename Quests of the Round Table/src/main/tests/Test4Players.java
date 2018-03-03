@@ -28,7 +28,7 @@ public class Test4Players {
 		//Create 4 players and assign the 4th player as the dealer.
 		Players players = new Players();
 		players.addListener(new PlayGameControlHandler());
-				
+
 		for(int i = 0; i < 4; i++) {
 			players.addHuman();
 		}
@@ -246,20 +246,35 @@ public class Test4Players {
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
 		assertEquals(playGame.getSDeck().size(), 24);
 		assertEquals(playGame.getSDiscard().size(), 4);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
 		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "search_for_the_holy_grail");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
 		}
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
-		assertEquals(playGame.getSDeck().size(), 24);
-		assertEquals(playGame.getSDiscard().size(), 4);
+		assertEquals(playGame.getSDeck().size(), 23);
+		assertEquals(playGame.getSDiscard().size(), 5);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
 		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "test_of_the_green_knight");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
 		}
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
-		assertEquals(playGame.getSDeck().size(), 24);
-		assertEquals(playGame.getSDiscard().size(), 4);
+		assertEquals(playGame.getSDeck().size(), 22);
+		assertEquals(playGame.getSDiscard().size(), 6);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
+		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "court_called_to_camelot");
+		for(Player p : players.getPlayers()) {
+			p.setHandState(CardStates.FACE_DOWN);
+		}
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
+		assertEquals(playGame.getSDeck().size(), 21);
+		assertEquals(playGame.getSDiscard().size(), 7);
+		playGame.getView().rotate(playGame);
+		playGame.doTurn(players.getPlayers().get(0));
 	}
 
 }

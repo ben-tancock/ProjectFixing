@@ -60,7 +60,7 @@ public class AdventureDeck extends ArrayList<Adventure>{
 		addFoe(2, "green_knight", 25, 40);
 		addFoe(3, "black_knight", 25, 35);
 		addFoe(6, "evil_knight", 20, 30);
-		addFoe(8, "saxon_knight", 15, 15);
+		addFoe(8, "saxon_knight", 15, 25);
 		addFoe(1, "dragon", 50, 70);
 		addFoe(2, "giant", 40, 40);
 		addFoe(4, "mordred", 30, 30);

@@ -204,6 +204,10 @@ public class QuestHandler {
 		logger.info("Adventure Discard card count: " + pg.getADiscard().size());
 		logger.info("Total amount of Adventure Cards accounted for: " + totalAmountOfCards);
 		card = null;
+		// rotate the view until we hit the sponsor, then it will be the player to the left of the sponsor's turn.
+		while(!pg.getPlayers().getPlayers().get(0).equals(sponsor)) {
+			pg.getView().rotate(pg);
+		}
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		return true;
 	}

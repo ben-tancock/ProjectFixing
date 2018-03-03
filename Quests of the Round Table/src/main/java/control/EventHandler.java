@@ -110,29 +110,38 @@ public class EventHandler {
 		pg.getPlayers().setPlayers(prClone);
 	}
 	
-	public void queensFavor(Players p, AdventureDeck d) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields
+	public void queensFavor(Players p, AdventureDeck d) { // player(s) with lowest rank receive 2 cards
 		//boolean lower = false; 
 		
 		List<Player> per = new ArrayList<Player>();
 		Integer pranks[] =  p.getPlayers().stream().map(Player::getRank).toArray(Integer[]::new);
 		int minR = Collections.min(Arrays.asList(pranks));
 				
-		for(Player pr : p.getPlayers()) { // scenario: squire w/ 4 shields and knight w/ 3 shields --> squire, not knight
-			if(pr.getRank() == minR) {
-				pr.drawCard(2, d);
+		logger.info("Queen's Favor drawn, all lowest ranked players receive 2 cards.");
+		PlayGame pg = PlayGame.getInstance();
+		ArrayList<Player> prClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
+		prClone.addAll(pg.getPlayers().getPlayers());
+		for(int i = 0; i < prClone.size(); i++) {
+			if(prClone.get(i).getRank() == minR) {
+				prClone.get(i).drawCard(2, d);
 			}
 		}
+		pg.getPlayers().setPlayers(prClone);
 	}
 	
 	public void courtCalled(Players p, AdventureDiscard d) { // all allies in play must be discarded
-		for (Player pr : p.getPlayers()) {
-			for(Ally a : pr.getAllies()) {
+		logger.info("Court Called to Camelot drawn, all allies in play must be discarded.");
+		PlayGame pg = PlayGame.getInstance();
+		ArrayList<Player> prClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
+		prClone.addAll(pg.getPlayers().getPlayers());
+		for(int i = 0; i < prClone.size(); i++) {
+			for(Ally a : prClone.get(i).getAllies()) {
 				//new ArrayList<Card>()
 				new ArrayList<Foe>();
-				pr.remove(pr.getAllies(), d, a );
+				prClone.get(i).remove(prClone.get(i).getAllies(), d, a );
 			}
 		}
-		
+		pg.getPlayers().setPlayers(prClone);
 	}
 	
 	public void kingsCallToArms(Players p, AdventureDiscard d) {
