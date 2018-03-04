@@ -54,8 +54,6 @@ public class DeckView extends HBox {
 			card = new Image("/playingCards/knight.jpg", 75, 100, true, true);
 		} else if(p.getRank() == 12) {
 			card = new Image("/playingCards/champion_knight.jpg", 75, 100, true, true);
-		} else if(p.getRank() == 22) {
-			//notify win
 		}
 		ImageView theCard = new ImageView(card);
 		//for 2 players for now.

@@ -663,36 +663,29 @@ public class View extends Application {
 	
 	public HBox shields(Player p, int pIndex) {
 		HBox shields = new HBox(-50);
+		ImageView theCard = new ImageView(new Image("/playingCards/" + p.getShieldName() + ".jpg", 75, 100, true, true));
 		for(int i = 0; i < p.getShields(); i++) {
-			if(pIndex == 0) {
-				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
-			} else if(pIndex == 1) {
-				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
+			if(pIndex == 1) {
 				theCard.setRotate(180);
-				shields.getChildren().add(theCard);
-			}else{
-				ImageView theCard = new ImageView(new Image("/playingCards/shield_3.jpg", 75, 100, true, true));
+			}else if (pIndex == 2){
 				theCard.setRotate(180);
-				shields.getChildren().add(theCard);
+				
 			}
+			shields.getChildren().add(theCard);
 		}
 		return shields;
 	}
 	
 	public VBox verticalPlayerShields(Player p, int pIndex) {
 		VBox shields = new VBox(-80);
+		ImageView theCard = new ImageView(new Image("/playingCards/" + p.getShieldName() + ".jpg", 75, 100, true, true));
 		for(int i = 0; i < p.getShields(); i++) {
-			if(pIndex == 0) {
-				shields.getChildren().add(new ImageView(new Image("/playingCards/shield_1.jpg", 75, 100, true, true)));
-			} else if(pIndex == 3) {
-				ImageView theCard = new ImageView(new Image("/playingCards/shield_2.jpg", 75, 100, true, true));
+			if(pIndex == 3) {
 				theCard.setRotate(270);
-				shields.getChildren().add(theCard);
 			}else if (pIndex == 1){
-				ImageView theCard = new ImageView(new Image("/playingCards/shield_4.jpg", 75, 100, true, true));
 				theCard.setRotate(90);
-				shields.getChildren().add(theCard);
 			}
+			shields.getChildren().add(theCard);
 		}
 		return shields;
 	}
@@ -1569,7 +1562,6 @@ public class View extends Application {
 				}
 			}
 			else {
-				logger.info("view of card overflow invoked, " + p.getName() + " must now discard or play an Ally.");
 				if(p.getHand().get(cardIndex) instanceof Ally) {
 					Button button = new Button();
 					final int index = cardIndex;

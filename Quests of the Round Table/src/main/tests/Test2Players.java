@@ -48,6 +48,17 @@ public class Test2Players {
 		assertEquals(adventureDeck.size(), 125);
 		adventureDeck.shuffle();
 		
+		Player player1 = players.getPlayers().get(0);
+		Player player2 = players.getPlayers().get(1);
+		
+		for(Player p : players.getPlayers()) {
+			p.drawRank("squire");
+			p.setShields(1);
+		}
+		
+		player1.setShieldName("shield_1");
+		player2.setShieldName("shield_2");
+		
 		for(int i = 0; i < 10; i++) {
 			System.out.println("shuffled: " + adventureDeck.get(i).getClass());
 		}

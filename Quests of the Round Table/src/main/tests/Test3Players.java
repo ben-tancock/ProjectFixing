@@ -41,6 +41,15 @@ public class Test3Players {
 		Player playerC = players.getPlayers().get(2);
 		playerC.setName("Player C");
 		
+		for(Player p : players.getPlayers()) {
+			p.drawRank("squire");
+			p.setShields(1);
+		}
+		
+		playerA.setShieldName("shield_1");
+		playerB.setShieldName("shield_2");
+		playerC.setShieldName("shield_3");
+		
 		assertEquals(players.getPlayers().size(), 3);
 		
 		//check

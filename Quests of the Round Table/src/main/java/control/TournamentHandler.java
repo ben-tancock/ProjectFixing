@@ -25,6 +25,7 @@ public class TournamentHandler {
     private Players players;
     private Player player;
     private PlayGame pg;
+    private int originalPartNum;
     
     public TournamentHandler(Tournament t, PlayGame game, Player p) {
         tournament = t;
@@ -37,6 +38,8 @@ public class TournamentHandler {
     
     public boolean playTournament() throws Exception {
         askToJoin();
+        originalPartNum = tournament.getParticipants().size();
+        System.out.println("original participant num: " + originalPartNum);
         getWinner(tournament.getParticipants(), false);
         while(pg.getPlayers().getPlayers().get(0).getName() != player.getName()) {
             pg.getView().rotate(pg);
@@ -72,10 +75,12 @@ public class TournamentHandler {
     
     public void playCards(Player p) {
         p.setAllyBp(p.getAllyBp());
+        p.setHandState(CardStates.FACE_UP);
+        pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
         pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
     }
     
-    public void cleanup(Player p) {
+    public void cleanupWeaponsAndAmour(Player p) {
         System.out.println("TEST CLEANUP");
         for(Iterator<Weapon> weaponsIterator = p.getWeapons().iterator(); weaponsIterator.hasNext();) {
             Weapon w = weaponsIterator.next();
@@ -84,9 +89,9 @@ public class TournamentHandler {
         }
         
         for(Iterator<Ally> allyIterator = p.getAllies().iterator(); allyIterator.hasNext();) {
+        	//Allies are not discarded during a tournament, explained in game rules.
             Ally a = allyIterator.next();
-            allyIterator.remove();
-            discard.add(a);
+            a.setState(CardStates.FACE_UP);
         }
         
         for(Iterator<Amour> amourIterator = p.getAmour().iterator(); amourIterator.hasNext();) {
@@ -96,10 +101,31 @@ public class TournamentHandler {
         }
     }
     
+    public void cleanupWeapons(Player p) {
+    	for(Iterator<Weapon> weaponsIterator = p.getWeapons().iterator(); weaponsIterator.hasNext();) {
+            Weapon w = weaponsIterator.next();
+            weaponsIterator.remove();
+            discard.add(w);
+        }
+        
+        for(Iterator<Ally> allyIterator = p.getAllies().iterator(); allyIterator.hasNext();) {
+        	//Allies are not discarded during a tournament, explained in game rules.
+            Ally a = allyIterator.next();
+            a.setState(CardStates.FACE_UP);
+        }
+        
+        for(Iterator<Amour> amourIterator = p.getAmour().iterator(); amourIterator.hasNext();) {
+        	//When tie happens, amours are not discarded.
+            Amour a = amourIterator.next();
+            a.setState(CardStates.FACE_UP);
+        }
+    }
+    
     public void tie(ArrayList<Player> tied) {
         System.out.println("TEST TIE");
         for (Player p : tied) {
-            cleanup(p);
+        	// On tie, only the weapons are discarded.
+            cleanupWeapons(p);
             while(pg.getPlayers().getPlayers().get(0).getName() != p.getName()) {
                 pg.getView().rotate(pg);
             }
@@ -129,7 +155,7 @@ public class TournamentHandler {
                     
                 }   
                 else if(part.get(i).getBattlePoints() - part.get(i).getABP() > max) {
-                    cleanup(maxP);
+                    cleanupWeaponsAndAmour(maxP);
                     max = part.get(i).getBattlePoints() - part.get(i).getABP();
                     maxP = part.get(i);
                     tied.clear();
@@ -143,7 +169,7 @@ public class TournamentHandler {
                     
                 }
                 else {
-                    cleanup(part.get(i));
+                    cleanupWeaponsAndAmour(part.get(i));
                 }
                 
             }
@@ -169,7 +195,7 @@ public class TournamentHandler {
         System.out.println(tournament.getParticipants().size());
         System.out.println(p.getName() + " shields increased by " + (tournament.getParticipants().size() + tournament.getBonus()));
         p.setShields(p.getShields() + tournament.getParticipants().size() + tournament.getBonus());
-        cleanup(p);
+        cleanupWeaponsAndAmour(p);
         pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
     }
     
@@ -177,8 +203,8 @@ public class TournamentHandler {
         System.out.println("it's a tie! all players tied with " + (tie.get(0).getBattlePoints() - tie.get(0).getABP()) + " battlepoints!");
         System.out.println("all players awarded " + tournament.getParticipants().size() + " shields!");
         for(Player p : tie) {
-            p.setShields(p.getShields() + tournament.getParticipants().size());
-            cleanup(p);
+            p.setShields(p.getShields() + originalPartNum);
+            cleanupWeaponsAndAmour(p);
         }
         pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
     }

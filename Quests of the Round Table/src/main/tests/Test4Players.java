@@ -55,6 +55,10 @@ public class Test4Players {
 			p.drawRank("squire");
 			p.setShields(1);
 		}
+		player1.setShieldName("shield_1");
+		player2.setShieldName("shield_2");
+		player3.setShieldName("shield_3");
+		player4.setShieldName("shield_4");
 				
 		//Check dealer.
 		assertFalse(player1.getDealer());
@@ -161,6 +165,10 @@ public class Test4Players {
 			p.drawRank("squire");
 			p.setShields(1);
 		}
+		player1.setShieldName("shield_1");
+		player2.setShieldName("shield_2");
+		player3.setShieldName("shield_3");
+		player4.setShieldName("shield_4");
 						
 		//Check dealer.
 		assertFalse(player1.getDealer());

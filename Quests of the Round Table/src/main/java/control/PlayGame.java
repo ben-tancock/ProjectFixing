@@ -109,9 +109,11 @@ public class PlayGame extends Application{
 				players.getPlayers().get(0).setName("Player 1");
 				players.getPlayers().get(1).setName("Player 2");
 				players.getPlayers().get(0).setShields(1);
-				players.getPlayers().get(1).setShields(2);
+				players.getPlayers().get(1).setShields(1);
 				players.getPlayers().get(0).setRank("squire");
-				players.getPlayers().get(1).setRank("knight");
+				players.getPlayers().get(1).setRank("squire");
+				players.getPlayers().get(0).setShieldName("shield_1");
+				players.getPlayers().get(1).setShieldName("shield_2");
 				
 				// commented this out because drawing the players story card for them on the initial setup caused null pointer exceptions
 				// have to wait for everything to be set up before we can start rotating i think
@@ -155,10 +157,11 @@ public class PlayGame extends Application{
 				players.getPlayers().get(2).setName("Player 3");
 				for(Player p : players.getPlayers()) {
 					p.setRank("squire");
+					p.setShields(1);
 				}
-				players.getPlayers().get(0).setShields(1);
-				players.getPlayers().get(1).setShields(1);
-				players.getPlayers().get(2).setShields(1);
+				players.getPlayers().get(0).setShieldName("shield_1");
+				players.getPlayers().get(1).setShieldName("shield_2");
+				players.getPlayers().get(2).setShieldName("shield_3");
 				
 				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
@@ -188,11 +191,12 @@ public class PlayGame extends Application{
 				
 				for(Player p : players.getPlayers()) {
 					p.setRank("squire");
+					p.setShields(1);
 				}
-				players.getPlayers().get(0).setShields(1);
-				players.getPlayers().get(1).setShields(1);
-				players.getPlayers().get(2).setShields(1);
-				players.getPlayers().get(3).setShields(1);
+				players.getPlayers().get(0).setShieldName("shield_1");
+				players.getPlayers().get(1).setShieldName("shield_2");
+				players.getPlayers().get(0).setShieldName("shield_3");
+				players.getPlayers().get(1).setShieldName("shield_4");
 				
 				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
@@ -330,6 +334,12 @@ public class PlayGame extends Application{
 			boolean cardsRemoved = view.cardOverflowPrompt(p, p.getHand().size() - 12);
 			if(!cardsRemoved) {
 				onCardOverflow(p);
+			}
+			p.setHandState(CardStates.FACE_DOWN);
+			if(qh != null && qh.getCard() != null) {
+				view.update(null, players, sDeck, sDiscard, qh.getCard());
+			} else {
+				view.update(null, players, sDeck, sDiscard, null);
 			}
 		}
 		
@@ -470,7 +480,7 @@ public class PlayGame extends Application{
 				view.update(null, players, sDeck, sDiscard, null);
 			}
 			logger.info(p.getName() + " discarded a card.");
-			logger.info(p.getName() + "'s hand count: " + p.getHand().size() + " Adventure Deck Count: " + aDeck.size() + " Adventure Discard Count: " + aDiscard);
+			logger.info(p.getName() + "'s hand count: " + p.getHand().size() + " Adventure Deck Count: " + aDeck.size() + " Adventure Discard Count: " + aDiscard.size());
 		}
 		
 		

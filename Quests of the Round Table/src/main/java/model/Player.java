@@ -15,6 +15,7 @@ public abstract class Player {
 	private boolean dealer;
 	private boolean focused;
 	private int shields;
+	private String shieldName;
 	private ArrayList<Adventure> hand;
 	private ArrayList<Ally> allies;
 	private List<Weapon> weapons;
@@ -33,6 +34,7 @@ public abstract class Player {
 		rank = "";
 		bid = 0;
 		aBP = 0;
+		shieldName = "";
 	}
 	
 	// Getters and Setters --------------------------------
@@ -79,6 +81,14 @@ public abstract class Player {
 	
 	public int getShields() {
 		return shields;
+	}
+	
+	public String getShieldName() {
+		return shieldName;
+	}
+	
+	public void setShieldName(String s) {
+		shieldName = s;
 	}
 	
 	public int getHandState() {
