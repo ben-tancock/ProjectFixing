@@ -663,8 +663,8 @@ public class View extends Application {
 	
 	public HBox shields(Player p, int pIndex) {
 		HBox shields = new HBox(-50);
-		ImageView theCard = new ImageView(new Image("/playingCards/" + p.getShieldName() + ".jpg", 75, 100, true, true));
 		for(int i = 0; i < p.getShields(); i++) {
+			ImageView theCard = new ImageView(new Image("/playingCards/" + p.getShieldName() + ".jpg", 75, 100, true, true));
 			if(pIndex == 1) {
 				theCard.setRotate(180);
 			}else if (pIndex == 2){
@@ -678,8 +678,8 @@ public class View extends Application {
 	
 	public VBox verticalPlayerShields(Player p, int pIndex) {
 		VBox shields = new VBox(-80);
-		ImageView theCard = new ImageView(new Image("/playingCards/" + p.getShieldName() + ".jpg", 75, 100, true, true));
 		for(int i = 0; i < p.getShields(); i++) {
+			ImageView theCard = new ImageView(new Image("/playingCards/" + p.getShieldName() + ".jpg", 75, 100, true, true));
 			if(pIndex == 3) {
 				theCard.setRotate(270);
 			}else if (pIndex == 1){
@@ -773,6 +773,15 @@ public class View extends Application {
 	
 	public boolean seeCardPrompt(Player p) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		PlayGame pg = PlayGame.getInstance();
+		QuestHandler qh = QuestHandler.getInstance();
+		
+		if(qh != null && qh.getCard() != null) {
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+		} else { 
+			update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+		}
 		
 		alert.setTitle(p.getName() + "'s Turn");
 		alert.setHeaderText(p.getName() + "'s Turn");
