@@ -203,7 +203,7 @@ public class TournamentHandler {
         System.out.println("it's a tie! all players tied with " + (tie.get(0).getBattlePoints() - tie.get(0).getABP()) + " battlepoints!");
         System.out.println("all players awarded " + tournament.getParticipants().size() + " shields!");
         for(Player p : tie) {
-            p.setShields(p.getShields() + originalPartNum);
+            p.setShields(p.getShields() + originalPartNum + tournament.getBonus());
             cleanupWeaponsAndAmour(p);
         }
         pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);

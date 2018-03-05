@@ -262,6 +262,8 @@ public class PlayGame extends Application{
 			logger.info(pr.getName() + "'s shields: " + pr.getShields());
 			logger.info(pr.getName() + "'s hand: " + pr.getHand());
 		}
+		//we want to make sure that allies have the right BP/Bids
+		allyCheck();
 		if(qh != null && qh.getCard() != null) {
 			view.update(null, players, sDeck, sDiscard, qh.getCard());
 		} else { 
@@ -310,6 +312,45 @@ public class PlayGame extends Application{
 		
 	}
 	
+	public void allyCheck() {
+		QuestHandler qh = QuestHandler.getInstance();
+		for(Player p : players.getPlayers()) {
+			for(Ally a : p.getAllies()) {
+				//Check Sir Percival
+				if(qh !=  null && qh.getCard() != null) {
+					if(a.getName().equals("sir_percival") ) {
+						if(qh.getCard().getName().equals("search_for_the_holy_grail")) {
+							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 20)");
+							a.setBattlePoints(20);
+						} else {
+							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 5)");
+							a.setBattlePoints(5);
+						}
+					} 
+					//Check Sir Gawain
+					else if(a.getName().equals("sir_gawain")) {
+						if(qh.getCard().getName().equals("test_of_the_green_knight")) {
+							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 20)");
+							a.setBattlePoints(20);
+						}else {
+							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 10)");
+							a.setBattlePoints(10);
+						} 
+					}
+				}
+				//Check King Pellinore
+				
+				//Check Queen Iseult
+				
+				//Check Sir Lancelot
+				
+				//Check Sir Tristan
+				
+				//Check Merlin
+			}
+		}
+	}
+	
 	
 	public static class PlayGameControlHandler extends ControlHandler {
 		
@@ -348,6 +389,17 @@ public class PlayGame extends Application{
 			QuestHandler qh = QuestHandler.getInstance();
 			if(card instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), card);
+				//had to add this so that when the card is played, the change is instantly made.
+				if(qh != null && qh.getCard() != null) {
+					if(card.getName().equals("sir_percival") && qh.getCard().getName().equals("search_for_the_holy_grail")) {
+						((Ally) card).setBattlePoints(20);
+						System.out.println(card.getName() + "'s battlepoints are set to: " + ((Ally)card).getBattlePoints() + "(should be 20)");
+					} else if(card.getName().equals("sir_gawain") && qh.getCard().getName().equals("test_of_the_green_knight")) {
+						((Ally) card).setBattlePoints(20);
+						System.out.println(card.getName() + "'s battlepoints are set to: " + ((Ally)card).getBattlePoints() + "(should be 20)");
+					} //needs rest of allies that are changed by quests.
+				}
+				//needs allies that are not changed by quests.
 			} else if (card instanceof Amour) {
 				if(p.getAmour().size() >= 1) {
 					card.setState(CardStates.FACE_UP);
@@ -474,6 +526,7 @@ public class PlayGame extends Application{
 			QuestHandler qh = QuestHandler.getInstance();
 			p.remove(p.getHand(), aDiscard, card);
 			card.setState(CardStates.FACE_DOWN);
+			p.setHandState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {
 				view.update(null, players, sDeck, sDiscard, qh.getCard());
 			} else {

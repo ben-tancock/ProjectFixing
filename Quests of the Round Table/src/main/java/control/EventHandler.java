@@ -135,11 +135,7 @@ public class EventHandler {
 		ArrayList<Player> prClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
 		prClone.addAll(pg.getPlayers().getPlayers());
 		for(int i = 0; i < prClone.size(); i++) {
-			for(Ally a : prClone.get(i).getAllies()) {
-				//new ArrayList<Card>()
-				new ArrayList<Foe>();
-				prClone.get(i).remove(prClone.get(i).getAllies(), d, a );
-			}
+			prClone.get(i).getAllies().removeAll(prClone.get(i).getAllies());
 		}
 		pg.getPlayers().setPlayers(prClone);
 	}

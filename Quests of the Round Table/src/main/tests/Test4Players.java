@@ -124,13 +124,6 @@ public class Test4Players {
 		assertEquals(playGame.getSDiscard().size(), 3);
 		playGame.getView().rotate(playGame);
 		playGame.doTurn(players.getPlayers().get(0));
-		player4.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "journey_through_the_enchanted_forest");
-		for(Player p : players.getPlayers()) {
-			p.setHandState(CardStates.FACE_DOWN);
-		}
-		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
-		assertEquals(playGame.getSDeck().size(), 24);
-		assertEquals(playGame.getSDiscard().size(), 4);
 	}
 	
 	@Test
