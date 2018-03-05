@@ -438,7 +438,6 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onMordredPlayed(Player perp, Player targ) {
-			//Flaws in this ofc so it will be changed.
 			Foe mord = null;
 			for(Adventure a : perp.getHand()) {
 				if(a.getName().equals("mordred")) {

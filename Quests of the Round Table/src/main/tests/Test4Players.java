@@ -181,7 +181,6 @@ public class Test4Players {
 		player1.drawCard(aDeck, "sword");
 		player1.drawCard(aDeck, "sword");
 		player1.drawCard(aDeck, "sword");
-		player1.drawCard(aDeck, "mordred");
 		player1.drawCard(aDeck, "thieves");
 		player1.drawCard(aDeck, "robber_knight");
 		player1.drawCard(aDeck, "saxon_knight");

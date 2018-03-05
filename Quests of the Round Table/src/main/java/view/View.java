@@ -1048,7 +1048,7 @@ public class View extends Application {
 		VBox window = new VBox();
 		List<Button> cards = new ArrayList<>();
 		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
-			if(p.getHand().get(cardIndex) instanceof Ally || p.getHand().get(cardIndex) instanceof Weapon || p.getHand().get(cardIndex) instanceof Amour || p.getHand().get(cardIndex).getName().equals("mordred")) {
+			if(p.getHand().get(cardIndex) instanceof Ally || p.getHand().get(cardIndex) instanceof Weapon || p.getHand().get(cardIndex) instanceof Amour) {
 				Button button = new Button();
 				final int index = cardIndex;
 				BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
@@ -1532,7 +1532,7 @@ public class View extends Application {
 		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(qh != null && qh.getCard() != null) {
 				
-				if(p.getHand().get(cardIndex) instanceof Ally || (p.getHand().get(cardIndex) instanceof Amour && p.getAmour().size() == 0) || p.getHand().get(cardIndex).getName().equals("mordred")) {
+				if(p.getHand().get(cardIndex) instanceof Ally || (p.getHand().get(cardIndex) instanceof Amour && p.getAmour().size() == 0)) {
 					Button button = new Button();
 					final int index = cardIndex;
 					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
@@ -1571,7 +1571,7 @@ public class View extends Application {
 				}
 			}
 			else {
-				if(p.getHand().get(cardIndex) instanceof Ally || p.getHand().get(cardIndex).getName().equals("mordred")) {
+				if(p.getHand().get(cardIndex) instanceof Ally) {
 					Button button = new Button();
 					final int index = cardIndex;
 					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
