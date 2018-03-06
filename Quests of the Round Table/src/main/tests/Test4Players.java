@@ -278,5 +278,66 @@ public class Test4Players {
 		playGame.getView().rotate(playGame);
 		playGame.doTurn(players.getPlayers().get(0));
 	}
+	
+	@Test
+	public void testAdventureDeck() throws Exception {
+		//Create 4 players and assign the 4th player as the dealer.
+		Players players = new Players();
+		players.addListener(new PlayGameControlHandler());
+							
+		for(int i = 0; i < 4; i++) {
+			players.addHuman();
+		}
+				
+		players.getPlayers().get(3).setDealer(true);
+					
+		Player player1 = players.getPlayers().get(0);
+		player1.setName("Player 1");
+		Player player2 = players.getPlayers().get(1);
+		player2.setName("Player 2");
+		Player player3 = players.getPlayers().get(2);
+		player3.setName("Player 3");
+		Player player4 = players.getPlayers().get(3);
+		player4.setName("Player 4");
+						
+		//Check for all players, check names.
+		assertEquals(players.getPlayers().size(), 4);
+		assertEquals(player1.getName(), "Player 1");
+		assertEquals(player2.getName(), "Player 2");
+		assertEquals(player3.getName(), "Player 3");
+		assertEquals(player4.getName(), "Player 4");
+				
+		for(Player p : players.getPlayers()) {
+			p.drawRank("squire");
+			p.setShields(1);
+		}
+		player1.setShieldName("shield_1");
+		player2.setShieldName("shield_2");
+		player3.setShieldName("shield_3");
+		player4.setShieldName("shield_4");
+						
+		//Check dealer.
+		assertFalse(player1.getDealer());
+		assertFalse(player2.getDealer());
+		assertFalse(player3.getDealer());
+		assertTrue(player4.getDealer());
+			
+		//Players are dealt cards and Adventure and Story Decks are setup.
+		AdventureDeck aDeck = new AdventureDeck();
+		aDeck.shuffle();
+		AdventureDiscard aDiscard = new AdventureDiscard();
+		StoryDeck sDeck = new StoryDeck();
+		sDeck.shuffle();
+		StoryDiscard sDiscard = new StoryDiscard();
+		
+		for(int i = 0; i < 40; i++) {
+			aDiscard.add(aDeck.get(0));
+			aDeck.remove(0);
+		}
+		
+		PlayGame playGame = new PlayGame(players, aDeck, aDiscard, sDeck, sDiscard);
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
+		player1.drawCard(220, playGame.getADeck());
+	}
 
 }

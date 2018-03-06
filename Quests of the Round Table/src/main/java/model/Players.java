@@ -49,8 +49,6 @@ public class Players {
 	
 	// notify listeners: send event message (e.g. drawCard, discard), old value(s), new value(s)
 	// possible changes: card drawn/discarded, rank up/down, shields up/down, 
-	
-	//Possible card overflow notify?
 	public static void notifyListeners(String event, Player p) {
 		switch(event) {
 			case "card overflow":
@@ -73,6 +71,15 @@ public class Players {
 				break;
 			case "player won":
 				listeners.get(0).onPlayerVictory(p);
+				break;
+			
+		}
+	}
+	
+	public static void notifyListeners(String event, Player p, int cardsLeftToDraw) { 
+		switch(event) {
+			case "deck empty":
+				listeners.get(0).onAdventureDeckEmpty(p, cardsLeftToDraw);
 				break;
 		}
 	}

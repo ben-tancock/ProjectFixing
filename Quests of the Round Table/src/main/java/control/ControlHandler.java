@@ -56,6 +56,10 @@ public abstract class ControlHandler {
 		
 	}
 	
+	public void onAdventureDeckEmpty(Player p, int cardsLeftToDraw) {
+		
+	}
+	
 	public void onPlayerVictory(Player p) {
 		
 	}

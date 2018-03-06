@@ -1058,10 +1058,14 @@ public class View extends Application {
 				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
-						p.getHand().get(index).setState(CardStates.FACE_DOWN);
-						notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
-						dialog.close();
-						cardClicked = true;
+						if(p.getHand().get(index).getName().equals("mordred")) {
+							
+						} else {
+							p.getHand().get(index).setState(CardStates.FACE_DOWN);
+							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
+							dialog.close();
+							cardClicked = true;
+						}
 					}
 				});
 				cards.add(button);
@@ -1542,12 +1546,16 @@ public class View extends Application {
 					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent arg0) {
-							p.getHand().get(index).setState(CardStates.FACE_UP);
-							update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-							logger.info("Controller notified that " + p.getName() + " played an Ally or Amour.");
-							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
-							dialog.close();
-							cardClicked = true;
+							if(p.getHand().get(index).getName().equals("mordred")) {
+								
+							} else {
+								p.getHand().get(index).setState(CardStates.FACE_UP);
+								update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
+								logger.info("Controller notified that " + p.getName() + " played an Ally or Amour.");
+								notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
+								dialog.close();
+								cardClicked = true;
+							}
 						}
 					});
 					allyAmourCards.add(button);
@@ -1581,12 +1589,16 @@ public class View extends Application {
 					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent arg0) {
-							p.getHand().get(index).setState(CardStates.FACE_UP);
-							update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
-							logger.info("Controller notified that" + p.getName() + " played an Ally.");
-							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
-							dialog.close();
-							cardClicked = true;
+							if(p.getHand().get(index).getName().equals("mordred")) {
+								
+							} else {
+								p.getHand().get(index).setState(CardStates.FACE_UP);
+								update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
+								logger.info("Controller notified that" + p.getName() + " played an Ally.");
+								notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
+								dialog.close();
+								cardClicked = true;
+							}
 						}
 					});
 					allyAmourCards.add(button);
@@ -1677,7 +1689,18 @@ public class View extends Application {
 		alert.showAndWait();
 	}
 	
+	public void kingsCallToArmsPrompt(Player p, int count, boolean hasWeapon) {
+		
+	}
 	
+	public void promptNoAdventureCardsLeft() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("No Adventure Cards Dialog");
+		alert.setHeaderText("Error: No Adventure Cards left");
+		alert.setContentText("There are no Adventure Cards left, sorry!");
+
+		alert.showAndWait();
+	}
 	
 	/*
 	

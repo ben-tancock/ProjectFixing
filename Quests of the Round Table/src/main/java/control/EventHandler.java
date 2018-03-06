@@ -57,10 +57,12 @@ public class EventHandler {
 	}
 	
 	public void kingsRecognition() {// notify that the next player to finish a quest gets 2 bonus shields
-		//listeners.get(0).onKingsRecognition();
+		logger.info("King's Recognition drawn, the next player to finish a quest will receive 2 bonus shields.");
+		listeners.get(0).onKingsRecognition();
 	}
 	
 	public void plague(Player p) { // drawer loses 2 shields if possible
+		logger.info("Plague drawn, " + p.getName() + " loses 2 shields if possible.");
 		if(p.getShields() > 2) {
 			p.setShields(p.getShields() -2);
 		}
@@ -70,7 +72,7 @@ public class EventHandler {
 	}
 	
 	public void chivalrousDeed(Players p) { // player(s) with BOTH lowest rank and least amount of shields receives 3 shields 
-		logger.info("Chivalrous Deed triggered, player(s) with BOTH lowest rank and least amount of shields receive 3 shields.");
+		logger.info("Chivalrous Deed drawn, player(s) with BOTH lowest rank and least amount of shields receive 3 shields.");
 		Integer pShields[] =  p.getPlayers().stream().map(Player::getShields).toArray(Integer[]::new);
 		int minS = Collections.min(Arrays.asList(pShields));
 			
@@ -88,9 +90,11 @@ public class EventHandler {
 	}
 	
 	public void pox(Players p, Player pr) { // all players except drawer lose a shield
+		logger.info("Pox drawn, all but " + pr.getName() + " (player who drew this card) lose a shield.");
 		for (Player ele : p.getPlayers()) {
 			if(!ele.equals(pr)) {
 				if(ele.getShields() > 0) {
+					logger.info(ele.getName() + " loses a shield.");
 					ele.setShields(ele.getShields()-1);
 				}
 			}
@@ -98,7 +102,7 @@ public class EventHandler {
 	}
 	
 	public void prosperity(Players p, AdventureDeck d) { // all players must draw two cards
-		logger.info("Prosperity throughout the realm triggered, all players must draw 2 cards.");
+		logger.info("Prosperity throughout the realm drawn, all players must draw 2 cards.");
 		PlayGame pg = PlayGame.getInstance();
 		ArrayList<Player> prClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
 		prClone.addAll(pg.getPlayers().getPlayers());
@@ -112,8 +116,6 @@ public class EventHandler {
 	
 	public void queensFavor(Players p, AdventureDeck d) { // player(s) with lowest rank receive 2 cards
 		//boolean lower = false; 
-		
-		List<Player> per = new ArrayList<Player>();
 		Integer pranks[] =  p.getPlayers().stream().map(Player::getRank).toArray(Integer[]::new);
 		int minR = Collections.min(Arrays.asList(pranks));
 				
@@ -123,6 +125,7 @@ public class EventHandler {
 		prClone.addAll(pg.getPlayers().getPlayers());
 		for(int i = 0; i < prClone.size(); i++) {
 			if(prClone.get(i).getRank() == minR) {
+				logger.info(prClone.get(i).getName() + " has drawn 2 cards.");
 				prClone.get(i).drawCard(2, d);
 			}
 		}
@@ -141,17 +144,17 @@ public class EventHandler {
 	}
 	
 	public void kingsCallToArms(Players p, AdventureDiscard d) {
+		logger.info("King's Call To Arms drawn, all highest ranked players must either discard 1 weapon or 2 foes.");
 		Integer pranks[] =  p.getPlayers().stream().map(Player::getRank).toArray(Integer[]::new);//map ranks of players to integer array
 		int maxR = Collections.max(Arrays.asList(pranks));
-				
+		PlayGame pg = PlayGame.getInstance();
 		for(Player pr : p.getPlayers()) { // scenario: squire w/ 4 shields and knight w/ 3 shields --> squire, not knight
 			if(pr.getRank() == maxR) {
-				//this is just a workaround to force cards out, but in reality we would notify the view.
+				//notify view method added, it's just empty.
 				boolean weaponFound = false;
 				for(Adventure a : pr.getHand()) {
 					if(a instanceof Weapon) {
 						weaponFound = true;
-						pr.remove(pr.getHand(), d, a);
 						break;
 					}
 				}
@@ -160,14 +163,22 @@ public class EventHandler {
 				if(!weaponFound) {
 					int count = 0;
 					for(Adventure a : pr.getHand()) {
-						if(count < 2 && a instanceof Foe) {
-							pr.remove(pr.getHand(), d, a);
+						if(a instanceof Foe) {
 							count++;
 						}
 					}
-					//notify that player must discard 2 foes
+					if (count >= 2 ) {
+						logger.info("Forcing player to discard 2 foes through view because a weapon was not found.");
+						pg.getView().kingsCallToArmsPrompt(pr, 2, false);
+					} else if (count == 1) {
+						logger.info(pr.getName() + " has only 1 foe, forcing them to remove it.");
+						pg.getView().kingsCallToArmsPrompt(pr, 1, false);
+					} else {
+						logger.info(pr.getName() + " didn't have any weapons or foes.");
+					}
 				} else {
-					//notify that player must discard 1 weapon
+					logger.info("Forcing player to discard a weapon because a weapon was found.");
+					pg.getView().kingsCallToArmsPrompt(pr, 1, true);
 				}
 				
 			}

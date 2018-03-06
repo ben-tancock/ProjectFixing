@@ -289,30 +289,50 @@ public abstract class Player {
 	}
 	
 	public void drawCard(int j, AdventureDeck deck) { // to do: when player receives card from AD, remove card from AD
-		for(int i = 0; i < j; i++) {
-			hand.add(deck.top());
-			//notifyListeners("draw", this.getCard(this.hand.size()-1)); // element in the hand at the end of the list is what was added
-		}
+		if(deck.size() == 0) {
+			Players.notifyListeners("deck empty", this, j);
+		} else {
+			for(int i = 0; i < j; i++) {
+				hand.add(deck.top());
+				if(deck.size() == 0) {
+					int cardsLeftToDraw = (j - 125);
+					Players.notifyListeners("deck empty", this, cardsLeftToDraw);
+					break;
+				}
+			}
 		
-		logger.info(j + " card(s) drawn by " + getName() + " from Adventure Deck.");
-		logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
-		
-		if(hand.size() > 12) {
-			logger.info(name + " has too many cards! Notifying the controller!");
-			Players.notifyListeners("card overflow", this);
+			if(deck.size() == 0) {
+				Players.notifyListeners("deck empty", this, 0);
+			}
+			
+			logger.info(j + " card(s) drawn by " + getName() + " from Adventure Deck.");
+			logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
+			
+			if(hand.size() > 12) {
+				logger.info(name + " has too many cards! Notifying the controller!");
+				Players.notifyListeners("card overflow", this);
+			}
 		}
 	}
 	
 	//draws a specific card from the AD
 	public void drawCard(AdventureDeck deck, String name) throws Exception {
-		hand.add(deck.findAndDraw(name));
-		
-		logger.info(name + " card drawn by " + getName() + " from Adventure Deck.");
-		logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
-		
-		if(hand.size() > 12) {
-			logger.info(name + " has too many cards! Notifying the controller!");
-			Players.notifyListeners("card overflow", this);
+		if(deck.size() == 0) {
+			Players.notifyListeners("deck empty", this, 1);
+		} else {
+			hand.add(deck.findAndDraw(name));
+			if(deck.size() == 0) {
+				Players.notifyListeners("deck empty", this, 0);
+			}
+			
+			
+			logger.info(name + " card drawn by " + getName() + " from Adventure Deck.");
+			logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
+			
+			if(hand.size() > 12) {
+				logger.info(name + " has too many cards! Notifying the controller!");
+				Players.notifyListeners("card overflow", this);
+			}
 		}
 	}
 	

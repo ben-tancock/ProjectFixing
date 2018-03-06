@@ -174,9 +174,16 @@ public class QuestHandler {
 		
 		//Winning participants get shields
 		for(Iterator<Player> participantIterator = participants.iterator(); participantIterator.hasNext();) {
-			Player p = participantIterator.next();
-			logger.info(p.getName() + " has successfully completed the quest " + card.getName() + " and has been awarded " + card.getNumStages() + " shields.");
-			p.setShields(p.getShields() + card.getNumStages());
+			if(PlayGame.isKingsRecognition()) {
+				Player p = participantIterator.next();
+				logger.info(p.getName() + " has successfully completed the quest " + card.getName() + " and has been awarded " + card.getNumStages() + " + 2 (King's Recognition) shields.");
+				p.setShields(p.getShields() + card.getNumStages() + 2);
+				PlayGame.setKingsRecognition(false);
+			} else {
+				Player p = participantIterator.next();
+				logger.info(p.getName() + " has successfully completed the quest " + card.getName() + " and has been awarded " + card.getNumStages() + " shields.");
+				p.setShields(p.getShields() + card.getNumStages());
+			}
 		}
 		//sponsor then draws back num cards used + numstages
 		sponsor.drawCard(numCardsUsed + card.getNumStages(), deck);
@@ -259,57 +266,48 @@ public class QuestHandler {
 				return new Stage((Test)addedCards.get(0)); 
 			}
 			else if(addedCards.get(0) instanceof Foe) {
-				Stage stage = setupFoe(sponsor);
-				System.out.println(stage.getBattlePoints());
-				System.out.println(finished);
-				return stage;
+				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
+				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor, new ArrayList<Weapon>());
+				if(fChoosingWeapons) {
+					for(Adventure a : addedCards) {
+						if(a instanceof Weapon) {
+							weapons.add((Weapon)a); 
+						}
+					}
+					Stage stage = new Stage((Foe)addedCards.get(0), weapons);
+					
+					boolean enoughBP = true;
+					if(stage.getFoe() != null) {
+						setStageBP(stage, card.getSpecialFoes());
+						for(Stage s :  card.getStages()) {
+							if(s.getFoe() != null && s.getBattlePoints() >= stage.getBattlePoints()) {
+								enoughBP = false;
+								logger.info("battle points not high enough detected!");
+							}
+							
+						}
+						
+					}
+					if(enoughBP) {
+						System.out.println(stage.getBattlePoints());
+						return stage;
+					} else {
+						for(Adventure a : addedCards) {
+							a.setState(CardStates.FACE_UP);
+						}
+						sponsor.getHand().addAll(addedCards);
+						addedCards.removeAll(addedCards);
+						pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+						pg.getView().promptNotEnoughBP();
+						setupStage(sponsor);
+						return null;
+					}
+				} 
+				return null;
 			}
 		} else {
 		}
 		return null;
-	}
-	
-	public Stage setupFoe(Player sponsor) {
-		PlayGame pg = PlayGame.getInstance();
-		ArrayList<Weapon> weapons = new ArrayList<Weapon>();
-		boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor, new ArrayList<Weapon>());
-		if(fChoosingWeapons) {
-			for(Adventure a : addedCards) {
-				if(a instanceof Weapon) {
-					weapons.add((Weapon)a); 
-				}
-			}
-			Stage stage = new Stage((Foe)addedCards.get(0), weapons);
-			
-			boolean enoughBP = true;
-			if(stage.getFoe() != null) {
-				setStageBP(stage, card.getSpecialFoes());
-				for(Stage s :  card.getStages()) {
-					if(s.getFoe() != null && s.getBattlePoints() >= stage.getBattlePoints()) {
-						enoughBP = false;
-						logger.info("battle points not high enough detected!");
-					}
-					
-				}
-				
-			}
-			if(enoughBP) {
-				System.out.println(stage.getBattlePoints());
-				return stage;
-			} else {
-				for(Adventure a : addedCards) {
-					a.setState(CardStates.FACE_UP);
-				}
-				sponsor.getHand().addAll(addedCards);
-				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
-				pg.getView().promptNotEnoughBP();
-				setupFoe(sponsor);
-				return stage;
-			}
-		} else {
-			return null;
-		}
-		
 	}
 	
 	public void setStageBP(Stage s, String specialFoes) {

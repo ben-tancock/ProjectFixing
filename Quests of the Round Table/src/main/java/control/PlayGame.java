@@ -42,6 +42,7 @@ public class PlayGame extends Application{
 	private static List<Player> winners;
 	private static Stage primStage;
 	private static final PlayGame instance = new PlayGame();
+	private static boolean KINGS_RECOGNITION;
 	
 	public PlayGame() {
 		aDeck = new AdventureDeck();
@@ -53,6 +54,7 @@ public class PlayGame extends Application{
 		winners = new ArrayList<Player>();
 		aDeck.shuffle();
 		sDeck.shuffle();
+		KINGS_RECOGNITION = false;
 	}
 	
 	public PlayGame(Players riggedPlayers, AdventureDeck riggedDeck, AdventureDiscard riggedDiscard, StoryDeck storyDeck, StoryDiscard storyDiscard ) {
@@ -71,6 +73,15 @@ public class PlayGame extends Application{
 	public static void main(String[] args) {
 		logger.info("Game Menu starting!");
 		Application.launch(args);
+	}
+	
+	public static void setKingsRecognition(boolean kingsRecognition) {
+		logger.info("Setting King's Recognition to: " + kingsRecognition);
+		KINGS_RECOGNITION = kingsRecognition;
+	}
+	
+	public static boolean isKingsRecognition() {
+		return KINGS_RECOGNITION;
 	}
 	
 	public static PlayGame getInstance() {
@@ -475,6 +486,32 @@ public class PlayGame extends Application{
 		}
 		
 		@Override
+		public void onAdventureDeckEmpty(Player p, int cardsLeftToDraw) {
+			if(aDiscard.size() > 0) {
+				aDeck.addAll(aDiscard);
+				aDeck.shuffle();
+				aDiscard.removeAll(aDiscard);
+				
+				System.out.println("Adventure Deck emptied, cards left to draw: " + cardsLeftToDraw);
+				p.drawCard(cardsLeftToDraw, aDeck);
+			}
+			else {
+				/* For Testing only
+				int allyCount = 0;
+				for(Adventure a : p.getHand()) {
+					if(a instanceof Ally) {
+						allyCount++;
+						System.out.println(a.getName());
+					}
+				}
+				System.out.println("number of allies in " + p.getName() + "'s hand: " + allyCount);
+				//--------------------------------------------------------------------------------*/
+				
+				view.promptNoAdventureCardsLeft();
+			}
+		}
+		
+		@Override
 		public void onQuestCardDraw(Player p) {
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
 			QuestHandler questHandler = new QuestHandler((Quest)topCard, players, p, aDeck, aDiscard);
@@ -540,6 +577,12 @@ public class PlayGame extends Application{
 		@Override
 		public void onRankSet(Player p) {
 			view.update(null, players, sDeck, sDiscard, null);
+		}
+		
+		@Override
+		public void onKingsRecognition() {
+			logger.info("King's Recognition set by controller to true, the next player to finish a quest will receive 2 bonus shields.");
+			PlayGame.setKingsRecognition(true);
 		}
 	}
 }
