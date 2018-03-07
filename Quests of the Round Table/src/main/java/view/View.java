@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -545,7 +547,7 @@ public class View extends Application {
 		//	fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			firstTime = false;
 		}
-		fourPlayerStage.setScene(new Scene(grid, 1120, 800,Color.AQUA));
+		fourPlayerStage.setScene(new Scene(grid, 1120, 700, Color.AQUA));
 		fourPlayerStage.getScene().setRoot(grid);
 		fourPlayerStage.show();
 		
@@ -833,28 +835,41 @@ public class View extends Application {
 		dialog.setTitle("Please choose either a foe or a test");
 		VBox window = new VBox();
 		List<Button> cards = new ArrayList<>();
+		QuestHandler qh = QuestHandler.getInstance();
 		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(p.getHand().get(cardIndex) instanceof Foe || p.getHand().get(cardIndex) instanceof Test) {
 				Button button = new Button();
 				final int index = cardIndex;
-				BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
+				BackgroundImage buttonBackground = new BackgroundImage(new Image("/playingCards/" + p.getHand().get(cardIndex).getName() + ".jpg", 75, 100, true, true), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 				button.setBackground(new Background(buttonBackground));
 				button.setMinWidth(75);
 				button.setMinHeight(100);
 				button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
-						if(twoPlayerStage != null) {
-							twoPlayerStage.getScene().getRoot().setEffect(null);
-						} else if(threePlayerStage != null) {
-							threePlayerStage.getScene().getRoot().setEffect(null);
-						} else if(fourPlayerStage != null) {
-							fourPlayerStage.getScene().getRoot().setEffect(null);
+						boolean testAlready = false;
+						for(model.Stage s : qh.getCard().getStages()) {
+							if(s.getTest() != null) {
+								testAlready = true;
+							}
 						}
-						p.getHand().get(index).setState(CardStates.FACE_DOWN);
-						notifyStageCardChosen(p, p.getHand().get(index));
-						cardClicked = true;
-						dialog.close();
+						if(testAlready && p.getHand().get(index) instanceof Test) {
+							promptTestAlreadyAdded();
+							dialog.close();
+							promptAddCardToStage(p);
+						} else {
+							if(twoPlayerStage != null) {
+								twoPlayerStage.getScene().getRoot().setEffect(null);
+							} else if(threePlayerStage != null) {
+								threePlayerStage.getScene().getRoot().setEffect(null);
+							} else if(fourPlayerStage != null) {
+								fourPlayerStage.getScene().getRoot().setEffect(null);
+							}
+							p.getHand().get(index).setState(CardStates.FACE_DOWN);
+							notifyStageCardChosen(p, p.getHand().get(index));
+							cardClicked = true;
+							dialog.close();
+						}
 					}
 				});
 				cards.add(button);
@@ -1173,7 +1188,7 @@ public class View extends Application {
 			} else if(bid <= p.getMaxBid() && bid > currBid) {
 				return p;
 			} else {
-				promptBidNotHighEnough(p);
+				promptInvalidBid(p);
 				return null;
 			}
 		} else {
@@ -1182,7 +1197,7 @@ public class View extends Application {
 		
 	}
 	
-	public void promptBidNotHighEnough(Player p) {
+	public void promptInvalidBid(Player p) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Test Card Error Dialog");
 		alert.setHeaderText("Error: Bid not high enough.");
@@ -1541,8 +1556,8 @@ public class View extends Application {
 					final int index = cardIndex;
 					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 					button.setBackground(new Background(buttonBackground));
-					button.setMinWidth(75);
-					button.setMinHeight(100);
+					button.setMinWidth(100);
+					button.setMinHeight(125);
 					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent arg0) {
@@ -1698,6 +1713,15 @@ public class View extends Application {
 		alert.setTitle("No Adventure Cards Dialog");
 		alert.setHeaderText("Error: No Adventure Cards left");
 		alert.setContentText("There are no Adventure Cards left, sorry!");
+
+		alert.showAndWait();
+	}
+	
+	public void promptTestAlreadyAdded() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Stage Test Error");
+		alert.setHeaderText("Error: Test already added.");
+		alert.setContentText("There already exists a test in this quest, please try again!");
 
 		alert.showAndWait();
 	}

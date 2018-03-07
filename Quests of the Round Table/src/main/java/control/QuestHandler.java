@@ -263,7 +263,7 @@ public class QuestHandler {
 		if(finished) {
 			if(addedCards.get(0) instanceof Test) {
 				addedCards.get(0).setState(CardStates.FACE_DOWN);
-				return new Stage((Test)addedCards.get(0)); 
+				return new Stage((Test)addedCards.get(0));
 			}
 			else if(addedCards.get(0) instanceof Foe) {
 				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
@@ -353,13 +353,18 @@ public class QuestHandler {
 		ArrayList<Player> pptsClone = new ArrayList<>(); // had to do this to avoid concurrent modification exception
 		pptsClone.addAll(ppts);
 		int iter = 0;
-		for(Player p : pptsClone) {
+		int count = 0;
+		while(pptsClone.size() > 1) {
+			Player p = pptsClone.get(iter);
 			while(!players.getPlayers().get(0).equals(p)) {
 				pg.getView().rotate(pg);
 			}
 			pg.doTurn(p);
 			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
-			Player bidP = pg.getView().promptBid(currBid, p, iter);
+			Player bidP = null;
+			if(p.getMaxBid() > currBid) {
+				bidP = pg.getView().promptBid(currBid, p, count);
+			}
 			if(bidP != null) {
 				p = bidP;
 				currBid = p.getBid();
@@ -368,11 +373,12 @@ public class QuestHandler {
 				logger.info("current bid (" + p.getName() + "): " + currBid);
 				bidWinner = p;
 			} else {
-				ppts.remove(p);
+				pptsClone.remove(p);
 				p.setHandState(CardStates.FACE_DOWN);
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
 			}
-			iter++;
+			count++; // keep track of iterations to catch the very first one.
+			iter = (iter + 1) % pptsClone.size(); // keep iterating through until there is only 1 left.
 		}
 		//winning player discards all bided cards.
 		if(bidWinner != null) {

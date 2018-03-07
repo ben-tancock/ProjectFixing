@@ -206,8 +206,8 @@ public class PlayGame extends Application{
 				}
 				players.getPlayers().get(0).setShieldName("shield_1");
 				players.getPlayers().get(1).setShieldName("shield_2");
-				players.getPlayers().get(0).setShieldName("shield_3");
-				players.getPlayers().get(1).setShieldName("shield_4");
+				players.getPlayers().get(2).setShieldName("shield_3");
+				players.getPlayers().get(3).setShieldName("shield_4");
 				
 				//view.notifyStoryCardClicked(event, sDeck.get(view.getCurrentTopStoryCardIndex()));
 				for(Player p : players.getPlayers()) {
