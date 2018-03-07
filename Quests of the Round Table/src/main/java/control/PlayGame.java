@@ -463,8 +463,8 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
-			players.getPlayers().get(0).drawCard(sDeck, sDiscard, "boar_hunt");
-			//players.getPlayers().get(0).drawCard(sDeck, sDiscard);
+			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "boar_hunt");
+			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
 			}
