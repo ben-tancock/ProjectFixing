@@ -1556,8 +1556,8 @@ public class View extends Application {
 					final int index = cardIndex;
 					BackgroundImage buttonBackground = new BackgroundImage(((ImageView)player1Cards.getChildren().get(cardIndex)).getImage(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true));
 					button.setBackground(new Background(buttonBackground));
-					button.setMinWidth(100);
-					button.setMinHeight(125);
+					button.setMinWidth(75);
+					button.setMinHeight(100);
 					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
 						@Override
 						public void handle(MouseEvent arg0) {
