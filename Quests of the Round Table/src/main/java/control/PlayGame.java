@@ -456,7 +456,7 @@ public class PlayGame extends Application{
 		public void onMordredPicked(Player perp, Foe mordred) {
 		//	perp.discard(mordred, discardPile, onPlaySurface);
 			onDiscardCard(perp, mordred, false);
-			
+			view.promptToKillAlly(players, perp);
 		}
 		
 		@Override
