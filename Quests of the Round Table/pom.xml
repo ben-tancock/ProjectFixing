@@ -19,7 +19,14 @@
         <artifactId>javafx-maven-plugin</artifactId>
         <version>8.8.3</version>
         <configuration>
-          <mainClass>your.package.with.Launcher</mainClass>
+          <mainClass>control.PlayGame</mainClass>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>control.PlayGame</mainClass>
         </configuration>
       </plugin>
     </plugins>
@@ -44,5 +51,15 @@
       <artifactId>log4j-api</artifactId>
       <version>2.10.0</version>
 	</dependency>
+	<dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.0.0.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+      <version>2.0.0.RELEASE</version>
+  </dependency>
   </dependencies>
 </project>

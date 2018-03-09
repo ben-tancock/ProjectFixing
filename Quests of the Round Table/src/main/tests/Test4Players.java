@@ -176,28 +176,29 @@ public class Test4Players {
 		StoryDeck sDeck = new StoryDeck();
 		sDeck.shuffle();
 		StoryDiscard sDiscard = new StoryDiscard();
+		player1.drawCard(aDeck, "sword");
+		player2.drawCard(aDeck, "amour");
+		player3.drawCard(aDeck, "sword");
+		player1.drawCard(aDeck, "sword");
+		player2.drawCard(aDeck, "thieves");
+		player2.drawCard(aDeck, "boar");
+		player2.drawCard(aDeck, "robber_knight");
+		player2.drawCard(aDeck, "dagger");
+		player2.drawCard(aDeck, "saxon_knight");
+		player2.drawCard(aDeck, "saxon_knight");
+		player2.drawCard(aDeck, "test_of_the_questing_beast");
+		player1.drawCard(aDeck, "sir_percival");
+		player3.drawCard(aDeck, "amour");
+		player3.drawCard(aDeck, "battle-ax");
+		player3.drawCard(aDeck, "lance");
+		player3.drawCard(aDeck, "thieves");
+		player3.drawCard(aDeck, "saxons");
+		player3.drawCard(aDeck, "saxon_knight");
+		player3.drawCard(aDeck, "green_knight");
 		player1.drawCard(aDeck, "sir_gawain");
-		player1.drawCard(aDeck, "boar");
-		player1.drawCard(aDeck, "sword");
-		player1.drawCard(aDeck, "sword");
 		player1.drawCard(aDeck, "sword");
 		player1.drawCard(aDeck, "mordred");
-		player1.drawCard(aDeck, "thieves");
-		player1.drawCard(aDeck, "robber_knight");
-		player1.drawCard(aDeck, "saxon_knight");
-		player1.drawCard(aDeck, "dagger");
-		player1.drawCard(aDeck, "test_of_the_questing_beast");
-		player2.drawCard(aDeck, "thieves");
-		player2.drawCard(aDeck, "saxons");
-		player2.drawCard(aDeck, "saxon_knight");
-		player2.drawCard(aDeck, "green_knight");
-		player2.drawCard(aDeck, "sir_percival");
-		player2.drawCard(aDeck, "amour");
-		player3.drawCard(aDeck, "lance");
-		player3.drawCard(aDeck, "battle-ax");
-		player3.drawCard(aDeck, "amour");
-		player3.drawCard(aDeck, "sword");
-		
+	
 		player1.drawCard(12 - player1.getHand().size(), aDeck);
 		player2.drawCard(12 - player2.getHand().size(), aDeck);
 		player3.drawCard(12 - player3.getHand().size(), aDeck);
@@ -213,6 +214,7 @@ public class Test4Players {
 		
 		PlayGame playGame = new PlayGame(players, aDeck, aDiscard, sDeck, sDiscard);
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
+		
 		playGame.doTurn(players.getPlayers().get(0));
 		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "tintagel");
 		for(Player p : players.getPlayers()) { //this is handled in PlayGame after a story card is played all the way through, so we put it here to catch it.
@@ -222,6 +224,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 27);
 		assertEquals(playGame.getSDiscard().size(), 1);
 		playGame.getView().rotate(playGame);
+		
 		playGame.doTurn(players.getPlayers().get(0));
 		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "plague");
 		for(Player p : players.getPlayers()) {
@@ -231,6 +234,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 26);
 		assertEquals(playGame.getSDiscard().size(), 2);
 		playGame.getView().rotate(playGame);
+		
 		playGame.doTurn(players.getPlayers().get(0));
 		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "pox");
 		for(Player p : players.getPlayers()) {
@@ -240,6 +244,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 25);
 		assertEquals(playGame.getSDiscard().size(), 3);
 		playGame.getView().rotate(playGame);
+		
 		playGame.doTurn(players.getPlayers().get(0));
 		player4.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "queen's_favor");
 		for(Player p : players.getPlayers()) {
@@ -249,8 +254,9 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 24);
 		assertEquals(playGame.getSDiscard().size(), 4);
 		playGame.getView().rotate(playGame);
+		
 		playGame.doTurn(players.getPlayers().get(0));
-		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "search_for_the_holy_grail");
+		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "king's_recognition");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
 		}
@@ -258,8 +264,9 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 23);
 		assertEquals(playGame.getSDiscard().size(), 5);
 		playGame.getView().rotate(playGame);
+		
 		playGame.doTurn(players.getPlayers().get(0));
-		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "test_of_the_green_knight");
+		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "search_for_the_holy_grail");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
 		}
@@ -267,8 +274,9 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 22);
 		assertEquals(playGame.getSDiscard().size(), 6);
 		playGame.getView().rotate(playGame);
+		
 		playGame.doTurn(players.getPlayers().get(0));
-		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "court_called_to_camelot");
+		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "test_of_the_green_knight");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
 		}
@@ -276,6 +284,17 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 21);
 		assertEquals(playGame.getSDiscard().size(), 7);
 		playGame.getView().rotate(playGame);
+		
+		playGame.doTurn(players.getPlayers().get(0));
+		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "court_called_to_camelot");
+		for(Player p : players.getPlayers()) {
+			p.setHandState(CardStates.FACE_DOWN);
+		}
+		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(), playGame.getSDiscard(), null);
+		assertEquals(playGame.getSDeck().size(), 20);
+		assertEquals(playGame.getSDiscard().size(), 8);
+		playGame.getView().rotate(playGame);
+		//to stop it from closing automatically
 		playGame.doTurn(players.getPlayers().get(0));
 	}
 	

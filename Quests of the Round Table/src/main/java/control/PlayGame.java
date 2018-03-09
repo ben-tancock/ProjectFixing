@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Controller;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -30,8 +31,10 @@ import model.StoryDeck;
 import model.StoryDiscard;
 import view.View;
 
+@Controller
 public class PlayGame extends Application{
 	
+	//Variables that the Controller needs
 	private static final Logger logger = LogManager.getLogger(PlayGame.class);
 	private static AdventureDeck aDeck;
 	private static AdventureDiscard aDiscard;
@@ -57,6 +60,8 @@ public class PlayGame extends Application{
 		KINGS_RECOGNITION = false;
 	}
 	
+	
+	//Constructor built for running test cases.
 	public PlayGame(Players riggedPlayers, AdventureDeck riggedDeck, AdventureDiscard riggedDiscard, StoryDeck storyDeck, StoryDiscard storyDiscard ) {
 		players = riggedPlayers;
 		
