@@ -1735,7 +1735,7 @@ public class View extends Application {
 	public boolean promptToKillAlly(Players players, Player perp) {
 		cardClicked = false;
 		final Stage dialog = new Stage(StageStyle.DECORATED);
-		dialog.setTitle("Please choose the Ally you wish to play");
+		dialog.setTitle("Please choose the Ally you wish to kill");
 		VBox window = new VBox();
 		
 		for(Player p : players.getPlayers()) {
@@ -1775,7 +1775,7 @@ public class View extends Application {
 		} else if(fourPlayerStage != null) {
 			dialog.initOwner(fourPlayerStage);
 		}
-		Scene scene = new Scene(window, 1000, 250, Color.AQUA);
+		Scene scene = new Scene(window, window.getWidth(), 100 * players.getPlayers().size(), Color.AQUA);
 		dialog.setScene(scene);
 		dialog.centerOnScreen();
 				
