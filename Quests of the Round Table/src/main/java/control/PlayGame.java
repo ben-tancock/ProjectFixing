@@ -453,17 +453,10 @@ public class PlayGame extends Application{
 		}
 		
 		@Override
-		public void onMordredPlayed(Player perp, Player targ) {
-			Foe mord = null;
-			for(Adventure a : perp.getHand()) {
-				if(a.getName().equals("mordred")) {
-					mord = (Foe)a;
-				}
-			}
-			perp.remove(perp.getHand(), aDiscard, perp.getCard(perp.getHand().indexOf(mord)));
-			if(targ.getAllies().get(0) != null) {
-				targ.remove(targ.getAllies(), aDiscard, targ.getAllies().get(0));
-			}
+		public void onMordredPicked(Player perp, Foe mordred) {
+		//	perp.discard(mordred, discardPile, onPlaySurface);
+			onDiscardCard(perp, mordred, false);
+			
 		}
 		
 		@Override
@@ -564,9 +557,19 @@ public class PlayGame extends Application{
 		}
 		
 		@Override
-		public void onDiscardCard(Player p, Adventure card) {
+		public void onDiscardCard(Player p, Adventure card, boolean onPlayingSurface) {
 			QuestHandler qh = QuestHandler.getInstance();
-			p.remove(p.getHand(), aDiscard, card);
+			if(onPlayingSurface) {
+				if(card instanceof Ally) {
+					p.remove(p.getAllies(), aDiscard, card);
+				} else if(card instanceof Amour) {
+					p.remove(p.getAmour(), aDiscard, card);
+				} else if(card instanceof Weapon) {
+					p.remove(p.getWeapons(), aDiscard, card);
+				}
+			} else {
+				p.remove(p.getHand(), aDiscard, card);
+			}
 			card.setState(CardStates.FACE_DOWN);
 			p.setHandState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {

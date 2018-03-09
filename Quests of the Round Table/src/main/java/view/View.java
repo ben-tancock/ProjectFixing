@@ -1074,7 +1074,9 @@ public class View extends Application {
 					@Override
 					public void handle(MouseEvent arg0) {
 						if(p.getHand().get(index).getName().equals("mordred")) {
-							
+							notifyMordredPicked(p, (Foe)p.getHand().get(index));
+							cardClicked = true;
+							dialog.close();
 						} else {
 							p.getHand().get(index).setState(CardStates.FACE_DOWN);
 							notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
@@ -1562,7 +1564,9 @@ public class View extends Application {
 						@Override
 						public void handle(MouseEvent arg0) {
 							if(p.getHand().get(index).getName().equals("mordred")) {
-								
+								notifyMordredPicked(p,(Foe)p.getHand().get(index));
+								cardClicked = true;
+								dialog.close();
 							} else {
 								p.getHand().get(index).setState(CardStates.FACE_UP);
 								update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
@@ -1585,7 +1589,7 @@ public class View extends Application {
 						@Override
 						public void handle(MouseEvent arg0) {
 							logger.info("Controller notified that " + p.getName() + " discarded a card.");
-							notifyPlayerCardDiscarded(p, p.getHand().get(index));
+							notifyPlayerCardDiscarded(p, p.getHand().get(index), false);
 							dialog.close();
 							cardClicked = true;
 						}
@@ -1605,7 +1609,9 @@ public class View extends Application {
 						@Override
 						public void handle(MouseEvent arg0) {
 							if(p.getHand().get(index).getName().equals("mordred")) {
-								
+								notifyMordredPicked(p, (Foe)p.getHand().get(index));
+								cardClicked = true;
+								dialog.close();
 							} else {
 								p.getHand().get(index).setState(CardStates.FACE_UP);
 								update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
@@ -1628,7 +1634,7 @@ public class View extends Application {
 						@Override
 						public void handle(MouseEvent arg0) {
 							logger.info("Controller notified that " + p.getName() + "discarded a card.");
-							notifyPlayerCardDiscarded(p, p.getHand().get(index));
+							notifyPlayerCardDiscarded(p, p.getHand().get(index), false);
 							dialog.close();
 							cardClicked = true;
 						}
@@ -1726,6 +1732,81 @@ public class View extends Application {
 		alert.showAndWait();
 	}
 	
+	public boolean promptToKillAlly(Players players, Player perp) {
+		cardClicked = false;
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Please choose the Ally you wish to play");
+		VBox window = new VBox();
+		
+		for(Player p : players.getPlayers()) {
+			if(! p.equals(perp)) {
+				Label playerLabel = new Label(p.getName());
+				HBox allieCards = new HBox();
+				allieCards.getChildren().add(playerLabel);
+				List <Button> playerAllies = new ArrayList<Button>();
+				for(Ally a : p.getAllies()) {
+					Button allyButton = new Button();
+					allyButton.setBackground(new Background(new BackgroundImage(new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true))));
+					allyButton.setPrefSize(75, 100);
+					allyButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	
+						@Override
+						public void handle(MouseEvent event) {
+							// TODO Auto-generated method stub
+							cardClicked = true;
+							notifyPlayerCardDiscarded(p, a , true);
+							dialog.close();
+						}
+						
+					});
+					playerAllies.add(allyButton);
+					
+				}
+				allieCards.getChildren().addAll(playerAllies);
+				window.getChildren().add(allieCards);
+			}
+		}
+		window.setAlignment(Pos.CENTER);
+		dialog.initModality(Modality.APPLICATION_MODAL);
+		if(twoPlayerStage != null) {
+			dialog.initOwner(twoPlayerStage);
+		} else if(threePlayerStage != null) {
+			dialog.initOwner(threePlayerStage);
+		} else if(fourPlayerStage != null) {
+			dialog.initOwner(fourPlayerStage);
+		}
+		Scene scene = new Scene(window, 1000, 250, Color.AQUA);
+		dialog.setScene(scene);
+		dialog.centerOnScreen();
+				
+		final Node root = dialog.getScene().getRoot();
+		final Delta dragDelta = new Delta();
+		root.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				dragDelta.x = arg0.getSceneX();
+				dragDelta.y = arg0.getSceneY();
+			}
+		});
+		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				dialog.setX(event.getScreenX() - dragDelta.x);
+				dialog.setY(event.getScreenY() - dragDelta.y);
+			}
+		});
+		if(twoPlayerStage != null) {
+			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(threePlayerStage != null) {
+			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		} else if(fourPlayerStage != null) {
+			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
+		}
+		dialog.showAndWait();
+		//p.getPlayers().get(index)
+		return cardClicked;
+	}
+	
 	/*
 	
 	public void cardSelect(Player p) { 
@@ -1752,9 +1833,9 @@ public class View extends Application {
 		}
 	}
 	
-	public void notifyPlayerCardDiscarded(Player p, Adventure card) {
+	public void notifyPlayerCardDiscarded(Player p, Adventure card, boolean onPlayingSurface) {
 		if(listeners.get(0) != null) {
-			listeners.get(0).onDiscardCard(p, card);
+			listeners.get(0).onDiscardCard(p, card, onPlayingSurface);
 		}
 	}
 	
@@ -1776,6 +1857,12 @@ public class View extends Application {
 	public void notifyBidCardChosen(Player p, Adventure card) {
 		if(listeners.get(1) != null) {
 			listeners.get(1).onBidCardPicked(p, card);
+		}
+	}
+	
+	public void notifyMordredPicked(Player p , Foe mordred) {
+		if(listeners.get(0) != null) {
+			listeners.get(0).onMordredPicked(p, mordred);
 		}
 	}
 }

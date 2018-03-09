@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.input.MouseEvent;
 import model.Adventure;
 import model.Event;
+import model.Foe;
 import model.Player;
 import model.Story;
 import model.Weapon;
@@ -64,7 +65,7 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onMordredPlayed(Player perp, Player targ) {
+	public void onMordredPicked(Player perp, Foe mordred) {
 		
 	}
 	
@@ -84,7 +85,7 @@ public abstract class ControlHandler {
 		
 	}
 	
-	public void onDiscardCard(Player p, Adventure card) {
+	public void onDiscardCard(Player p, Adventure card, boolean onPlayingSurface) {
 		
 	}
 }
