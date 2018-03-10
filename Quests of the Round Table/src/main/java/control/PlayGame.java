@@ -77,6 +77,7 @@ public class PlayGame extends Application{
 	
 	public static void main(String[] args) {
 		logger.info("Game Menu starting!");
+		//need to move this to happen later.
 		Application.launch(args);
 	}
 	
@@ -111,7 +112,7 @@ public class PlayGame extends Application{
 		logger.info("Adventure Deck Count: " + aDeck.size());
 		view.start(arg0);
 		logger.info("Started the view.");
-		
+		// a lot of this code is no longer going to be this way.
 		view.twoPlayerButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 
 			@Override

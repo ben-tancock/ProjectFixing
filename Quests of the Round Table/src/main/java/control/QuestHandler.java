@@ -66,6 +66,7 @@ public class QuestHandler {
 				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), getCard());
 			} catch (NullPointerException e) {
 				//Sponsor dropped sponsoring, so give the sponsor their cards back before continuing
+				e.printStackTrace();
 				logger.error("Sponsor didn't finish sponsoring, they have been awarded back their cards.");
 				for(Stage stage : getCard().getStages()) {
 					if(stage != null) {

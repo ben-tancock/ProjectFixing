@@ -313,21 +313,17 @@ public class View extends Application {
 			grid.add(storyDeckSpace, 2, 2);
 			
 			//grid.setGridLinesVisible(true);
-
-			//BorderPane.setAlignment(storyDeckCards(), Pos.CENTER_RIGHT);
-			
-			//Scene twoPlayerScene = new Scene(border, 1120, 700,Color.AQUA);
 			if(firstTime) {
 				if(primStage != null) {
 					primStage.close();
 				}
 			
 				twoPlayerStage = new Stage(StageStyle.DECORATED);
-			//	twoPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 				firstTime = false;
 			}
 			twoPlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
 			twoPlayerStage.getScene().setRoot(grid);
+			primStage = twoPlayerStage;
 			twoPlayerStage.show();
 		}
 	// -----------------------------------------------------------------------------------------------------------------------
@@ -422,11 +418,11 @@ public class View extends Application {
 			}
 		
 			threePlayerStage = new Stage(StageStyle.DECORATED);
-		//	threePlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			firstTime = false;
 		}
 		threePlayerStage.setScene(new Scene(grid, 1120, 700,Color.AQUA));
 		threePlayerStage.getScene().setRoot(grid);
+		primStage = threePlayerStage;
 		threePlayerStage.show();
 	}
 	
@@ -544,11 +540,11 @@ public class View extends Application {
 			}
 		
 			fourPlayerStage = new Stage(StageStyle.DECORATED);
-		//	fourPlayerStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
 			firstTime = false;
 		}
 		fourPlayerStage.setScene(new Scene(grid, 1120, 700, Color.AQUA));
 		fourPlayerStage.getScene().setRoot(grid);
+		primStage = fourPlayerStage;
 		fourPlayerStage.show();
 		
 	}
@@ -827,15 +823,14 @@ public class View extends Application {
 		}
 	}
 	
-	boolean cardClicked; 
-	boolean buttonClicked;
+	private boolean cardClicked; 
+	private boolean buttonClicked;
+	private CustomDialog dialog;
 	public boolean promptAddCardToStage(Player p) {
 		cardClicked = false;
-		final Stage dialog = new Stage(StageStyle.DECORATED);
-		dialog.setTitle("Please choose either a foe or a test");
-		VBox window = new VBox();
+		dialog = null;
 		List<Button> cards = new ArrayList<>();
-		QuestHandler qh = QuestHandler.getInstance();
+		QuestHandler qh = QuestHandler.getInstance(); //For catching if there's already a test in the stage.
 		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
 			if(p.getHand().get(cardIndex) instanceof Foe || p.getHand().get(cardIndex) instanceof Test) {
 				Button button = new Button();
@@ -858,13 +853,7 @@ public class View extends Application {
 							dialog.close();
 							promptAddCardToStage(p);
 						} else {
-							if(twoPlayerStage != null) {
-								twoPlayerStage.getScene().getRoot().setEffect(null);
-							} else if(threePlayerStage != null) {
-								threePlayerStage.getScene().getRoot().setEffect(null);
-							} else if(fourPlayerStage != null) {
-								fourPlayerStage.getScene().getRoot().setEffect(null);
-							}
+							primStage.getScene().getRoot().setEffect(null);
 							p.getHand().get(index).setState(CardStates.FACE_DOWN);
 							notifyStageCardChosen(p, p.getHand().get(index));
 							cardClicked = true;
@@ -878,43 +867,11 @@ public class View extends Application {
 		HBox foesAndTests = new HBox();
 		foesAndTests.getChildren().addAll(cards);
 		foesAndTests.setMaxHeight(100);
-		window.getChildren().addAll(foesAndTests);
+		VBox window = new VBox();
 		window.setAlignment(Pos.CENTER);
-		dialog.initModality(Modality.APPLICATION_MODAL);
-		if(twoPlayerStage != null) {
-			dialog.initOwner(twoPlayerStage);
-		} else if(threePlayerStage != null) {
-			dialog.initOwner(threePlayerStage);
-		} else if(fourPlayerStage != null) {
-			dialog.initOwner(fourPlayerStage);
-		}
 		Scene scene = new Scene(window, (75 * cards.size()) + 100, 150, Color.AQUA);
-		dialog.setScene(scene);
-		dialog.centerOnScreen();
-		
-		final Node root = dialog.getScene().getRoot();
-		final Delta dragDelta = new Delta();
-		root.setOnMousePressed(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent arg0) {
-				dragDelta.x = arg0.getSceneX();
-				dragDelta.y = arg0.getSceneY();
-			}
-		});
-		root.setOnMouseDragged(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				dialog.setX(event.getScreenX() - dragDelta.x);
-				dialog.setY(event.getScreenY() - dragDelta.y);
-			}
-		});
-		if(twoPlayerStage != null) {
-			twoPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
-		} else if(threePlayerStage != null) {
-			threePlayerStage.getScene().getRoot().setEffect(new BoxBlur());
-		} else if(fourPlayerStage != null) {
-			fourPlayerStage.getScene().getRoot().setEffect(new BoxBlur());
-		}
+		dialog = new CustomDialog("Please choose either a foe or a test", primStage, scene);
+		window.getChildren().addAll(foesAndTests);
 		dialog.showAndWait();
 		if(cardClicked) {
 			return true;
