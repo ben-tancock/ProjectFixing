@@ -1667,8 +1667,81 @@ public class View extends Application {
 		alert.showAndWait();
 	}
 	
-	public void kingsCallToArmsPrompt(Player p, int count, boolean hasWeapon) {
+	public boolean kingsCallToArmsPrompt(Player p, int count, boolean hasWeapon) {
+		final Stage dialog = new Stage(StageStyle.DECORATED);
+		dialog.setTitle("Please choose the cards you wish to play");
+		VBox window = new VBox();
+		List<Button> btn = new ArrayList<Button>();
+		Label discardCountLabel = new Label();
+		if(hasWeapon) {
+			discardCountLabel.setText("please discard 1 weapon");
+			for (Adventure a: p.getHand()) {
+				if(a instanceof Weapon) {
+					Button b = new Button();	
+					b.setMinWidth(75);
+					b.setMinHeight(100);
+					b.setBackground(makeBground(a.getName()));
+					b.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+						@Override
+						public void handle(MouseEvent arg0) {
+							notifyPlayerCardDiscarded(p, a, false);
+							cardClicked = true;
+							dialog.close();
+						}
+						
+					});
+					btn.add(b);
+				}
+			}
+		}
+		else {
+			discardCountLabel.setText("please discount " + count + "foes");
+			
+			for (Adventure a: p.getHand()) {
+				if(a instanceof Foe) {
+					Button b = new Button();	
+					b.setMinWidth(75);
+					b.setMinHeight(100);
+					b.setBackground(makeBground(a.getName()));
+					b.setOnMouseClicked(new EventHandler<MouseEvent>() {
+						
+						@Override
+						public void handle(MouseEvent arg0) {
+							notifyPlayerCardDiscarded(p, a, false);
+							cardClicked = true;
+							dialog.close();
+						}
+						
+					});
+					btn.add(b);
+				}
+			}
+		}
+		window.getChildren().add(discardCountLabel);
+		window.getChildren().addAll(btn);
+		Scene scene = new Scene(window, 400, 300);
+		dialog.initOwner(primStage);
+		dialog.centerOnScreen();
+		dialog.setScene(scene);
+		primStage.getScene().getRoot().setEffect(new BoxBlur());
+		dialog.showAndWait();
 		
+		if(cardClicked) {
+			
+			if(count > 1) {
+				kingsCallToArmsPrompt(p, (count -= 1), hasWeapon);
+			}
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public Background makeBground(String name) {
+		Background bck = new Background(new BackgroundImage(new Image("/playingCards/" + name + ".jpg", 75, 100, true, true), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, true, true)));  
+		return bck;
 	}
 	
 	public void promptNoAdventureCardsLeft() {

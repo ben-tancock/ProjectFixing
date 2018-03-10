@@ -1,0 +1,19 @@
+[INFO ] 2018-03-01 14:21:07.277 [main] PlayGame - Game Menu starting!
+[INFO ] 2018-03-01 14:21:09.648 [JavaFX Application Thread] PlayGame - Player 1's turn.
+[INFO ] 2018-03-01 14:21:13.259 [JavaFX Application Thread] PlayGame - setting Player 1's cards to face up.
+[INFO ] 2018-03-01 14:21:13.259 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 12
+[INFO ] 2018-03-01 14:21:13.259 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-01 14:21:13.260 [JavaFX Application Thread] PlayGame - Player 1's shields: 1
+[INFO ] 2018-03-01 14:21:13.260 [JavaFX Application Thread] PlayGame - Player 1's hand: [giant, robber_Knight, saxon_knight, test_of_the_questing_beast, saxon_knight, boar, saxon_knight, amour, sword, amour, lance, thieves]
+[INFO ] 2018-03-01 14:21:13.260 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 12
+[INFO ] 2018-03-01 14:21:13.260 [JavaFX Application Thread] PlayGame - Player 2's rank: squire
+[INFO ] 2018-03-01 14:21:13.261 [JavaFX Application Thread] PlayGame - Player 2's shields: 1
+[INFO ] 2018-03-01 14:21:13.261 [JavaFX Application Thread] PlayGame - Player 2's hand: [amour, dagger, horse, horse, test_of_morgan_le_fey, sword, saxon_knight, mordred, evil_knight, thieves, saxons, battle-ax]
+[INFO ] 2018-03-01 14:21:13.261 [JavaFX Application Thread] PlayGame - Player 3's number of cards: 12
+[INFO ] 2018-03-01 14:21:13.261 [JavaFX Application Thread] PlayGame - Player 3's rank: squire
+[INFO ] 2018-03-01 14:21:13.261 [JavaFX Application Thread] PlayGame - Player 3's shields: 1
+[INFO ] 2018-03-01 14:21:13.262 [JavaFX Application Thread] PlayGame - Player 3's hand: [sword, robber_Knight, robber_Knight, lance, dragon, lance, saxons, evil_knight, amour, test_of_temptation, amour, dagger]
+[INFO ] 2018-03-01 14:21:13.262 [JavaFX Application Thread] PlayGame - Player 4's number of cards: 12
+[INFO ] 2018-03-01 14:21:13.262 [JavaFX Application Thread] PlayGame - Player 4's rank: squire
+[INFO ] 2018-03-01 14:21:13.262 [JavaFX Application Thread] PlayGame - Player 4's shields: 1
+[INFO ] 2018-03-01 14:21:13.262 [JavaFX Application Thread] PlayGame - Player 4's hand: [battle-ax, saxon_knight, excalibur, king_arthur, mordred, sword, boar, thieves, saxon_knight, sword, sir_gawain, evil_knight]

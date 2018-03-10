@@ -1,0 +1,21 @@
+[INFO ] 2018-03-01 23:27:12.722 [main] PlayGame - Game Menu starting!
+[INFO ] 2018-03-01 23:27:16.065 [JavaFX Application Thread] PlayGame - Player 1's turn.
+[INFO ] 2018-03-01 23:27:17.462 [JavaFX Application Thread] PlayGame - setting Player 1's cards to face up.
+[INFO ] 2018-03-01 23:27:17.463 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 12
+[INFO ] 2018-03-01 23:27:17.463 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-01 23:27:17.463 [JavaFX Application Thread] PlayGame - Player 1's shields: 1
+[INFO ] 2018-03-01 23:27:17.463 [JavaFX Application Thread] PlayGame - Player 1's hand: [thieves, saxons, saxon_knight, robber_Knight, battle-ax, amour, sword, mordred, amour, giant, saxon_knight, sword]
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 12
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 2's rank: squire
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 2's shields: 1
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 2's hand: [sword, battle-ax, test_of_the_questing_beast, evil_knight, mordred, battle-ax, horse, dagger, horse, robber_Knight, green_knight, thieves]
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 3's number of cards: 12
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 3's rank: squire
+[INFO ] 2018-03-01 23:27:17.464 [JavaFX Application Thread] PlayGame - Player 3's shields: 1
+[INFO ] 2018-03-01 23:27:17.465 [JavaFX Application Thread] PlayGame - Player 3's hand: [horse, excalibur, boar, sword, lance, boar, amour, test_of_temptation, thieves, mordred, amour, thieves]
+[INFO ] 2018-03-01 23:27:17.465 [JavaFX Application Thread] PlayGame - Player 4's number of cards: 12
+[INFO ] 2018-03-01 23:27:17.465 [JavaFX Application Thread] PlayGame - Player 4's rank: squire
+[INFO ] 2018-03-01 23:27:17.465 [JavaFX Application Thread] PlayGame - Player 4's shields: 1
+[INFO ] 2018-03-01 23:27:17.465 [JavaFX Application Thread] PlayGame - Player 4's hand: [sword, excalibur, king_pellinore, saxon_knight, sword, horse, horse, queen_guinevere, battle-ax, boar, sword, saxon_knight]
+[INFO ] 2018-03-01 23:27:19.291 [JavaFX Application Thread] Player - Story card drawn: york
+[INFO ] 2018-03-01 23:27:19.292 [JavaFX Application Thread] Player - Story Deck Count: 23 Story Discard Pile Count: 1

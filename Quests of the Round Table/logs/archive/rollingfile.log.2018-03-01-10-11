@@ -1,0 +1,19 @@
+[INFO ] 2018-03-01 22:11:04.434 [main] PlayGame - Game Menu starting!
+[INFO ] 2018-03-01 22:11:07.194 [JavaFX Application Thread] PlayGame - Player 1's turn.
+[INFO ] 2018-03-01 22:11:08.505 [JavaFX Application Thread] PlayGame - setting Player 1's cards to face up.
+[INFO ] 2018-03-01 22:11:08.505 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 12
+[INFO ] 2018-03-01 22:11:08.505 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-01 22:11:08.505 [JavaFX Application Thread] PlayGame - Player 1's shields: 1
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 1's hand: [lance, amour, amour, thieves, queen_iseult, horse, sword, lance, robber_Knight, green_knight, evil_knight, dagger]
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 12
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 2's rank: squire
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 2's shields: 1
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 2's hand: [horse, battle-ax, sword, thieves, horse, lance, robber_Knight, thieves, evil_knight, thieves, lance, robber_Knight]
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 3's number of cards: 12
+[INFO ] 2018-03-01 22:11:08.506 [JavaFX Application Thread] PlayGame - Player 3's rank: squire
+[INFO ] 2018-03-01 22:11:08.507 [JavaFX Application Thread] PlayGame - Player 3's shields: 1
+[INFO ] 2018-03-01 22:11:08.507 [JavaFX Application Thread] PlayGame - Player 3's hand: [lance, amour, sword, giant, sword, dagger, sword, saxons, mordred, horse, amour, horse]
+[INFO ] 2018-03-01 22:11:08.507 [JavaFX Application Thread] PlayGame - Player 4's number of cards: 12
+[INFO ] 2018-03-01 22:11:08.507 [JavaFX Application Thread] PlayGame - Player 4's rank: squire
+[INFO ] 2018-03-01 22:11:08.507 [JavaFX Application Thread] PlayGame - Player 4's shields: 1
+[INFO ] 2018-03-01 22:11:08.507 [JavaFX Application Thread] PlayGame - Player 4's hand: [test_of_the_questing_beast, sword, boar, giant, dagger, robber_Knight, sword, black_knight, battle-ax, battle-ax, test_of_morgan_le_fey, lance]

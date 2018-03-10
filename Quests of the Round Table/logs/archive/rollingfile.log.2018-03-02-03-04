@@ -1,0 +1,17 @@
+[INFO ] 2018-03-02 15:04:20.979 [JavaFX Application Thread] PlayGame - setting Player 4's cards to face up.
+[INFO ] 2018-03-02 15:04:20.993 [JavaFX Application Thread] PlayGame - Player 4's number of cards: 12
+[INFO ] 2018-03-02 15:04:20.993 [JavaFX Application Thread] PlayGame - Player 4's rank: squire
+[INFO ] 2018-03-02 15:04:20.993 [JavaFX Application Thread] PlayGame - Player 4's shields: 1
+[INFO ] 2018-03-02 15:04:20.993 [JavaFX Application Thread] PlayGame - Player 4's hand: [evil_knight, horse, amour, boar, test_of_valor, sir_gawain, battle-ax, mordred, horse, horse, thieves, robber_Knight]
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 10
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 1's shields: 3
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 1's hand: [battle-ax, horse, robber_Knight, sword, thieves, dagger, saxon_knight, black_knight, sword, giant]
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 10
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 2's rank: squire
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 2's shields: 3
+[INFO ] 2018-03-02 15:04:20.994 [JavaFX Application Thread] PlayGame - Player 2's hand: [saxons, dagger, saxons, lance, queen_guinevere, saxon_knight, amour, mordred, sir_lancelot, lance]
+[INFO ] 2018-03-02 15:04:20.995 [JavaFX Application Thread] PlayGame - Player 3's number of cards: 12
+[INFO ] 2018-03-02 15:04:20.995 [JavaFX Application Thread] PlayGame - Player 3's rank: squire
+[INFO ] 2018-03-02 15:04:20.995 [JavaFX Application Thread] PlayGame - Player 3's shields: 1
+[INFO ] 2018-03-02 15:04:20.995 [JavaFX Application Thread] PlayGame - Player 3's hand: [test_of_temptation, king_arthur, lance, saxon_knight, sir_tristan, battle-ax, dagger, sword, test_of_the_questing_beast, robber_Knight, lance, battle-ax]

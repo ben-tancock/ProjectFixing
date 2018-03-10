@@ -1,0 +1,18 @@
+[INFO ] 2018-03-01 14:56:28.567 [JavaFX Application Thread] PlayGame - Player 1's turn.
+[INFO ] 2018-03-01 14:56:31.141 [JavaFX Application Thread] PlayGame - setting Player 1's cards to face up.
+[INFO ] 2018-03-01 14:56:31.141 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 12
+[INFO ] 2018-03-01 14:56:31.141 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-01 14:56:31.141 [JavaFX Application Thread] PlayGame - Player 1's shields: 1
+[INFO ] 2018-03-01 14:56:31.141 [JavaFX Application Thread] PlayGame - Player 1's hand: [robber_Knight, thieves, battle-ax, amour, black_knight, lance, boar, sword, saxon_knight, king_pellinore, mordred, evil_knight]
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 12
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 2's rank: squire
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 2's shields: 1
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 2's hand: [green_knight, battle-ax, black_knight, giant, saxon_knight, amour, king_arthur, dagger, sir_tristan, evil_knight, horse, thieves]
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 3's number of cards: 12
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 3's rank: squire
+[INFO ] 2018-03-01 14:56:31.142 [JavaFX Application Thread] PlayGame - Player 3's shields: 1
+[INFO ] 2018-03-01 14:56:31.143 [JavaFX Application Thread] PlayGame - Player 3's hand: [robber_Knight, queen_iseult, lance, excalibur, evil_knight, sir_galahad, horse, robber_Knight, sword, saxon_knight, sword, dagger]
+[INFO ] 2018-03-01 14:56:31.143 [JavaFX Application Thread] PlayGame - Player 4's number of cards: 12
+[INFO ] 2018-03-01 14:56:31.143 [JavaFX Application Thread] PlayGame - Player 4's rank: squire
+[INFO ] 2018-03-01 14:56:31.143 [JavaFX Application Thread] PlayGame - Player 4's shields: 1
+[INFO ] 2018-03-01 14:56:31.143 [JavaFX Application Thread] PlayGame - Player 4's hand: [sir_lancelot, mordred, horse, horse, saxon_knight, robber_Knight, dagger, horse, evil_knight, thieves, sword, amour]

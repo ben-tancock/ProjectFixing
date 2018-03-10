@@ -1,0 +1,18 @@
+[INFO ] 2018-03-01 23:36:47.697 [JavaFX Application Thread] PlayGame - Player 2's turn.
+[INFO ] 2018-03-01 23:36:59.443 [JavaFX Application Thread] PlayGame - setting Player 2's cards to face up.
+[INFO ] 2018-03-01 23:36:59.443 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 12
+[INFO ] 2018-03-01 23:36:59.443 [JavaFX Application Thread] PlayGame - Player 2's rank: squire
+[INFO ] 2018-03-01 23:36:59.443 [JavaFX Application Thread] PlayGame - Player 2's shields: 1
+[INFO ] 2018-03-01 23:36:59.443 [JavaFX Application Thread] PlayGame - Player 2's hand: [amour, sir_tristan, sword, battle-ax, dagger, sword, battle-ax, thieves, sword, battle-ax, saxon_knight, horse]
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 3's number of cards: 12
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 3's rank: squire
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 3's shields: 1
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 3's hand: [mordred, sword, sword, black_knight, test_of_temptation, sir_percival, queen_iseult, robber_Knight, dagger, evil_knight, thieves, boar]
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 4's number of cards: 12
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 4's rank: squire
+[INFO ] 2018-03-01 23:36:59.444 [JavaFX Application Thread] PlayGame - Player 4's shields: 1
+[INFO ] 2018-03-01 23:36:59.445 [JavaFX Application Thread] PlayGame - Player 4's hand: [battle-ax, horse, robber_Knight, amour, evil_knight, sir_gawain, saxon_knight, boar, saxon_knight, sir_galahad, lance, dagger]
+[INFO ] 2018-03-01 23:36:59.445 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 12
+[INFO ] 2018-03-01 23:36:59.445 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-01 23:36:59.445 [JavaFX Application Thread] PlayGame - Player 1's shields: 1
+[INFO ] 2018-03-01 23:36:59.445 [JavaFX Application Thread] PlayGame - Player 1's hand: [evil_knight, lance, lance, saxon_knight, battle-ax, saxons, dagger, sword, excalibur, amour, horse, mordred]

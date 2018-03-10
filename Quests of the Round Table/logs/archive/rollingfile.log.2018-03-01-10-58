@@ -1,0 +1,11 @@
+[INFO ] 2018-03-01 10:58:14.986 [main] PlayGame - Game Menu starting!
+[INFO ] 2018-03-01 10:58:18.476 [JavaFX Application Thread] PlayGame - Player 1's turn.
+[INFO ] 2018-03-01 10:58:20.081 [JavaFX Application Thread] PlayGame - setting Player 1's cards to face up.
+[INFO ] 2018-03-01 10:58:20.081 [JavaFX Application Thread] PlayGame - Player 1's number of cards: 12
+[INFO ] 2018-03-01 10:58:20.082 [JavaFX Application Thread] PlayGame - Player 1's rank: squire
+[INFO ] 2018-03-01 10:58:20.082 [JavaFX Application Thread] PlayGame - Player 1's shields: 1
+[INFO ] 2018-03-01 10:58:20.082 [JavaFX Application Thread] PlayGame - Player 1's hand: [saxon_knight, sir_lancelot, battle-ax, sir_tristan, test_of_the_questing_beast, sword, amour, saxon_knight, sword, robber_Knight, saxons, thieves]
+[INFO ] 2018-03-01 10:58:20.082 [JavaFX Application Thread] PlayGame - Player 2's number of cards: 12
+[INFO ] 2018-03-01 10:58:20.082 [JavaFX Application Thread] PlayGame - Player 2's rank: knight
+[INFO ] 2018-03-01 10:58:20.083 [JavaFX Application Thread] PlayGame - Player 2's shields: 2
+[INFO ] 2018-03-01 10:58:20.083 [JavaFX Application Thread] PlayGame - Player 2's hand: [boar, horse, evil_knight, horse, sword, horse, robber_Knight, saxons, battle-ax, sword, saxon_knight, horse]
