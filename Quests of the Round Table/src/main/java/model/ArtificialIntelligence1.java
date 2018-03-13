@@ -1,28 +1,40 @@
 package model;
 
 import java.util.List;
+import java.util.Set;
 
 public class ArtificialIntelligence1 extends Player implements AIStrategies {
 
 	@Override
 	public boolean doIParticipateInTournament(Players p, Tournament t) {
-		//if(Any player can win/evolve by winning tournament) {
-		//  if(Another player that can win/evolve is in tournament
-		//     OR I can win/evolve myself) {
-		//		play strongest hand possible;
-		//	} else {
-		//		play weapons that I have 2 or more of;
-		//  }
-		//	return true;
-	    //}
+		//check if current participants including AI can win/evolve 
+		if(checkWinOrEvolve(p, p.getPlayers().size() + t.getBonus())) {
+			Players participants = new Players();
+			participants.getPlayers().addAll(t.getParticipants());
+			participants.getPlayers().add(this);
+			if(checkWinOrEvolve(participants, p.getPlayers().size() + t.getBonus())) {
+					List<Adventure> strongestHand = getStrongestHand();
+					for(Adventure card : strongestHand) {
+						Players.notifyListeners("card played", this, card);
+					}
+		     } else {
+					Set<Weapon> duplicates = findDuplicateWeapons();
+					for(Weapon w : duplicates) {
+						Players.notifyListeners("card played", this, w);
+					}
+			}
+			return true;
+	    }
 		return false;
 	}
 
 	@Override
 	public boolean doISponsorAQuest(Players p, Quest q) {
-		//if(Someone else could win/evolve by winning quest) {
-		//	return false;
-		//} else if(There are enough foes in hand(-1 if they have test) and they have increasing battle points) {
+		Players prClone = p;
+		prClone.getPlayers().remove(this);
+		if(checkWinOrEvolve(prClone, q.getNumStages())) {
+			return false;
+		} else if(checkIfEnoughFoes(q)) {
 		//  q.setup1(); {
 		//		setup last stage to be atleast 50
 		//		setup second last stage to be a test (if possible)
@@ -30,8 +42,8 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 		//			pick strongest foe
 		//			set with one weapon that is a duplicate and respect order of BP
 		//  }
-		//	return true;
-		//}
+			return true;
+		}
 		return false;
 	}
 
