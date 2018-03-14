@@ -1,9 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -166,17 +169,40 @@ public abstract class Player {
 			}
 		}
 		
-		int currentBP = 0;
+		// a set removes duplicates
+		HashSet<Integer> setOfBP = new HashSet<>(); 
 		for(Adventure a : hand) {
 			if(a instanceof Foe) {
-				
+				int foeBP = getFoeBP((Foe) a, card.getSpecialFoes());
+				setOfBP.add(Integer.valueOf(foeBP));
 			}
+		}
+		
+		//different bp means there's some sort of increasing order, so increase the count
+		for(Integer bp : setOfBP) {
+			count++;
 		}
 		
 		if(count >= card.getNumStages()) {
 			return true;
 		}
 		return false;
+	}
+	
+	public int getFoeBP(Foe f, String spfs) {
+		if(spfs.equals("all")) {
+			return f.getHigherBattlePoints();
+		} else if(spfs.equals("all_saxons")) {
+			if(f.getName().contains("saxon")) {
+				return f.getHigherBattlePoints();
+			} else {
+				return f.getLowerBattlePoints();
+			}
+		} else if(spfs.equals(f.getName())) {
+			return f.getHigherBattlePoints();
+		} else {
+			return f.getLowerBattlePoints();
+		}
 	}
 	
 	public void setHandState(int state) {
