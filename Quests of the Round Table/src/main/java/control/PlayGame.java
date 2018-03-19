@@ -306,7 +306,7 @@ public class PlayGame extends Application{
 		logger.info(p.getName() + "'s turn.");
 		QuestHandler qh = QuestHandler.getInstance();
 		TournamentHandler th = TournamentHandler.getInstance();
-		
+		//
 		for(int i = 0; i < sDeck.size(); i++) {
 			if(sDeck.get(i) instanceof Tournament) {
 				sDeck.set(0, sDeck.get(i));
