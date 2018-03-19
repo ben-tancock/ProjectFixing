@@ -1,7 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -93,6 +98,111 @@ public abstract class Player {
 	
 	public int getHandState() {
 		return hand.get(0).getState();
+	}
+	
+	public ArrayList<Adventure> getStrongestHand() {
+		ArrayList<Adventure> strongestHand = new ArrayList<>();
+		for(Adventure card : hand) {
+			if(card instanceof Weapon) {
+				boolean distinct = true;
+				for(Adventure c : strongestHand) {
+					if(c.getName().equals(card.getName())) {
+						distinct = false;
+						break;
+					}
+				}
+				for(Weapon w : weapons) {
+					if(w.getName().equals(card.getName())) {
+						distinct = false;
+						break;
+					}
+				}
+				if(distinct)
+					strongestHand.add(card);
+			} else if(card instanceof Ally){
+				strongestHand.add(card);
+			}
+			if(amour.size() == 0 && card instanceof Amour) {
+				strongestHand.add(card);
+			}
+		}
+		return strongestHand;
+	}
+	
+	public boolean checkWinOrEvolve(Players players, int potentialShields) {
+		for(Player p : players.getPlayers()) {
+			//if they're a squire and could become a knight
+			if(p.getRank() == 0 && (p.getShields() + potentialShields) >= 5 ) {
+				return true;
+			}
+			//else if they're a knight and could become a champion knight
+			else if(p.getRank() == 5 && (p.getShields() + potentialShields) >= 7) {
+				return true;
+			}
+			//else if they're a champion knight and could win
+			else if (p.getRank() == 12 && (p.getShields() + potentialShields) >= 10) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Set<Weapon> findDuplicateWeapons() {
+		Set<Weapon> setToReturn = new HashSet<>();
+		Set<Weapon> set1 = new HashSet<>();
+		for(Adventure a : hand) {
+			if(a instanceof Weapon && !set1.add((Weapon) a)) {
+				setToReturn.add((Weapon) a);
+			}
+		}
+		
+		return setToReturn;
+	}
+	
+	public boolean checkIfEnoughFoes(Quest card) {
+		int count = 0;
+		//check for a test and if there is one, increase count by 1
+		for(Adventure a : hand) {
+			if(a instanceof Test) {
+				count++;
+				break; //there's a test, increase the count and exit
+			}
+		}
+		
+		// a set removes duplicates
+		HashSet<Integer> setOfBP = new HashSet<>(); 
+		for(Adventure a : hand) {
+			if(a instanceof Foe) {
+				int foeBP = getFoeBP((Foe) a, card.getSpecialFoes());
+				setOfBP.add(Integer.valueOf(foeBP));
+			}
+		}
+		
+		//different bp means there's some sort of increasing order, so increase the count
+		for(Integer bp : setOfBP) {
+			count++;
+		}
+		
+		if(count >= card.getNumStages()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public int getFoeBP(Foe f, String spfs) {
+		if(spfs.equals("all")) {
+			return f.getHigherBattlePoints();
+		} else if(spfs.equals("all_saxons")) {
+			if(f.getName().contains("saxon")) {
+				return f.getHigherBattlePoints();
+			} else {
+				return f.getLowerBattlePoints();
+			}
+		} else if(spfs.equals(f.getName())) {
+			return f.getHigherBattlePoints();
+		} else {
+			return f.getLowerBattlePoints();
+		}
 	}
 	
 	public void setHandState(int state) {

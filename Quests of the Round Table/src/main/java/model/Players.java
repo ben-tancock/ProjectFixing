@@ -76,6 +76,14 @@ public class Players {
 		}
 	}
 	
+	public static void notifyListeners(String event, Player p, Adventure card) {
+		switch(event) {
+			case "card played":
+				listeners.get(0).onAdventureCardPlayed(p, card, null);
+				break;
+		}
+	}
+	
 	public static void notifyListeners(String event, Player p, int cardsLeftToDraw) { 
 		switch(event) {
 			case "deck empty":
