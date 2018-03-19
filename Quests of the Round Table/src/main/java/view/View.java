@@ -44,7 +44,7 @@ import javafx.stage.StageStyle;
 // new stuff Ben added
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import java.awt.*;
+import javafx.geometry.Insets;
 import javafx.stage.Modality;
 // ------------------
 
@@ -567,25 +567,34 @@ public class View extends Application {
 	}
 	
 	//setting up display for top and bottom of screen
-	public HBox playerCards(Player player, int index) {
-		HBox playerCards = new HBox(-50);
-		for(Adventure a : player.getHand()) {
-			Image card;
-			if(a.getState() == CardStates.FACE_UP) {
-				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
-			} else {
-				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
-			}
+		public HBox playerCards(Player player, int index) {
+			HBox playerCards = new HBox();
 			
-			ImageView theCard = new ImageView(card);
-			if(index == 1 || index == 2) {
-				theCard.setRotate(180);
+			for(Adventure a : player.getHand()) {
+				Image card;
+				if(a.getState() == CardStates.FACE_UP) {
+					card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
+				} else {
+					card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
+				}
+				
+				
+				
+				ImageView theCard = new ImageView(card);
+				theCard.setSmooth(true);
+				
+				if(index == 1 || index == 2) {
+					theCard.setRotate(180);
+				}
+				
+				HBox theCardBox = new HBox();
+				theCardBox.getChildren().add(theCard);
+				theCardBox.setPadding(new Insets(0, -50, 0, 0));
+				playerCards.getChildren().add(theCardBox);
+			
 			}
-			playerCards.getChildren().add(theCard);
-		
+			return playerCards;
 		}
-		return playerCards;
-	}
 	
 	public VBox verticalPlayerCards(Player player, int index) {
 		VBox playerCards = new VBox(-90);

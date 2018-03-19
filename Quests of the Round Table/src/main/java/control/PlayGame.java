@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import javafx.application.Application;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 //import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
@@ -695,6 +697,25 @@ public class PlayGame extends Application{
 						Adventure a = players.getPlayers().get(0).getHand().get(view.getPlayerCards().getChildren().indexOf(n));
 						cardClicked(a, p);						
 					}
+				});
+				
+				n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
+
+					@Override
+					public void handle(MouseEvent arg0) {
+						((HBox)n).setPadding(new Insets(0, 0, 0, 0));
+						
+					}
+					
+				});
+				n.setOnMouseExited(new javafx.event.EventHandler<MouseEvent>() {
+
+					@Override
+					public void handle(MouseEvent arg0) {
+						((HBox)n).setPadding(new Insets(0, -50, 0, 0));
+						
+					}
+					
 				});
 			}
 			
