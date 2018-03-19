@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Dialog.ModalityType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,8 @@ import javafx.stage.StageStyle;
 // new stuff Ben added
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import java.awt.*;
+import javafx.stage.Modality;
 // ------------------
 
 import model.Adventure;
@@ -98,6 +101,7 @@ public class View extends Application {
 	private HBox player3Cards;
 	private HBox stageSpace;
 	private HBox player1PlayingSurface;
+	public Button endButton;
 	
 	private static List<ControlHandler> listeners = new ArrayList<ControlHandler>();
 	
@@ -126,6 +130,11 @@ public class View extends Application {
 	public HBox getPlayerSpace() {
 		return playerSpace;
 	}
+	
+	public HBox getPlayerSurface() {
+		return player1PlayingSurface;
+	}
+	
 	//player 2
 	public HBox getsecondPlayerSpace() {
 		return secondPlayerSpace;
@@ -228,6 +237,7 @@ public class View extends Application {
 			setUpFor3Players(event, players,sDeck, sDiscard, quest);
 		} else {
 			setUpFor4Players(event, players, sDeck, sDiscard, quest);
+			notifyUpdate();
 		}
 	}
 	
@@ -424,6 +434,30 @@ public class View extends Application {
 		VBox player4PlayingSurface = new VBox();
 		HBox storyDeckSpace = new HBox();
 		HBox questStageSpace = new HBox(-50);
+		
+		endButton  = new Button();
+		endButton.setText("End Turn");
+		endButton.setPrefSize(100, 100);
+		endButton.setAlignment(Pos.BASELINE_CENTER);
+		
+		
+		/*finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				if(twoPlayerStage != null) {
+					twoPlayerStage.getScene().getRoot().setEffect(null);
+				} else if(threePlayerStage != null) {
+					threePlayerStage.getScene().getRoot().setEffect(null);
+				} else if(fourPlayerStage != null) {
+					fourPlayerStage.getScene().getRoot().setEffect(null);
+				}
+				dialog.close();
+				buttonClicked = true;
+			}
+		});*/
+		
+		//endButton.setOnMouseClicked(viewController);
+		
 		if(quest != null) {
 			for(model.Stage stage : quest.getStages()) {
 				stageSpace = new HBox();
@@ -487,6 +521,8 @@ public class View extends Application {
 		player4ShieldSurface.getChildren().add(verticalPlayerShields(players.getPlayers().get(3), 3));
 		player4ShieldSurface.setAlignment(Pos.CENTER_LEFT);
 		player4ShieldSurface.setMinWidth(100);
+		
+		grid.add(endButton, 0, 4);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(0), 0), 1, 4);
 		grid.add(player1ShieldSurface, 2, 4);
@@ -727,8 +763,35 @@ public class View extends Application {
 		
 		alert.setTitle("Participant Dialog");
 		alert.setHeaderText(type + " Participant Request");
-		alert.setContentText("Would you like to participate?");
-
+		if(type == "Tournament") {
+			alert.setContentText("Would you like to participate?");
+			alert.initModality(Modality.NONE);
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK){
+			    
+				return true;
+			} else {
+			    // ... user chose CANCEL or closed the dialog
+				return false;
+			}
+		}
+		else if(type == "Quest") {
+			alert.setContentText("Would you like to sponsor the Quest?");
+			alert.initModality(Modality.NONE);
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get() == ButtonType.OK){
+				return true;
+			} else {
+			    // ... user chose CANCEL or closed the dialog
+				return false;
+			}
+		}
+		
+		return false;
+		
+		
+		/*alert.setContentText("Would you like to participate?");
+		alert.initModality(Modality.NONE);
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
 		    
@@ -736,17 +799,16 @@ public class View extends Application {
 		} else {
 		    // ... user chose CANCEL or closed the dialog
 			return false;
-		}
+		}*/
 	}
 	
 	public boolean sponsorPrompt() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
-		
-		
 		alert.setTitle("Sponsor Dialog");
 		alert.setHeaderText("Sponsor Request");
 		alert.setContentText("Would you like to sponsor?");
-
+		alert.initModality(Modality.NONE);
+		
 		Optional<ButtonType> result = alert.showAndWait();
 		if(result.get() == ButtonType.OK) {
 			return true;
@@ -786,7 +848,6 @@ public class View extends Application {
 		alert.setTitle("Player Win Dialog");
 		alert.setHeaderText("Congratulations " + p.getName() + "You win!!");
 		alert.setContentText("Would you like to play again?");
-		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
 			if(players.getPlayers().size() == 2) {
@@ -807,6 +868,7 @@ public class View extends Application {
 			}
 			return false;
 		}
+		
 	}
 	
 	private boolean cardClicked; 
@@ -960,9 +1022,45 @@ public class View extends Application {
 		alert.showAndWait();
 	}
 	
+	public boolean playCards() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Play Cards");
+		alert.setContentText("Please select the cards you wish to play (weapons, allies, amours)");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			notifyPlaying();
+		    return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+		}
+		
+		return true;
+	}
+	
+	public boolean tiePlay() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Play Cards");
+		alert.setContentText("The tournament ended in a tie. Initiating sudden death round. Please select the cards you wish to play (weapons, allies, amours)");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			notifyPlaying();
+		    return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+		}
+		
+		return true;
+	}
+	
 	public boolean playPrompt(String name, Player p, ArrayList<Adventure> playedCards) {
 		cardClicked = false;
 		buttonClicked = false;
+		
+		
+		dialog.initModality(Modality.NONE);
+		
 		
 		VBox window = new VBox();
 		List<Button> cards = new ArrayList<>();
@@ -1555,6 +1653,7 @@ public class View extends Application {
 	
 	//notify when a story card has been clicked
 	public void notifyStoryCardClicked(MouseEvent event, Story card) {
+		System.out.println("test view");
 		if(listeners.get(0) != null) {
 			listeners.get(0).onStoryCardDraw(event);
 		}
@@ -1600,5 +1699,21 @@ public class View extends Application {
 		if(listeners.get(1) != null) {
 			listeners.get(1).onBidCardPicked(p, card);
 		}
+	}
+	
+	public void notifyUpdate() {
+		//System.out.println("TESTSETESTSAGDSAGDSGSADGASD");
+		if(listeners.get(0) != null) {
+			listeners.get(0).onUpdate();
+		}
+	}
+	
+	public void notifyPlaying() {
+		if(listeners.get(0) != null) {
+			listeners.get(0).onPlaying();
+		}
+	}
+	
+	public void allDown() { // will set all cards face down
 	}
 }

@@ -26,6 +26,10 @@ public class TournamentHandler {
     private Player player;
     private PlayGame pg;
     private int originalPartNum;
+    private int numAsked;  //number of times we've asked participants to join
+    private int tiePlayed; //number of times tie participant has played
+    private static TournamentHandler instance;
+    private ArrayList<Player> tieParticipants;
     
     public TournamentHandler(Tournament t, PlayGame game, Player p) {
         tournament = t;
@@ -34,38 +38,101 @@ public class TournamentHandler {
         deck = game.getADeck();
         discard = game.getADiscard();
         pg = game;
+        instance = this;
+        numAsked = 0;
+        tiePlayed = 0;
+        tieParticipants = new ArrayList<Player>();
     }
     
+    public static TournamentHandler getInstance() {
+		return instance;
+	}
+    
     public boolean playTournament() throws Exception {
-        askToJoin();
+    	if(pg.getTie() == true) {
+    		playCards(tieParticipants.get(0));
+    		tieRotate();
+    		tiePlayed += 1;
+    	}
+		else {
+			askToJoin();
+		}
         originalPartNum = tournament.getParticipants().size();
-        System.out.println("original participant num: " + originalPartNum);
-        getWinner(tournament.getParticipants(), false);
-        while(pg.getPlayers().getPlayers().get(0).getName() != player.getName()) {
-            pg.getView().rotate(pg);
-        }
-        pg.getView().rotate(pg);
-        
         return true;
     }
     
+    public void onEnd() {
+    	if(pg.getTie()) { // if a tournament is tied, you must rotate to the next tied participant
+			if(getTiePlayed() >= getTieParticipants().size()) { // if all the tied players have played, calculate the winner, end the tournament
+    			getWinner(getTieParticipants(), true);
+    			pg.setTournament(false);
+    		}
+			else {
+				while(!(players.getPlayers().get(0).getName().equals(getTieParticipants().get(0).getName()))){
+					pg.getView().rotate(PlayGame.getInstance());
+				}
+				//doTurn(players.getPlayers().get(0));
+			}
+		}
+		else if (getNumAsked() >= players.getPlayers().size()){ //if all players have been asked to join, determine winner/is tied before rotating
+    		getWinner(getParticipants(), false);
+    		if(pg.getTie()) {
+    			while(!(pg.getPlayers().getPlayers().get(0).getName().equals(getTieParticipants().get(0).getName()))){
+    				pg.getView().rotate(PlayGame.getInstance());
+				}
+    		}
+    	}
+		else {
+			System.out.println("NORMAL TOURNAMENT ROTATE");
+			pg.getView().rotate(PlayGame.getInstance());
+		}
+    	
+    }
+    
+    public int getNumAsked() {
+    	return numAsked;
+    }
+    
+    public int getTiePlayed() {
+    	return tiePlayed;
+    }
+    
+    public ArrayList<Player> getTieParticipants(){
+    	return tieParticipants;
+    }
+    
+    public void setTieParticipants(ArrayList<Player> p){
+    	//if(!tieParticipants.isEmpty())
+    	//	tieParticipants.clear();
+    	tieParticipants = p;
+    }
+    
+    public void tieRotate() {
+    	ArrayList<Player> rotate = tieParticipants;
+    	rotate.add(rotate.get(0));
+    	rotate.remove(0);
+    	setTieParticipants(rotate);
+    	System.out.println("TEST TIE ROTATE, CURRENT PLAYER SHOULD BE: " + tieParticipants.get(0).getName());
+    	System.out.println("TEST TIE ROTATE NEXT IS: " + tieParticipants.get(tieParticipants.size()-1).getName());
+    }
+    
+    public ArrayList<Player> getParticipants() {
+    	return tournament.getParticipants(); 
+    }
+    
     public Player askToJoin() {
-        for(int i = 0; i < players.getPlayers().size(); i++) {  
-            if(i > 0) {
-                pg.getView().rotate(pg);
-                pg.doTurn(players.getPlayers().get(0));
-            }   
-            ask(0);
-        }
+    	ask(0);
         return null;
     }
     
-    public void ask(int i){     
+    public void ask(int i){ 
+    	numAsked += 1;
+    	System.out.println("test ask " + numAsked);
         boolean join = this.pg.getView().prompt("Tournament"); 
         if(join) {
             System.out.println(players.getPlayers().get(i).getName() + " joins the tournament");
             players.getPlayers().get(i).drawCard(1, deck);
-            this.tournament.addParticipant(players.getPlayers().get(i));
+            tournament.addParticipant(players.getPlayers().get(i));
             playCards(players.getPlayers().get(i));
         }
         else {
@@ -77,7 +144,14 @@ public class TournamentHandler {
         p.setAllyBp(p.getAllyBp());
         p.setHandState(CardStates.FACE_UP);
         pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
-        pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
+       // pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
+        if(pg.getTie() == true) {
+    		pg.getView().tiePlay();
+    	}
+        else {
+        	pg.getView().playCards();
+        }
+        
     }
     
     public void cleanupWeaponsAndAmour(Player p) {
@@ -126,14 +200,9 @@ public class TournamentHandler {
         for (Player p : tied) {
         	// On tie, only the weapons are discarded.
             cleanupWeapons(p);
-            while(pg.getPlayers().getPlayers().get(0).getName() != p.getName()) {
-                pg.getView().rotate(pg);
-            }
-            pg.doTurn(players.getPlayers().get(0));
-            playCards(p);
         }
-        
-        getWinner(tied, true);
+        setTieParticipants(tied);
+        pg.setTie(true);
     }
     
     public void getWinner(ArrayList<Player> part, boolean tiebreaker) {
@@ -146,12 +215,15 @@ public class TournamentHandler {
             System.out.println("nobody joined the tournament");
         }
         else {
-            for(int i = 0; i < part.size(); i++) {
+        	int s = part.size();
+            for(int i = 0; i < s; i++) {
                 if(max == -1) {
                     part.get(0).setAllyBp(part.get(0).getAllyBp());
                     max = part.get(0).getBattlePoints() - part.get(0).getABP();
                     maxP = part.get(0);
                     tied.add(maxP);
+                   // tieParticipants.add(maxP);
+                    System.out.println("tie participant added: " + tied.get(tied.size()-1).getName());
                     
                 }   
                 else if(part.get(i).getBattlePoints() - part.get(i).getABP() > max) {
@@ -160,12 +232,19 @@ public class TournamentHandler {
                     maxP = part.get(i);
                     tied.clear();
                     tied.add(maxP);
+                   // tieParticipants.clear();
+                   // tieParticipants.add(maxP);
+                    System.out.println("FIRST tie participant added: " + tied.get(tied.size()-1).getName());
                     isTie = false;
+                    pg.setTie(false);
                 }
                 else if(part.get(i).getBattlePoints() - part.get(i).getABP() == max) {
                     System.out.println("TEST TIE DETECT");
                     tied.add(part.get(i));
+                   // tieParticipants.add(part.get(i));
+                    System.out.println("tie participant added: " + tied.get(tied.size()-1).getName());
                     isTie = true;
+                    pg.setTie(true);
                     
                 }
                 else {
@@ -197,6 +276,7 @@ public class TournamentHandler {
         p.setShields(p.getShields() + tournament.getParticipants().size() + tournament.getBonus());
         cleanupWeaponsAndAmour(p);
         pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
+        endTournament(player);
     }
     
     public void announceTieWinner(ArrayList<Player> tie) {
@@ -207,5 +287,17 @@ public class TournamentHandler {
             cleanupWeaponsAndAmour(p);
         }
         pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
+        endTournament(player);
     }
+    
+    public void endTournament(Player p) { //end the tournament by rotating back to the initial player
+    	//so that the view rotates back to the player who drew the tournament card for the game to resume to the player on the left.
+		while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
+			pg.getView().rotate(pg);
+		}
+		pg.setTournament(false);
+    }
+    
+    
+    
 }

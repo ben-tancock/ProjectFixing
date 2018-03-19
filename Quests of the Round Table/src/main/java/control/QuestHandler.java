@@ -2,6 +2,7 @@ package control;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,17 +23,20 @@ import model.Weapon;
 
 public class QuestHandler {
 	private static final Logger logger = LogManager.getLogger(QuestHandler.class);
-	private Quest card;
+	private Quest quest;
 	private AdventureDeck deck;
 	private AdventureDiscard discard;
 	private Players players;
 	private Player player;
 	private ArrayList<Adventure> addedCards;
 	private ArrayList<Adventure> bidedCards;
+	private int numAsked;  //number of times we've asked participants to join
+	private PlayGame pg;
 	private static QuestHandler instance;
+	private boolean isSponsored;
 	
-	public QuestHandler(Quest c, Players p, Player pr, AdventureDeck d, AdventureDiscard di) {
-		card = c;
+	public QuestHandler(Quest c, Players p, Player pr, PlayGame game, AdventureDeck d, AdventureDiscard di) {
+		quest = c;
 		deck = d;
 		discard = di;
 		players = p;
@@ -40,13 +44,17 @@ public class QuestHandler {
 		addedCards = new ArrayList<>();
 		bidedCards = new ArrayList<>();
 		instance = this;
+		pg = game;
+		isSponsored = false;
 	}
 	
 	public static QuestHandler getInstance() {
 		return instance;
 	}
 
-	public boolean playQuest() {
+	
+
+	/*public boolean playQuest() {
 		//Ask for the sponsor and move focus to them.
 		Player sponsor = askForSponsor(player);
 		System.out.println("Starting quest...");
@@ -218,15 +226,36 @@ public class QuestHandler {
 		}
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
 		return true;
+	}*/
+	
+	public boolean playQuest() {
+		if(pg.getFoe()) { // has a foe been encountered?
+			
+		}
+		else if(pg.getBidding()) { // has a test been encountered?
+			
+		}
+		else { // if not bidding or playing against a foe, asking to sponsor/participate
+			if(!isSponsored) {
+				System.out.println("test sponsoring");
+				askForSponsor(pg.getPlayers().getPlayers().get(0));
+			}
+			else {
+				askForParticipant();
+			}
+		}
+		return true;
 	}
 	
-	public Player askForSponsor(Player pr) {
-		//pr = player that drew the quest card, so we start there.
-		PlayGame pg = PlayGame.getInstance();
-		Player sponsor = null;
+	public void onEnd() {
 		
+	}
+	
+	/*public Player askForSponsor(Player pr) {
+		//pr = player that drew the quest card, so we start there.
+		//PlayGame pg = PlayGame.getInstance();
+		Player sponsor = null;
 		for(int i = 0; i < players.getPlayers().size(); i++) {
-			
 			if(i > 0) {
 				pg.getView().rotate(pg);
 				pg.doTurn(players.getPlayers().get(0));
@@ -237,9 +266,59 @@ public class QuestHandler {
 				return sponsor;
 			}
 		}
-		
 		return sponsor;
+	}*/
+	
+	public boolean isValid(Player p, Quest q) { // check if the player has enough cards to sponsor
+		int numTests = 0;
+		int numFoes = 0;
+		
+		for(int i = 0; i < p.getHand().size(); i++) {
+			if(p.getHand().get(i) instanceof Foe) {
+				numFoes += 1;
+			}
+			else if(p.getHand().get(i) instanceof Test) {
+				numTests += 1;
+			}
+		}
+		
+		if(numFoes >= q.getNumStages() - 1 && numTests >= 1 || numFoes >= q.getNumStages()) {
+			return true;
+		}
+		
+		System.out.println("player doesn't have enough cards to sponsor this quest");
+		return false;
 	}
+	
+	public void askForParticipant() {
+		numAsked += 1;
+		
+	}
+	
+	 public void askForSponsor(Player p){ 
+	    	numAsked += 1;
+	    	System.out.println("test ask " + numAsked);
+	        boolean join = this.pg.getView().prompt("Quest"); 
+	        if(join) {
+	        	if(isValid(p, quest)) {
+		            System.out.println(players.getPlayers().get(0).getName() + " sponsors the Quest");
+		            players.getPlayers().get(0).drawCard(1, deck);
+		            playCards(players.getPlayers().get(0));
+		            isSponsored = true;
+		            
+		            // TO DO: NEED BUTTON FOR SUBMITTING STAGE (change end button functionality?) 
+		            setupStage(players.getPlayers().get(0));
+		            // -------------------------------------------------------------------------
+		            
+		            numAsked = 0;
+	        	}
+
+	        }
+	        else {
+	            System.out.println(players.getPlayers().get(0).getName() + " does not sponsor the Quest");
+	        }
+	        //return pg.getPlayers().getPlayers().get(0);
+	    }
 	
 	public Player askSponsor(int i) {
 		PlayGame pg = PlayGame.getInstance();
@@ -255,8 +334,19 @@ public class QuestHandler {
 		}
 	}
 	
+	public void playCards(Player p) {
+       // p.setAllyBp(p.getAllyBp()); allies are persistent through quest
+        p.setHandState(CardStates.FACE_UP);
+        pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), null);
+       // pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
+        
+        // Quest specific prompt?
+        pg.getView().playCards();
+        
+        
+    }
+	
 	public Stage setupStage(Player sponsor) {
-		PlayGame pg = PlayGame.getInstance();
 		addedCards = new ArrayList<>();
 		
 		boolean finished = pg.getView().promptAddCardToStage(sponsor);
@@ -279,8 +369,8 @@ public class QuestHandler {
 					
 					boolean enoughBP = true;
 					if(stage.getFoe() != null) {
-						setStageBP(stage, card.getSpecialFoes());
-						for(Stage s :  card.getStages()) {
+						setStageBP(stage, quest.getSpecialFoes());
+						for(Stage s :  quest.getStages()) {
 							if(s.getFoe() != null && s.getBattlePoints() >= stage.getBattlePoints()) {
 								enoughBP = false;
 								logger.info("battle points not high enough detected!");
@@ -298,7 +388,7 @@ public class QuestHandler {
 						}
 						sponsor.getHand().addAll(addedCards);
 						addedCards.removeAll(addedCards);
-						pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+						pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 						pg.getView().promptNotEnoughBP();
 						setupStage(sponsor);
 						return null;
@@ -342,7 +432,7 @@ public class QuestHandler {
 			pg.getView().rotate(pg);
 		}
 		pg.doTurn(p);
-		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 		pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
 	}
 	
@@ -361,7 +451,7 @@ public class QuestHandler {
 				pg.getView().rotate(pg);
 			}
 			pg.doTurn(p);
-			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 			Player bidP = null;
 			if(p.getMaxBid() > currBid) {
 				bidP = pg.getView().promptBid(currBid, p, count);
@@ -370,13 +460,13 @@ public class QuestHandler {
 				p = bidP;
 				currBid = p.getBid();
 				p.setHandState(CardStates.FACE_DOWN);
-				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 				logger.info("current bid (" + p.getName() + "): " + currBid);
 				bidWinner = p;
 			} else {
 				pptsClone.remove(p);
 				p.setHandState(CardStates.FACE_DOWN);
-				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), card);
+				pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 			}
 			count++; // keep track of iterations to catch the very first one.
 			iter = (iter + 1) % pptsClone.size(); // keep iterating through until there is only 1 left.
@@ -398,7 +488,9 @@ public class QuestHandler {
 		return null;
 	}
 	
-	public ArrayList<Player> askForParticipants(Player sponsor, Player start) {
+	
+	
+	/*public ArrayList<Player> askForParticipants(Player sponsor, Player start) {
 		PlayGame pg = PlayGame.getInstance();
 		ArrayList<Player> participants = new ArrayList<>();
 		Player participant;
@@ -433,10 +525,10 @@ public class QuestHandler {
 			players.getPlayers().get(i).setHandState(CardStates.FACE_DOWN);
 			return null;
 		}
-	}
+	}*/
 	
 	public Quest getCard() {
-		return card;
+		return quest;
 	}
 
 	public static class QuestControlHandler extends ControlHandler {

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 
 import javafx.application.Application;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 //import javafx.event.EventHandler;
@@ -46,6 +47,15 @@ public class PlayGame extends Application{
 	private static Stage primStage;
 	private static final PlayGame instance = new PlayGame();
 	private static boolean KINGS_RECOGNITION;
+	
+	private static boolean isTournament;
+	private static boolean isTie; // tournament tie
+	private static boolean isQuest;
+	private static boolean isFoe;
+	
+	
+	private static boolean isBidding;
+	private static boolean isPlaying;
 	
 	public PlayGame() {
 		aDeck = new AdventureDeck();
@@ -154,7 +164,7 @@ public class PlayGame extends Application{
 				currentPlayer = 0;//(currentPlayer + 1) % 2;
 				//focusPlayer(players.getPlayers().get(currentPlayer));
 				// ADD A THING HERE WHICH WILL DO THE TURN THING THAT FOCUS DID
-			    doTurn(players.getPlayers().get(0));
+			   // doTurn(players.getPlayers().get(0));
 				
 			}
 			
@@ -184,6 +194,7 @@ public class PlayGame extends Application{
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
+				
 				currentPlayer = 0;
 				view.update(event, players, sDeck, sDiscard, null);
 				doTurn(players.getPlayers().get(0));
@@ -197,6 +208,7 @@ public class PlayGame extends Application{
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
 				players.addListener(new PlayGameControlHandler());
+				
 				
 				for(int i = 0; i < 4; i++) {
 					players.addHuman();
@@ -219,6 +231,8 @@ public class PlayGame extends Application{
 				for(Player p : players.getPlayers()) {
 					p.drawCard(12, aDeck);
 				}
+				
+				//players.getPlayers().get(0).getHand().set(0, element);
 				currentPlayer = 0;
 				view.update(event, players, sDeck, sDiscard, null);
 				doTurn(players.getPlayers().get(0));
@@ -254,10 +268,50 @@ public class PlayGame extends Application{
 		return view;
 	}
 	
+	public void setTie(boolean b) {
+		isTie = b;
+	}
+	
+	// VARIOUS GAME STATES: BIDDING, PLAYING AGAINST FOE, TOURNAMENT, TIED TOURNAMENT
+	public boolean getTie() {
+		return isTie;
+	}
+	
+	public void setBidding(boolean b) {
+		isBidding = b;
+	}
+	
+	public boolean getBidding() {
+		return isBidding;
+	}
+	
+	public void setFoe(boolean b) {
+		isFoe = b;
+	}
+	
+	public boolean getFoe() {
+		return isFoe;
+	}
+	
+	
+	public static void setTournament(boolean b) {
+		isTournament = b;
+	}
+	// --------------------------------------------------------------
+	
+	
+	
 	// DO TURN ------------------------------------------------------------------------------------------------------------
-	public void doTurn(Player p) { // a repurposed focus method 
+	public static void doTurn(Player p) { // a repurposed focus method 
 		logger.info(p.getName() + "'s turn.");
 		QuestHandler qh = QuestHandler.getInstance();
+		TournamentHandler th = TournamentHandler.getInstance();
+		
+		for(int i = 0; i < sDeck.size(); i++) {
+			if(sDeck.get(i) instanceof Tournament) {
+				sDeck.set(0, sDeck.get(i));
+			}
+		}
 		for(Player pl : players.getPlayers()) {
 			pl.setHandState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {
@@ -279,57 +333,82 @@ public class PlayGame extends Application{
 			logger.info(pr.getName() + "'s shields: " + pr.getShields());
 			logger.info(pr.getName() + "'s hand: " + pr.getHand());
 		}
+		
 		//we want to make sure that allies have the right BP/Bids
-		allyCheck();
+		//allyCheck();
+		
 		if(qh != null && qh.getCard() != null) {
 			view.update(null, players, sDeck, sDiscard, qh.getCard());
 		} else { 
 			view.update(null, players, sDeck, sDiscard, null);
 		}
-		if(sDeck.size() > 0) {
-			view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent arg0) {
-					view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
-					for(Player p : players.getPlayers()) {
-						p.setHandState(CardStates.FACE_DOWN);
-					}
-					if(winners.size() == 1) {
-						System.out.println("Congratulations " + winners.get(0).getName() + "! You Win!");
-						boolean gameRestart = view.promptGameEnd(winners.get(0));
-						if(gameRestart) {
-							primStage.close();
-							try {
-								PlayGame playGame = new PlayGame();
-								playGame.start(primStage);
-								return;
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						} else {
-							primStage.close();
-							return;
-						}
-					} else if (winners.size() > 1) {
-						//begin final tournament!
-					}
-					if(qh != null && qh.getCard() != null) {
-						view.update(null, players, sDeck, sDiscard, qh.getCard());
-					} else { 
-						view.update(null, players, sDeck, sDiscard, null);
-					}
-					view.rotate(PlayGame.getInstance());
-					
-					doTurn(players.getPlayers().get(0));
-				}
-			}); 
-		}
-	// ---------------------------------------------------------------------------------------------------------------------	
 		
+		if(isTournament == true) {
+			try {
+				th.playTournament();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		else if(isQuest == true) {
+			try {
+				qh.playQuest();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	
 	}
 	
-	public void allyCheck() {
+	
+	public static void cardClicked(Adventure a, Player p) {
+		System.out.println("test card clicked");
+		if(isPlaying) {
+			System.out.println("test isplaying execute");
+			if(a instanceof Weapon) {
+				p.remove(p.getHand(), p.getWeapons(), a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if (a instanceof Amour) {
+				p.remove(p.getHand(), p.getAmour(), a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if(a instanceof Ally) {
+				p.remove(p.getHand(), p.getAllies(), a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else {
+				
+			}
+			
+		}
+		else if(isBidding) {
+			
+		}
+		else {
+			if(a instanceof Ally) {
+				p.remove(p.getHand(), p.getAllies(), a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else {
+				//p.remove(p.getHand(), p.getAllies(), a);
+				//view.update(null, players, sDeck, sDiscard, null);
+			}
+		}
+	}
+	
+	public static void allyClicked(Ally a) {
+		if(a.getName() == "merlin") {
+			System.out.println("test merlin click");
+		}
+		else if(a.getName() == "mordred") {
+			System.out.println("test mordred click");
+		}
+	}
+	
+	/*public void allyCheck() {
 		QuestHandler qh = QuestHandler.getInstance();
 		for(Player p : players.getPlayers()) {
 			for(Ally a : p.getAllies()) {
@@ -366,7 +445,7 @@ public class PlayGame extends Application{
 				//Check Merlin
 			}
 		}
-	}
+	}*/
 	
 	
 	public static class PlayGameControlHandler extends ControlHandler {
@@ -393,7 +472,7 @@ public class PlayGame extends Application{
 			if(!cardsRemoved) {
 				onCardOverflow(p);
 			}
-			p.setHandState(CardStates.FACE_DOWN);
+			//p.setHandState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {
 				view.update(null, players, sDeck, sDiscard, qh.getCard());
 			} else {
@@ -463,6 +542,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onStoryCardDraw(MouseEvent event) {
 			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "boar_hunt");
+			System.out.println("test");
 			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
 			if(sDeck.isEmpty()) {
 				onStoryDeckEmpty();
@@ -512,8 +592,9 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onQuestCardDraw(Player p) {
+			isQuest = true;
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
-			QuestHandler questHandler = new QuestHandler((Quest)topCard, players, p, aDeck, aDiscard);
+			QuestHandler questHandler = new QuestHandler((Quest)topCard, players, p, PlayGame.getInstance(), aDeck, aDiscard);
 			view.update(null, players, sDeck, sDiscard, (Quest) topCard);
 			System.out.println("Quest: " + topCard.getName());
 			try {
@@ -540,6 +621,7 @@ public class PlayGame extends Application{
 		@Override
 		public void onTournamentCardDraw(Player p) {
 			//System.out.println("test tourn draw");
+			isTournament = true;
 			PlayGame pg = PlayGame.getInstance();
 			view.update(null, players, sDeck, sDiscard, null);
 			Story topCard = sDiscard.get(sDiscard.size() - 1);
@@ -552,9 +634,10 @@ public class PlayGame extends Application{
 				e.printStackTrace();
 			}
 			//so that the view rotates back to the player who drew the tournament card for the game to resume to the player on the left.
-			while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
+			/*while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
 				pg.getView().rotate(pg);
-			}
+			}*/
+			//isTournament = false;
 		}
 		
 		@Override
@@ -593,5 +676,111 @@ public class PlayGame extends Application{
 			logger.info("King's Recognition set by controller to true, the next player to finish a quest will receive 2 bonus shields.");
 			PlayGame.setKingsRecognition(true);
 		}
+		
+		@Override
+		public void onPlaying() {
+			System.out.println("test playing");
+			isPlaying = true;
+		}
+		
+		@Override
+		public void onUpdate() {
+			System.out.println("update");
+			for(Node n : view.getPlayerCards().getChildren()) {
+				n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent arg0) {
+						System.out.println("this is a " + players.getPlayers().get(0).getHand().get(view.getPlayerCards().getChildren().indexOf(n)).getName());
+						Player p = players.getPlayers().get(0);
+						Adventure a = players.getPlayers().get(0).getHand().get(view.getPlayerCards().getChildren().indexOf(n));
+						cardClicked(a, p);						
+					}
+				});
+			}
+			
+			for(Node n : view.getPlayerSurface().getChildren()) {
+				n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+
+					@Override
+					public void handle(MouseEvent arg0) {
+						System.out.println("test field card clicked");
+					}
+					
+				});
+			}
+	
+			view.endButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					// TODO Auto-generated method stub
+					for(Weapon w : players.getPlayers().get(0).getWeapons()) {
+						w.setState(CardStates.FACE_DOWN);
+					}
+					for(Amour a : players.getPlayers().get(0).getAmour()) {
+						a.setState(CardStates.FACE_DOWN);
+					}
+					System.out.println("test end turn button");
+					isPlaying = false;
+					
+					if(isTournament) {
+						TournamentHandler th = TournamentHandler.getInstance();
+						th.onEnd();
+					}
+					else if (isQuest) {
+					//	QuestHandler qh = QuestHandler.getInstance();
+					//	qh.onEnd();
+					}
+					else {
+						System.out.println("NORMAL ROTATE");
+						view.rotate(PlayGame.getInstance());
+						//doTurn(players.getPlayers().get(0));
+					}
+					doTurn(players.getPlayers().get(0));
+				}
+			});
+			
+			QuestHandler qh = QuestHandler.getInstance();
+			if(sDeck.size() > 0) {
+				view.getStoryCards().getChildren().get(view.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent arg0) {
+						view.notifyStoryCardClicked(arg0, sDeck.get(view.getCurrentTopStoryCardIndex()));
+						for(Player p : players.getPlayers()) {
+							//p.setHandState(CardStates.FACE_DOWN);
+						}
+						if(winners.size() == 1) {
+							System.out.println("Congratulations " + winners.get(0).getName() + "! You Win!");
+							boolean gameRestart = view.promptGameEnd(winners.get(0));
+							if(gameRestart) {
+								primStage.close();
+								try {
+									PlayGame playGame = new PlayGame();
+									playGame.start(primStage);
+									return;
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							} else {
+								primStage.close();
+								return;
+							}
+						} else if (winners.size() > 1) {
+							//begin final tournament!
+						}
+						if(qh != null && qh.getCard() != null) {
+							view.update(null, players, sDeck, sDiscard, qh.getCard());
+						} else { 
+							view.update(null, players, sDeck, sDiscard, null);
+						}
+						//view.rotate(PlayGame.getInstance());
+						
+						//doTurn(players.getPlayers().get(0));
+					}
+				}); 
+			}
+		}
 	}
+	// END PGCONTROL HANDLER --------------------------------------------
 }
+

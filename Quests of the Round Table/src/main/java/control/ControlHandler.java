@@ -10,6 +10,7 @@ import model.Foe;
 import model.Player;
 import model.Story;
 import model.Weapon;
+import view.View;
 //Possible abstract class for notifying the controllers?
 public abstract class ControlHandler {
 
@@ -86,6 +87,14 @@ public abstract class ControlHandler {
 	}
 	
 	public void onDiscardCard(Player p, Adventure card, boolean onPlayingSurface) {
+		
+	}
+	
+	public void onPlaying() {
+		
+	}
+	
+	public void onUpdate() {
 		
 	}
 }
