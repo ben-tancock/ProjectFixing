@@ -28,7 +28,7 @@ public class QuestHandler {
 	private AdventureDiscard discard;
 	private Players players;
 	private Player player;
-	private ArrayList<Adventure> addedCards;
+	//private ArrayList<Adventure> addedCards;
 	private ArrayList<Adventure> bidedCards;
 	private int currentStage;
 	private int numAsked;  //number of times we've asked participants to join
@@ -42,11 +42,11 @@ public class QuestHandler {
 		discard = di;
 		players = p;
 		player = pr;
-		addedCards = new ArrayList<>();
 		bidedCards = new ArrayList<>();
 		instance = this;
 		pg = game;
 		isSponsored = false;
+		numAsked = 0;
 	}
 	
 	public static QuestHandler getInstance() {
@@ -242,7 +242,7 @@ public class QuestHandler {
 				askForSponsor(pg.getPlayers().getPlayers().get(0));
 			}
 			else {
-				//askForParticipant();
+				askForParticipant();
 			}
 		}
 		return true;
@@ -326,7 +326,7 @@ public class QuestHandler {
 		            // TO DO: NEED BUTTON FOR SUBMITTING STAGE (change end button functionality?) 
 		            setupStage(players.getPlayers().get(0));
 		            // -------------------------------------------------------------------------
-		            
+		            getCard().setSponsor(p);
 		            numAsked = 0;
 	        	}
 
@@ -434,10 +434,6 @@ public class QuestHandler {
 		} else {
 			s.setBattlePoints(s.getFoe().getLowerBattlePoints());
 		}
-	}
-	
-	public ArrayList<Adventure> getAddedCards() {
-		return addedCards;
 	}
 	
 	public ArrayList<Adventure> getBidedCards() {
@@ -551,21 +547,6 @@ public class QuestHandler {
 	}
 
 	public static class QuestControlHandler extends ControlHandler {
-		@Override
-		public void onStageCardPicked(Player p, Adventure card) {
-			QuestHandler qh = QuestHandler.getInstance();
-			PlayGame pg = PlayGame.getInstance();
-			p.remove(p.getHand(), qh.getAddedCards(), card);
-			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-		}
-		
-		@Override
-		public void onStageWeaponPicked(Player p, Weapon card) {
-			QuestHandler qh = QuestHandler.getInstance();
-			PlayGame pg = PlayGame.getInstance();
-			p.remove(p.getHand(), qh.getAddedCards(), card);
-			pg.getView().update(null, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-		}
 		
 		@Override
 		public void onBidCardPicked(Player p, Adventure card) {
