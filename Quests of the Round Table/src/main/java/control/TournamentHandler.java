@@ -65,7 +65,7 @@ public class TournamentHandler {
     	if(pg.getTie()) { // if a tournament is tied, you must rotate to the next tied participant
 			if(getTiePlayed() >= getTieParticipants().size()) { // if all the tied players have played, calculate the winner, end the tournament
     			getWinner(getTieParticipants(), true);
-    			pg.setTournament(false);
+    			PlayGame.setTournament(false);
     		}
 			else {
 				while(!(players.getPlayers().get(0).getName().equals(getTieParticipants().get(0).getName()))){
