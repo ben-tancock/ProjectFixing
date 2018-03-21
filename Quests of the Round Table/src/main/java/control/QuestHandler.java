@@ -8,6 +8,7 @@ import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.scene.layout.HBox;
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
@@ -23,6 +24,9 @@ import model.Weapon;
 
 public class QuestHandler {
 	private static final Logger logger = LogManager.getLogger(QuestHandler.class);
+	private static Foe selectedFoe;
+	private static ArrayList<Weapon> selectedWeapons;
+	private static boolean foeSelected;
 	private Quest quest;
 	private AdventureDeck deck;
 	private AdventureDiscard discard;
@@ -47,13 +51,33 @@ public class QuestHandler {
 		pg = game;
 		isSponsored = false;
 		numAsked = 0;
+		selectedWeapons = new ArrayList<Weapon>();
+		selectedFoe = null;
 	}
 	
 	public static QuestHandler getInstance() {
 		return instance;
 	}
-
 	
+	public void setFoeSelected(boolean b) {
+		foeSelected = b;
+	}
+	
+	public boolean getFoeSelected() {
+		return foeSelected;
+	}
+	
+	public void setSelectedFoe(Foe f) {
+		selectedFoe = f;
+	}
+	
+	public Foe getSelectedFoe() {
+		return selectedFoe;
+	}
+	
+	public ArrayList<Weapon> getSelectedWeapons() {
+		return selectedWeapons;
+	}
 
 	/*public boolean playQuest() {
 		//Ask for the sponsor and move focus to them.
@@ -250,7 +274,25 @@ public class QuestHandler {
 	
 	public void onEnd() {
 		if(PlayGame.getInstance().getSettingUpStage()) {
-			
+			if(foeSelected && selectedFoe != null) {
+				((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).setTranslateY(50);
+				((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).translateYProperty();
+				for(Weapon w : selectedWeapons) {
+					((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(w))).setTranslateY(50);
+					((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(w))).translateYProperty();
+				}
+				model.Stage stage = new model.Stage(selectedFoe, selectedWeapons);
+				players.getPlayers().get(0).getHand().remove(selectedFoe);
+				for(Weapon w : selectedWeapons) {
+					players.getPlayers().get(0).getHand().remove(w);
+				}
+				getCard().addStage(stage);
+				PlayGame.getInstance().getView().update(null, players, PlayGame.getInstance().getSDeck(), PlayGame.getInstance().getSDiscard(), getCard());
+				nextStage();
+				foeSelected = false;
+				selectedFoe = null;
+				selectedWeapons = new ArrayList<>();
+			}
 		} else {
 			System.out.println("NORMAL QUEST ROTATE");
 			pg.getView().rotate(PlayGame.getInstance());

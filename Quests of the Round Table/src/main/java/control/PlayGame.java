@@ -55,9 +55,9 @@ public class PlayGame extends Application{
 	private static boolean isTie; // tournament tie
 	private static boolean isQuest;
 	private static boolean isSettingUpStage;
-	private static boolean foeSelected;
-	private static Foe selectedFoe;
-	private static ArrayList<Weapon> selectedWeapons;
+	
+	
+	
 	private static boolean isFoe;
 	
 	
@@ -72,8 +72,6 @@ public class PlayGame extends Application{
 		players = new Players();
 		view = new View();
 		winners = new ArrayList<Player>();
-		selectedWeapons = new ArrayList<Weapon>();
-		selectedFoe = null;
 		aDeck.shuffle();
 		sDeck.shuffle();
 		KINGS_RECOGNITION = false;
@@ -315,13 +313,6 @@ public class PlayGame extends Application{
 		return isSettingUpStage;
 	}
 	
-	public void setFoeSelected(boolean b) {
-		foeSelected = b;
-	}
-	
-	public boolean getFoeSelected() {
-		return foeSelected;
-	}
 	// --------------------------------------------------------------
 	
 	
@@ -414,11 +405,11 @@ public class PlayGame extends Application{
 		}
 		else if(isSettingUpStage) {
 			QuestHandler qh = QuestHandler.getInstance();
-			if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && !foeSelected) {
+			if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && !qh.getFoeSelected()) {
 				if(a instanceof Foe) {
 					//stage counter increased only after the foe has chosen weapons
-					selectedFoe = (Foe)a;
-					foeSelected = true;
+					qh.setSelectedFoe((Foe)a);
+					qh.setFoeSelected(true);
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).setTranslateY(-50);
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).translateYProperty();
 				} else if(a instanceof Test) {
@@ -430,11 +421,11 @@ public class PlayGame extends Application{
 					qh.nextStage();
 					
 				}
-			} else if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && foeSelected){
+			} else if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && qh.getFoeSelected()){
 				if(a instanceof Weapon) {
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).setTranslateY(-50);
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).translateYProperty();
-					selectedWeapons.add((Weapon)a);
+					qh.getSelectedWeapons().add((Weapon)a);
 				}
 			}
 		}
@@ -791,27 +782,7 @@ public class PlayGame extends Application{
 					}
 					else if (isQuest) {
 						QuestHandler qh = QuestHandler.getInstance();
-						if(foeSelected && selectedFoe != null) {
-							((HBox)view.getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).setTranslateY(50);
-							((HBox)view.getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).translateYProperty();
-							for(Weapon w : selectedWeapons) {
-								((HBox)view.getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(w))).setTranslateY(50);
-								((HBox)view.getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(w))).translateYProperty();
-							}
-							model.Stage stage = new model.Stage(selectedFoe, selectedWeapons);
-							players.getPlayers().get(0).getHand().remove(selectedFoe);
-							for(Weapon w : selectedWeapons) {
-								players.getPlayers().get(0).getHand().remove(w);
-							}
-							qh.getCard().addStage(stage);
-							view.update(null, players, sDeck, sDiscard, qh.getCard());
-							qh.nextStage();
-							foeSelected = false;
-							selectedFoe = null;
-							selectedWeapons = new ArrayList<>();
-						}
-					//	QuestHandler qh = QuestHandler.getInstance();
-					//	qh.onEnd();
+						qh.onEnd();
 					}
 					else {
 						System.out.println("NORMAL ROTATE");
