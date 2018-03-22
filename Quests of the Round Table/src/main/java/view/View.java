@@ -769,34 +769,26 @@ public class View extends Application {
 	public boolean prompt(String type) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
-		
-		alert.setTitle("Participant Dialog");
-		alert.setHeaderText(type + " Participant Request");
-		if(type == "Tournament") {
+		if(type.equals("Tournament") || type.equals("Quest Participate")) {
+			type = type.split(" ")[0];
+			alert.setTitle("Participant Dialog");
+			alert.setHeaderText(type + " Participant Request");
 			alert.setContentText("Would you like to participate?");
-			alert.initModality(Modality.NONE);
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == ButtonType.OK){
-			    
-				return true;
-			} else {
-			    // ... user chose CANCEL or closed the dialog
-				return false;
-			}
 		}
-		else if(type == "Quest") {
-			alert.setContentText("Would you like to sponsor the Quest?");
-			alert.initModality(Modality.NONE);
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get() == ButtonType.OK){
-				return true;
-			} else {
-			    // ... user chose CANCEL or closed the dialog
-				return false;
-			}
+		else if(type.equals("Quest Sponsor") ) {
+			alert.setTitle("Sponsor Dialog");
+			alert.setHeaderText(type + " Request");
+			alert.setContentText("Would you like to sponsor the Quest?");	
 		}
 		
-		return false;
+		alert.initModality(Modality.NONE);
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return false;
+		}
 		
 		
 		/*alert.setContentText("Would you like to participate?");

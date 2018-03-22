@@ -59,8 +59,16 @@ public class Quest extends Story {
 		sponsor = s;
 	}
 	
+	public Player getSponsor() {
+		return sponsor;
+	}
+	
 	public void addParticipant(Player p) {
 		participants.add(p);
+	}
+	
+	public ArrayList<Player> getParticipants() {
+		return participants;
 	}
 	
 	public String toString() {

@@ -313,6 +313,10 @@ public class PlayGame extends Application{
 		return isSettingUpStage;
 	}
 	
+	public boolean isTournament() {
+		return isTournament;
+	}
+	
 	// --------------------------------------------------------------
 	
 	
@@ -324,7 +328,7 @@ public class PlayGame extends Application{
 		TournamentHandler th = TournamentHandler.getInstance();
 		//
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Tournament) {
+			if(sDeck.get(i) instanceof Quest) {
 				sDeck.set(0, sDeck.get(i));
 			}
 		}
@@ -351,7 +355,7 @@ public class PlayGame extends Application{
 		}
 		
 		//we want to make sure that allies have the right BP/Bids
-		//allyCheck();
+		allyCheck();
 		
 		if(qh != null && qh.getCard() != null) {
 			view.update(null, players, sDeck, sDiscard, qh.getCard());
@@ -394,6 +398,7 @@ public class PlayGame extends Application{
 			else if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
 				view.update(null, players, sDeck, sDiscard, null);
+				allyCheck();
 			}
 			else {
 				
@@ -413,13 +418,12 @@ public class PlayGame extends Application{
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).setTranslateY(-50);
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).translateYProperty();
 				} else if(a instanceof Test) {
-					
 					p.getHand().remove(a);
 					model.Stage stage = new model.Stage((Test)a);
 					qh.getCard().addStage(stage);
 					view.update(null, players, sDeck, sDiscard, qh.getCard());
 					qh.nextStage();
-					
+					qh.onEnd();
 				}
 			} else if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && qh.getFoeSelected()){
 				if(a instanceof Weapon) {
@@ -433,6 +437,9 @@ public class PlayGame extends Application{
 			if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
 				view.update(null, players, sDeck, sDiscard, null);
+				allyCheck();
+			} else if (a instanceof Foe && a.getName().equals("mordred")) {
+				//play mordred
 			}
 			else {
 				//p.remove(p.getHand(), p.getAllies(), a);
@@ -450,7 +457,7 @@ public class PlayGame extends Application{
 		}
 	}
 	
-	/*public void allyCheck() {
+	public static void allyCheck() {
 		QuestHandler qh = QuestHandler.getInstance();
 		for(Player p : players.getPlayers()) {
 			for(Ally a : p.getAllies()) {
@@ -487,7 +494,7 @@ public class PlayGame extends Application{
 				//Check Merlin
 			}
 		}
-	}*/
+	}
 	
 	
 	public static class PlayGameControlHandler extends ControlHandler {

@@ -27,10 +27,12 @@ public class QuestHandler {
 	private static Foe selectedFoe;
 	private static ArrayList<Weapon> selectedWeapons;
 	private static boolean foeSelected;
+	private static boolean isAskingForParticipants;
 	private Quest quest;
 	private AdventureDeck deck;
 	private AdventureDiscard discard;
 	private Players players;
+	private ArrayList<Player> participants;
 	private Player player;
 	//private ArrayList<Adventure> addedCards;
 	private ArrayList<Adventure> bidedCards;
@@ -51,6 +53,7 @@ public class QuestHandler {
 		pg = game;
 		isSponsored = false;
 		numAsked = 0;
+		participants = new ArrayList<Player>();
 		selectedWeapons = new ArrayList<Weapon>();
 		selectedFoe = null;
 	}
@@ -258,6 +261,9 @@ public class QuestHandler {
 			
 		}
 		else if(pg.getBidding()) { // has a test been encountered?
+			Player bidWinner = promptPlayerToBid(getCard().getParticipants(), getCard().getStages().get(currentStage).getBids());
+			getCard().getParticipants().clear();
+			getCard().addParticipant(bidWinner);
 			
 		}
 		else { // if not bidding or playing against a foe, asking to sponsor/participate
@@ -293,6 +299,12 @@ public class QuestHandler {
 				selectedFoe = null;
 				selectedWeapons = new ArrayList<>();
 			}
+		} else if (currentStage > getCard().getNumStages() - 1){
+			PlayGame.setSettingUpStage(false);
+			isAskingForParticipants = true;
+		} else if(numAsked >= pg.getPlayers().getPlayers().size() - 1 && getCard().getParticipants().size() > 0) {
+			//all players but the sponsor have been asked to participate and at least 1 participates.
+			
 		} else {
 			System.out.println("NORMAL QUEST ROTATE");
 			pg.getView().rotate(PlayGame.getInstance());
@@ -349,17 +361,30 @@ public class QuestHandler {
 	}
 	
 	public void askForParticipant() {
+		if(!players.getPlayers().get(0).equals(getCard().getSponsor())) {
+			askParticipant(0);
+		}
+	}
+	
+	public void askParticipant(int i) {
 		numAsked += 1;
-		
+		System.out.println("test ask " + numAsked);
+		boolean join = pg.getView().prompt("Quest Participate");
+		if(join) {
+			System.out.println(players.getPlayers().get(0) + " has joined the quest.");
+			getCard().addParticipant(players.getPlayers().get(0));
+		} else {
+			System.out.println(players.getPlayers().get(0) + " does not join the quest.");
+		}
 	}
 	
 	 public void askForSponsor(Player p){ 
 	    	numAsked += 1;
 	    	System.out.println("test ask " + numAsked);
-	        boolean join = this.pg.getView().prompt("Quest"); 
-	        if(join) {
+	        boolean sponsor = this.pg.getView().prompt("Quest Sponsor"); 
+	        if(sponsor) {
 	        	if(isValid(p, quest)) {
-		            System.out.println(players.getPlayers().get(0).getName() + " sponsors the Quest");
+		            System.out.println(pg.getPlayers().getPlayers().get(0).getName() + " sponsors the Quest");
 		            //players.getPlayers().get(0).drawCard(1, deck);
 		            //playCards(players.getPlayers().get(0));
 		            isSponsored = true;
@@ -462,6 +487,7 @@ public class QuestHandler {
 		return null;
 	}
 	
+	/*
 	public void setStageBP(Stage s, String specialFoes) {
 		if(specialFoes.equals("all")) {
 			s.setBattlePoints(s.getFoe().getHigherBattlePoints());
@@ -476,12 +502,12 @@ public class QuestHandler {
 		} else {
 			s.setBattlePoints(s.getFoe().getLowerBattlePoints());
 		}
-	}
+	}*/
 	
 	public ArrayList<Adventure> getBidedCards() {
 		return bidedCards;
 	}
-	
+	/*
 	public void promptPlayerToFightFoe(Player p) {
 		//Force Player to only choose Weapon, Ally, or Amour
 		PlayGame pg = PlayGame.getInstance();
@@ -491,7 +517,7 @@ public class QuestHandler {
 		PlayGame.doTurn(p);
 		pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 		pg.getView().playPrompt(p.getName(), p, new ArrayList<Adventure>());
-	}
+	}*/
 	
 	public Player promptPlayerToBid(ArrayList<Player> ppts, int minBid) {
 		//Force Player to make their bid, if Player cannot make the bid, remove them from the ppts list 
