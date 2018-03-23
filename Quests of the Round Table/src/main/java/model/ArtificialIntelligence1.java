@@ -202,4 +202,8 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	public void play1() {
 		
 	}
+	
+	public void decideWhatToPlay(Player p) {
+		p.decideWhatToPlay();
+	}
 }

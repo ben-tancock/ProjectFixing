@@ -524,5 +524,18 @@ public abstract class Player {
 		//notifyListeners("rankset", this.rank, r);
 		setRank(r);
 	}
+	
+	public ArrayList decideWhatToPlay() {
+		ArrayList<Adventure> cardsToPlay = new ArrayList<>();
+		int aipoints = 0;
+		Collections.sort(getStrongestHand(), (c1, c2)-> c2.getBattlePoint());
+		for(Adventure a : getStrongestHand()) {
+			while (aipoints < 50) {
+				cardsToPlay.add(a);
+				aipoints += a.getBattlePoint();
+			}
+		}
+		return cardsToPlay;
+	}
 
 }
