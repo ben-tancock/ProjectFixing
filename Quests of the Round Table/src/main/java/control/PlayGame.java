@@ -55,6 +55,7 @@ public class PlayGame extends Application{
 	private static boolean isTie; // tournament tie
 	private static boolean isQuest;
 	private static boolean isSettingUpStage;
+	private static boolean Overflow;
 	
 	
 	
@@ -328,10 +329,11 @@ public class PlayGame extends Application{
 		TournamentHandler th = TournamentHandler.getInstance();
 		//
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Quest) {
+			if(sDeck.get(i) instanceof Tournament) {
 				sDeck.set(0, sDeck.get(i));
 			}
 		}
+		
 		for(Player pl : players.getPlayers()) {
 			pl.setHandState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {
@@ -363,15 +365,19 @@ public class PlayGame extends Application{
 			view.update(null, players, sDeck, sDiscard, null);
 		}
 		
-		if(isTournament == true) {
+		if(Overflow) {
+			//view.cardOverflowPrompt(p, numCards)
+			System.out.println("test overflow");
+			view.cardOverflowPrompt(p, p.getHand().size() - 12);
+		}
+		else if(isTournament) {
 			try {
 				th.playTournament();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
-		else if(isQuest == true) {
+		else if(isQuest) {
 			try {
 				qh.playQuest();
 			} catch (Exception e) {
@@ -385,7 +391,44 @@ public class PlayGame extends Application{
 	
 	public static void cardClicked(Adventure a, Player p) {
 		System.out.println("test card clicked");
-		if(isPlaying) {
+		
+		if(Overflow) {
+			if(a instanceof Weapon) {
+				p.remove(p.getHand(), aDiscard, a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if (a instanceof Foe) {
+				p.remove(p.getHand(), aDiscard, a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if (a instanceof Amour) {
+				p.remove(p.getHand(), p.getAmour(), a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if(a instanceof Ally) {
+				p.remove(p.getHand(), p.getAllies(), a);
+				view.update(null, players, sDeck, sDiscard, null);
+				allyCheck();
+			}
+			
+			// when an overflow is done, a prompt MAY follow it, but the prompt needs to wait until the overflow is done
+			// for now the only solution i can think of is moving all the prompts to happen after overflow and on doTurn
+			if(p.getHand().size() - 12 <= 0) {
+				System.out.println("test end overflow");
+				Overflow = false;
+				if(isTournament) {
+					//prompt 
+				}
+				else if (isQuest) {
+					//prompt
+				}
+				else if (isBidding) {
+					
+				}
+				//doTurn(p);
+			}
+		}
+		else if(isPlaying) {
 			System.out.println("test isplaying execute");
 			if(a instanceof Weapon) {
 				p.remove(p.getHand(), p.getWeapons(), a);
@@ -502,10 +545,18 @@ public class PlayGame extends Application{
 		@Override
 		public void onCardOverflow(Player p) {
 			QuestHandler qh = QuestHandler.getInstance();
-			while(p.getName() != players.getPlayers().get(0).getName()) {
+			/*while(p.getName() != players.getPlayers().get(0).getName()) {
 				view.rotate(PlayGame.getInstance());
-			}
-			boolean seeCards = view.seeCardPrompt(p);
+			}*/
+			
+			
+			Overflow = true;
+			doTurn(p);
+			//view.cardOverflowPrompt(p, p.getHand().size() - 12);
+			//int numDiscard = p.getHand().size() - 12;
+			
+			
+			/*boolean seeCards = view.seeCardPrompt(p);
 			if(seeCards) {
 				p.setHandState(CardStates.FACE_UP);
 				if(qh != null && qh.getCard() != null) {
@@ -526,7 +577,7 @@ public class PlayGame extends Application{
 				view.update(null, players, sDeck, sDiscard, qh.getCard());
 			} else {
 				view.update(null, players, sDeck, sDiscard, null);
-			}
+			}*/
 		}
 		
 		@Override

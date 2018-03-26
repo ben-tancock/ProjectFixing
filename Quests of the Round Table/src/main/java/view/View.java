@@ -1387,6 +1387,24 @@ public class View extends Application {
 	}
 	
 	public boolean cardOverflowPrompt(Player p, int numCards) {
+		System.out.println("test overflow prompt");
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Play Cards");
+		alert.setContentText("Please select " + numCards + " card(s) you wish to discard");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			notifyPlaying();
+		    return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+		}
+		
+		return true;
+	}
+	
+	
+	/*public boolean cardOverflowPrompt(Player p, int numCards) {
 		cardClicked = false;
 		buttonClicked = false;
 		System.out.println(numCards);
@@ -1515,7 +1533,7 @@ public class View extends Application {
 		} else {
 			return false;
 		}
-	}
+	}*/
 	
 	public void promptTooManyAmour() {
 		Alert alert = new Alert(AlertType.ERROR);
