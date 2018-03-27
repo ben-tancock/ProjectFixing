@@ -147,6 +147,44 @@ public abstract class Player {
 		return false;
 	}
 	
+	public boolean twoFoesUnderXBP(int x) {
+		return false;
+	}
+	
+	public Foe getFoeWithHighestBP(String spfs) {
+		HashMap<Integer, Integer> foeBPMap = new HashMap<>();
+		for(Adventure card : getHand()) {
+			if(card instanceof Foe) {
+				foeBPMap.put(Integer.valueOf(getHand().indexOf(card)), ((Foe)card).getFoeBP(spfs));
+			}
+		}
+		ValueComparator valueComparator = new ValueComparator(foeBPMap);
+		TreeMap<Integer, Integer> sortedFoeBPMap = new TreeMap<>(valueComparator);
+		int indexOfHighestBPFoe = sortedFoeBPMap.lastKey().intValue();
+		
+		return (Foe)getHand().get(indexOfHighestBPFoe);
+	}
+	
+	public Weapon getStrongestWeapon(String n) {
+		HashMap <Integer, Integer> weaponBPMap = new HashMap<>();
+		for(Adventure card : getHand()) {
+			if(card instanceof Weapon) {
+				weaponBPMap.put(Integer.valueOf(getHand().indexOf(card)), ((Weapon)card).getBattlePoints());
+			}
+		}
+		ValueComparator valueComparator = new ValueComparator(weaponBPMap);
+		TreeMap<Integer, Integer> sortedWeaponBPMap = new TreeMap<>(valueComparator);
+		Weapon strongestWeapon = null;
+		while(strongestWeapon == null && sortedWeaponBPMap.size() > 0) {
+			strongestWeapon = (Weapon)getHand().get(sortedWeaponBPMap.lastKey());
+			if(strongestWeapon.getName().equals(n)) { //make sure it isn't a duplicate of the previous
+				sortedWeaponBPMap.remove(sortedWeaponBPMap.lastKey());
+				strongestWeapon = null;
+			}
+		}
+		return strongestWeapon;
+	}
+	
 	public Set<Weapon> findDuplicateWeapons() {
 		Set<Weapon> setToReturn = new HashSet<>();
 		Set<Weapon> set1 = new HashSet<>();
@@ -173,7 +211,7 @@ public abstract class Player {
 		HashSet<Integer> setOfBP = new HashSet<>(); 
 		for(Adventure a : hand) {
 			if(a instanceof Foe) {
-				int foeBP = getFoeBP((Foe) a, card.getSpecialFoes());
+				int foeBP = ((Foe)a).getFoeBP(card.getSpecialFoes());
 				setOfBP.add(Integer.valueOf(foeBP));
 			}
 		}
@@ -189,21 +227,7 @@ public abstract class Player {
 		return false;
 	}
 	
-	public int getFoeBP(Foe f, String spfs) {
-		if(spfs.equals("all")) {
-			return f.getHigherBattlePoints();
-		} else if(spfs.equals("all_saxons")) {
-			if(f.getName().contains("saxon")) {
-				return f.getHigherBattlePoints();
-			} else {
-				return f.getLowerBattlePoints();
-			}
-		} else if(spfs.equals(f.getName())) {
-			return f.getHigherBattlePoints();
-		} else {
-			return f.getLowerBattlePoints();
-		}
-	}
+	
 	
 	public void setHandState(int state) {
 		for(Adventure card : hand) {

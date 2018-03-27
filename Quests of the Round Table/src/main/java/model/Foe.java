@@ -49,6 +49,22 @@ public class Foe extends Adventure{
 		return bp2 + weaponBp;
 	}
 	
+	public int getFoeBP(String spfs) {
+		if(spfs.equals("all")) {
+			return getHigherBattlePoints();
+		} else if(spfs.equals("all_saxons")) {
+			if(getName().contains("saxon")) {
+				return getHigherBattlePoints();
+			} else {
+				return getLowerBattlePoints();
+			}
+		} else if(spfs.equals(getName())) {
+			return getHigherBattlePoints();
+		} else {
+			return getLowerBattlePoints();
+		}
+	}
+	
 	public void addWeapon(Weapon w){
 		weapons.add(w);
 	}

@@ -55,7 +55,7 @@ public class PlayGame extends Application{
 	private static boolean isTie; // tournament tie
 	private static boolean isQuest;
 	private static boolean isSettingUpStage;
-	private static boolean Overflow;
+	private static boolean overflow;
 	
 	
 	
@@ -365,7 +365,7 @@ public class PlayGame extends Application{
 			view.update(null, players, sDeck, sDiscard, null);
 		}
 		
-		if(Overflow) {
+		if(overflow) {
 			//view.cardOverflowPrompt(p, numCards)
 			System.out.println("test overflow");
 			view.cardOverflowPrompt(p, p.getHand().size() - 12);
@@ -391,31 +391,29 @@ public class PlayGame extends Application{
 	
 	public static void cardClicked(Adventure a, Player p) {
 		System.out.println("test card clicked");
+		QuestHandler qh = QuestHandler.getInstance();
 		
-		if(Overflow) {
-			if(a instanceof Weapon) {
-				p.remove(p.getHand(), aDiscard, a);
-				view.update(null, players, sDeck, sDiscard, null);
-			}
-			else if (a instanceof Foe) {
-				p.remove(p.getHand(), aDiscard, a);
-				view.update(null, players, sDeck, sDiscard, null);
-			}
-			else if (a instanceof Amour) {
-				p.remove(p.getHand(), p.getAmour(), a);
-				view.update(null, players, sDeck, sDiscard, null);
+		if(overflow) {
+			if (a instanceof Amour) {
+				if(p.getAmour().size() < 1) {
+					p.remove(p.getHand(), p.getAmour(), a);
+				} else {
+					view.promptTooManyAmour();
+					p.remove(p.getHand(), aDiscard, a); //discard if amour is already on playing field.
+				}
 			}
 			else if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
-				view.update(null, players, sDeck, sDiscard, null);
 				allyCheck();
+			} else {
+				p.remove(p.getHand(), aDiscard, a); //discard if test, weapon, or foe
 			}
 			
 			// when an overflow is done, a prompt MAY follow it, but the prompt needs to wait until the overflow is done
 			// for now the only solution i can think of is moving all the prompts to happen after overflow and on doTurn
 			if(p.getHand().size() - 12 <= 0) {
 				System.out.println("test end overflow");
-				Overflow = false;
+				overflow = false;
 				if(isTournament) {
 					//prompt 
 				}
@@ -432,15 +430,12 @@ public class PlayGame extends Application{
 			System.out.println("test isplaying execute");
 			if(a instanceof Weapon) {
 				p.remove(p.getHand(), p.getWeapons(), a);
-				view.update(null, players, sDeck, sDiscard, null);
 			}
 			else if (a instanceof Amour) {
 				p.remove(p.getHand(), p.getAmour(), a);
-				view.update(null, players, sDeck, sDiscard, null);
 			}
 			else if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
-				view.update(null, players, sDeck, sDiscard, null);
 				allyCheck();
 			}
 			else {
@@ -452,7 +447,7 @@ public class PlayGame extends Application{
 			
 		}
 		else if(isSettingUpStage) {
-			QuestHandler qh = QuestHandler.getInstance();
+			
 			if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && !qh.getFoeSelected()) {
 				if(a instanceof Foe) {
 					//stage counter increased only after the foe has chosen weapons
@@ -464,7 +459,6 @@ public class PlayGame extends Application{
 					p.getHand().remove(a);
 					model.Stage stage = new model.Stage((Test)a);
 					qh.getCard().addStage(stage);
-					view.update(null, players, sDeck, sDiscard, qh.getCard());
 					qh.nextStage();
 					qh.onEnd();
 				}
@@ -479,7 +473,6 @@ public class PlayGame extends Application{
 		else {
 			if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
-				view.update(null, players, sDeck, sDiscard, null);
 				allyCheck();
 			} else if (a instanceof Foe && a.getName().equals("mordred")) {
 				//play mordred
@@ -489,6 +482,7 @@ public class PlayGame extends Application{
 				//view.update(null, players, sDeck, sDiscard, null);
 			}
 		}
+		view.update(null, players, sDeck, sDiscard, qh.getCard());
 	}
 	
 	public static void allyClicked(Ally a) {
@@ -550,7 +544,7 @@ public class PlayGame extends Application{
 			}*/
 			
 			
-			Overflow = true;
+			overflow = true;
 			doTurn(p);
 			//view.cardOverflowPrompt(p, p.getHand().size() - 12);
 			//int numDiscard = p.getHand().size() - 12;

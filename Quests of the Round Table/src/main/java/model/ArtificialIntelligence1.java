@@ -39,8 +39,7 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 		if(checkWinOrEvolve(prClone, q.getNumStages())) {
 			return false;
 		} else if(checkIfEnoughFoes(q)) {
-			//quest will run setup1 that is tied to this strategy class
-			// yes I do sponsor.
+			setup1(q);
 			return true;
 		}
 		return false;
@@ -48,27 +47,10 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 
 	@Override
 	public boolean doIParticipantInQuest(Players p, Quest q) {
-		//if(I have 2 weapons/Allies for each stage AND I have atleast 2 foes with less than 20 BP) {
-		//  play1() {
-		//		if(currentStage is a Test) {
-		//			nextBid();
-	    //			if(Test is won) {
-		//				discardAfterWinningTest();
-		//			}
-		//      } else {
-		//			sort available allies/amour/weapons in decreasing order of BPs
-		//          if(Stage is last stage) {
-		//				play strongest valid combination.
-		//		    } else if (I have 1 or 2 allies/amour) {
-		//				play them.
-		//			}
-		//			if(less than 2 have been played AND I have enough weapons) {
-		//				play weakest weapon(s) until 2 cards have been played.
-		//			}
-		//		}
-		//	}
-		//	return true;	
-		//}
+		if(twoWeaponsAlliesPerStage(q) && twoFoesUnderXBP(20)) {
+		    play1(q);
+			return true;	
+		}
  		return false;
 	}
 
@@ -131,7 +113,9 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 			restOfStagesList.add(secondLastStage);
 		}
 		restOfStagesList.add(lastStage); // add the last stage
-			
+		for(Stage s : restOfStagesList) { //add all stages to the quest
+			card.addStage(s);
+		}
 	}
 
 	public Stage setupStageToBeAtleast50(Quest card) {
@@ -165,45 +149,35 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 		return null;
 	}
 	
-	public Foe getFoeWithHighestBP(String spfs) {
-		HashMap<Integer, Integer> foeBPMap = new HashMap<>();
-		for(Adventure card : getHand()) {
-			if(card instanceof Foe) {
-				foeBPMap.put(Integer.valueOf(getHand().indexOf(card)), getFoeBP((Foe) card, spfs));
+	public boolean twoWeaponsAlliesPerStage(Quest q) {
+		int count = 0;
+		for(Adventure a : getHand()) {
+			if(a instanceof Weapon || a instanceof Ally) {
+				count++;
 			}
 		}
-		ValueComparator valueComparator = new ValueComparator(foeBPMap);
-		TreeMap<Integer, Integer> sortedFoeBPMap = new TreeMap<>(valueComparator);
-		int indexOfHighestBPFoe = sortedFoeBPMap.lastKey().intValue();
-		
-		return (Foe)getHand().get(indexOfHighestBPFoe);
-	}
-	
-	public Weapon getStrongestWeapon(String n) {
-		HashMap <Integer, Integer> weaponBPMap = new HashMap<>();
-		for(Adventure card : getHand()) {
-			if(card instanceof Weapon) {
-				weaponBPMap.put(Integer.valueOf(getHand().indexOf(card)), ((Weapon)card).getBattlePoints());
-			}
+		if (count >= (q.getNumStages() * 2)) {
+			return true;
 		}
-		ValueComparator valueComparator = new ValueComparator(weaponBPMap);
-		TreeMap<Integer, Integer> sortedWeaponBPMap = new TreeMap<>(valueComparator);
-		Weapon strongestWeapon = null;
-		while(strongestWeapon == null && sortedWeaponBPMap.size() > 0) {
-			strongestWeapon = (Weapon)getHand().get(sortedWeaponBPMap.lastKey());
-			if(strongestWeapon.getName().equals(n)) { //make sure it isn't a duplicate of the previous
-				sortedWeaponBPMap.remove(sortedWeaponBPMap.lastKey());
-				strongestWeapon = null;
-			}
-		}
-		return strongestWeapon;
+		return false;
 	}
 	
-	public void play1() {
-		
-	}
-	
-	public void decideWhatToPlay(Player p) {
-		p.decideWhatToPlay();
+	public void play1(Quest q) {
+		//		if(currentStage is a Test) {
+		//			nextBid();
+	    //			if(Test is won) {
+		//				discardAfterWinningTest();
+		//			}
+		//      } else {
+		//			sort available allies/amour/weapons in decreasing order of BPs
+		//          if(Stage is last stage) {
+		//				play strongest valid combination.
+		//		    } else if (I have 1 or 2 allies/amour) {
+		//				play them.
+		//			}
+		//			if(less than 2 have been played AND I have enough weapons) {
+		//				play weakest weapon(s) until 2 cards have been played.
+		//			}
+		//		}
 	}
 }
