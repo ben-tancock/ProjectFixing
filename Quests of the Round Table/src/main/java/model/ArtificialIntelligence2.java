@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -101,9 +102,31 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	public void setUp2(Quest q) {
 		
 	}
-	public Stage setUpStageToBeAtLeast40(Quest qguestCard) {
+	
+	public Stage setUpStageToBeAtLeast40(Quest questCard) {
+		int stageBP = 0;
 		
-		return null;
+		Foe f = getFoeWithHighestBP(questCard.getSpecialFoes());
+		
+		//weapons with highest battlepoint
+		ArrayList <Weapon> weapons = new ArrayList<>();
+		String currentWeaponName = "";
+		int maxIter = getHand().size();
+		int iter = 0;
+		while(stageBP < 40 && iter < maxIter) {
+			Weapon w = getStrongestWeapon(currentWeaponName);
+			currentWeaponName = w.getName();
+			weapons.add(w);
+			stageBP =+ w.getBattlePoint();
+			iter++;
+		}
+		if(stageBP >= 50) {
+			getHand().remove(f);
+			getHand().removeAll(weapons);
+			return new Stage(f, weapons);
+		}else {
+			return null;
+		}
 	}
 	
 	public void decideWhatToPlay(Player p) {
