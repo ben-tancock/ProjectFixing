@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+import control.QuestHandler;
+
 public class ArtificialIntelligence1 extends Player implements AIStrategies {
 
 	@Override
@@ -47,7 +49,7 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 
 	@Override
 	public boolean doIParticipantInQuest(Players p, Quest q) {
-		if(twoWeaponsAlliesPerStage(q) && twoFoesUnderXBP(20)) {
+		if(twoWeaponsAlliesPerStage(q) && twoFoesUnderXBP(20, q)) {
 		    play1(q);
 			return true;	
 		}
@@ -163,12 +165,13 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	}
 	
 	public void play1(Quest q) {
-		//		if(currentStage is a Test) {
-		//			nextBid();
-	    //			if(Test is won) {
-		//				discardAfterWinningTest();
-		//			}
-		//      } else {
+		QuestHandler qh = QuestHandler.getInstance();
+				if(q.getStages().get(qh.getCurrentStage()).getTest() != null) {
+					nextBid();
+	    			if(q.getParticipants().size() == 1 && q.getParticipants().contains(this)) {
+						discardAfterWinningTest();
+					}
+	            } else {
 		//			sort available allies/amour/weapons in decreasing order of BPs
 		//          if(Stage is last stage) {
 		//				play strongest valid combination.
@@ -178,6 +181,6 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 		//			if(less than 2 have been played AND I have enough weapons) {
 		//				play weakest weapon(s) until 2 cards have been played.
 		//			}
-		//		}
+				}
 	}
 }

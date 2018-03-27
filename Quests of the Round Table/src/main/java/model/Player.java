@@ -147,7 +147,16 @@ public abstract class Player {
 		return false;
 	}
 	
-	public boolean twoFoesUnderXBP(int x) {
+	public boolean twoFoesUnderXBP(int x, Quest q) {
+		int count = 0;
+		for(Adventure a : hand) {
+			if(((Foe)a).getFoeBP(q.getSpecialFoes()) < x) {
+				count ++;
+			}
+		}
+		if(count >= 2) {
+			return true;
+		}
 		return false;
 	}
 	
