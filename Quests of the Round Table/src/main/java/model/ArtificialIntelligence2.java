@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -129,7 +130,17 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		}
 	}
 	
-	public void decideWhatToPlay(Player p) {
-		p.decideWhatToPlay();
+	
+	public ArrayList decideWhatToPlay() {
+		ArrayList<Adventure> cardsToPlay = new ArrayList<>();
+		int aipoints = 0;
+		Collections.sort(getStrongestHand(), (c1, c2)-> c2.getBattlePoint());
+		for(Adventure a : getStrongestHand()) {
+			while (aipoints < 50) {
+				cardsToPlay.add(a);
+				aipoints += a.getBattlePoint();
+			}
+		}
+		return cardsToPlay;
 	}
 }
