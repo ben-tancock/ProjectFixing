@@ -118,7 +118,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 			Weapon w = getStrongestWeapon(currentWeaponName);
 			currentWeaponName = w.getName();
 			weapons.add(w);
-			stageBP =+ w.getBattlePoint();
+			stageBP =+ w.getBattlePoints();
 			iter++;
 		}
 		if(stageBP >= 50) {
@@ -134,11 +134,10 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	public ArrayList decideWhatToPlay() {
 		ArrayList<Adventure> cardsToPlay = new ArrayList<>();
 		int aipoints = 0;
-		Collections.sort(getStrongestHand(), (c1, c2)-> c2.getBattlePoint());
-		for(Adventure a : getStrongestHand()) {
+		for(Adventure a : getStrongestHand(IncreasingOrDecreasing.INCREASING)) {
 			while (aipoints < 50) {
 				cardsToPlay.add(a);
-				aipoints += a.getBattlePoint();
+				aipoints += a.getBattlePoints();
 			}
 		}
 		return cardsToPlay;

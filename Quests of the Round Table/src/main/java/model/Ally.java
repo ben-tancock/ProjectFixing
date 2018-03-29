@@ -39,6 +39,7 @@ public class Ally extends Adventure{
 		return name;
 	}
 	
+	@Override
 	public int getBattlePoints() {
 		return bp;
 	}

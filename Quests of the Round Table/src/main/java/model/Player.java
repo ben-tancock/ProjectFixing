@@ -100,7 +100,7 @@ public abstract class Player {
 		return hand.get(0).getState();
 	}
 	
-	public ArrayList<Adventure> getStrongestHand() {
+	public ArrayList<Adventure> getStrongestHand(int increasingOrDecreasing) {
 		ArrayList<Adventure> strongestHand = new ArrayList<>();
 		for(Adventure card : hand) {
 			if(card instanceof Weapon) {
@@ -125,6 +125,13 @@ public abstract class Player {
 			if(amour.size() == 0 && card instanceof Amour) {
 				strongestHand.add(card);
 			}
+		}
+		
+		Collections.sort(strongestHand, (c1, c2)-> c2.getBattlePoints());
+		Foe f = (Foe)Collections.min(strongestHand, (c1, c2) -> c2.getBattlePoints());
+		
+		if (increasingOrDecreasing == IncreasingOrDecreasing.DECREASING) {
+			Collections.reverse(strongestHand);
 		}
 		return strongestHand;
 	}

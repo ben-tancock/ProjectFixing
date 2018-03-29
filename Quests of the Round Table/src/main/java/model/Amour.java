@@ -23,6 +23,7 @@ public class Amour extends Adventure{
 		state = s;
 	}
 	
+	@Override
 	public int getBattlePoints() {
 		return bp;
 	}

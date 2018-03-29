@@ -15,6 +15,7 @@ public class Weapon extends Adventure{
 		return name;
 	}
 	
+	@Override
 	public int getBattlePoints() {
 		return battlepoints;
 	}

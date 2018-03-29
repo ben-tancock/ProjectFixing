@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
@@ -19,7 +20,7 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 			participants.getPlayers().addAll(t.getParticipants());
 			participants.getPlayers().add(this);
 			if(checkWinOrEvolve(participants, p.getPlayers().size() + t.getBonus())) {
-					List<Adventure> strongestHand = getStrongestHand();
+					List<Adventure> strongestHand = getStrongestHand(IncreasingOrDecreasing.INCREASING);
 					for(Adventure card : strongestHand) {
 						Players.notifyListeners("card played", this, card);
 					}
@@ -173,14 +174,38 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 					}
 	            } else {
 		//			sort available allies/amour/weapons in decreasing order of BPs
-		//          if(Stage is last stage) {
-		//				play strongest valid combination.
-		//		    } else if (I have 1 or 2 allies/amour) {
-		//				play them.
-		//			}
-		//			if(less than 2 have been played AND I have enough weapons) {
-		//				play weakest weapon(s) until 2 cards have been played.
-		//			}
+	            	int amtPlayed = 0;
+	            	ArrayList<Adventure> playableCards = grabAndSortPlayableCardsInDecreasingOrderOfBPs();
+	            	if(qh.getCurrentStage() == q.getNumStages() - 1) { //if it's the last stage
+	            		for(Adventure card : playableCards) {
+							Players.notifyListeners("card played", this, card);
+						}
+				    } else if (hasAllyOrAmour(playableCards)) {
+						amtPlayed += playUpToTwoAlliesOrAmours(playableCards);
+					} else if(amtPlayed < 2 && hasEnoughWeapons(2-amtPlayed)) {
+						playWeakestWeapons(playableCards, 2-amtPlayed);
+					}
 				}
+	}
+	
+	//helper methods for play1
+	public ArrayList<Adventure> grabAndSortPlayableCardsInDecreasingOrderOfBPs() {
+		return getStrongestHand(IncreasingOrDecreasing.DECREASING);
+	}
+	
+	public boolean hasAllyOrAmour(ArrayList<Adventure> playableCards) {
+		return false;
+	}
+	
+	public int playUpToTwoAlliesOrAmours(ArrayList<Adventure> playableCards) {
+		return 0;
+	}
+	
+	public boolean hasEnoughWeapons(int req) {
+		return false;
+	}
+	
+	public int playWeakestWeapons(ArrayList<Adventure> playableCards, int req) {
+		return 0;
 	}
 }

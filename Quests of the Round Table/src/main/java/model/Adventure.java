@@ -26,7 +26,7 @@ public abstract class Adventure implements Card{
 		System.out.println("Name:" + name + "\n");
 	}
 	
-	public int getBattlePoint() {
+	public int getBattlePoints() {
 		return battlePoints;
 	}
 	
