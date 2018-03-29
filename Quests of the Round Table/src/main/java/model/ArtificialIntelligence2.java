@@ -107,7 +107,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		
 		//if last stage could not be made with 40 bp
 		if(lastStage == null) {
-			//nextHighestFoeBPWithDupWeapon(currentBp, q.getSpecialFoes());
+			nextHighestFoeBPWithDupWeapon(currentBp, q.getSpecialFoes());
 		}
 		currentBp = lastStage.getBattlePoints();
 		restOfStages -= 1;
@@ -145,6 +145,10 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		//indexOfCardWithLowestBp = getHand().indexOf(Collections.min(getHand()));
 		
 		return foeStage;
+	}
+	
+	public Stage nextHighestFoeBPWithDupWeapon(int BPtoCompare, String spfs) {
+		return null;
 	}
 	
 	public Stage setUpStageToBeAtLeast40(Quest questCard) {
