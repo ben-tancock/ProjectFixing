@@ -101,7 +101,50 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	}
 
 	public void setUp2(Quest q) {
+		Stage lastStage = setUpStageToBeAtLeast40(q);
+		int restOfStages = q.getNumStages();
+		int currentBp = 0;
 		
+		//if last stage could not be made with 40 bp
+		if(lastStage == null) {
+			//nextHighestFoeBPWithDupWeapon(currentBp, q.getSpecialFoes());
+		}
+		currentBp = lastStage.getBattlePoints();
+		restOfStages -= 1;
+		
+		Stage secondLastStage = null;
+		for(Adventure a : getHand()) {
+			if(a instanceof Test) {
+				secondLastStage = new Stage((Test) a);
+				getHand().remove(a);
+				break; // only taking a test out if found
+			}
+		}
+		if (secondLastStage != null) {
+			restOfStages -= 1;
+		}
+		//setting up stages
+		List<Stage> restOfStagesList = new ArrayList<>();
+		for(int i = 0; i < restOfStages; i++) {
+			
+		}
+	}
+	
+	public Stage weakestFoeWithNoWeapons(Quest questCard) {
+		int indexOfCardWithLowestBp;
+		ArrayList<Foe> foes = new ArrayList<Foe>();
+		int smallestBp = getHand().get(0).getBattlePoints();
+		for(Adventure a : getHand()) {
+			if(a instanceof Foe) {
+				foes.add((Foe)a);
+			}
+		}
+		Foe weakestFoe = Collections.min(foes,(c1, c2)-> c2.getFoeBP(questCard.getSpecialFoes()));
+		Stage foeStage = new Stage(weakestFoe, new ArrayList<Weapon>());
+		//Collections.sort(, (c1, c2)-> c2.getBattlePoint());
+		//indexOfCardWithLowestBp = getHand().indexOf(Collections.min(getHand()));
+		
+		return foeStage;
 	}
 	
 	public Stage setUpStageToBeAtLeast40(Quest questCard) {
