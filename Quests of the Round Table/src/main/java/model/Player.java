@@ -564,5 +564,14 @@ public abstract class Player {
 		//notifyListeners("rankset", this.rank, r);
 		setRank(r);
 	}
+	
+	//discarding foes with BP less than 20 0r 25 ....needed for AI
+	public void DiscardFoesOfLessThansomethingPoints(int point) {
+		for(Adventure a : getHand()) {
+			if(a instanceof Foe && a.getBattlePoints() < point) {
+				getHand().remove(a);
+			}
+		}
+	}
 
 }

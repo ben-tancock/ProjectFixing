@@ -56,6 +56,10 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 
 	@Override
 	public boolean doIParticipantInQuest(Players p, Quest q) {
+		if(incrementByTenPerStage(q) && twoFoesUnderXBP(25,q)) {
+			play2(q);
+			return true;
+		}
 		//q.play2(this)?
 		//if(I can increase my BP by 10 each stage AND I have atleast 2 foes of less than 25 BP) {
 		//  play2() {
@@ -117,7 +121,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 			if(a instanceof Test) {
 				secondLastStage = new Stage((Test) a);
 				getHand().remove(a);
-				break; // only taking a test out if found
+				//break; // only taking a test out if found
 			}
 		}
 		if (secondLastStage != null) {
@@ -126,7 +130,16 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		//setting up stages
 		List<Stage> restOfStagesList = new ArrayList<>();
 		for(int i = 0; i < restOfStages; i++) {
-			
+			Stage nextLastStage = weakestFoeWithNoWeapons(q);
+			currentBp = nextLastStage.getBattlePoints();
+			restOfStagesList.add(nextLastStage);
+		}
+		if(secondLastStage != null) {
+			restOfStagesList.add(secondLastStage);
+		}
+		restOfStagesList.add(lastStage);
+		for(Stage s : restOfStagesList) {
+			q.addStage(s);
 		}
 	}
 	
@@ -168,7 +181,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 			stageBP =+ w.getBattlePoints();
 			iter++;
 		}
-		if(stageBP >= 50) {
+		if(stageBP >= 40) {
 			getHand().remove(f);
 			getHand().removeAll(weapons);
 			return new Stage(f, weapons);
@@ -177,6 +190,31 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		}
 	}
 	
+	public boolean incrementByTenPerStage(Quest q) {
+		int bpCounter = 1;
+		ArrayList<Adventure>cardsWithTenBp = new ArrayList<Adventure>();
+		for(Adventure a : getHand()) {
+			if(a.getBattlePoints() % 10 == 0) {
+				cardsWithTenBp.add(a);
+				//bpCounter++;
+			}
+		}
+		Collections.sort(cardsWithTenBp, (c1, c2)-> c2.getBattlePoints());
+		for(Adventure a : cardsWithTenBp) {
+			if(a.getBattlePoints() % 10 != bpCounter) {
+				cardsWithTenBp.remove(a);
+			}
+			bpCounter++;
+		}
+		if(q.getNumStages() == cardsWithTenBp.size()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void play2(Quest q) {
+		
+	}
 	
 	public ArrayList decideWhatToPlay() {
 		ArrayList<Adventure> cardsToPlay = new ArrayList<>();
