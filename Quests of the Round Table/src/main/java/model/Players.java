@@ -81,6 +81,9 @@ public class Players {
 			case "card played":
 				listeners.get(0).onAdventureCardPlayed(p, card, null);
 				break;
+			case "card discarded":
+				listeners.get(0).onAdventureCardDiscard(p);
+				break;
 		}
 	}
 	

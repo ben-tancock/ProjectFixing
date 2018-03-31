@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -58,19 +59,20 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	}
 
 	@Override
-	public int nextBid() {
-		//if(has bid already) {
-		//	return 0;
-		//}
-		//if(foes of less than 20 points are in hand) {
-		//	return numFoesWithLessThan20Points;
-		//}
+	public int nextBid(Quest q) {
+		if(getBid() > 0) {
+			return 0;
+		}
+		if(containsFoeWithLessThan20BP(q)) {
+		    setBid(numFoesWithLessThan20BP(q));
+		    return getBid();
+		}
 		return 0;
 	}
 
 	@Override
 	public List<Adventure> discardAfterWinningTest() {
-		//discard foes of less than 20 points in hand
+		discardFoesOfLessThansomethingPoints(20);
 		return null;
 	}
 	
@@ -125,6 +127,7 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 		int stageBP = 0;
 		//Choose foe with highest BP and increase stage BP with that
 		Foe f = getFoeWithHighestBP(card.getSpecialFoes());
+		stageBP += f.getFoeBP(card.getSpecialFoes());
 		
 		ArrayList<Weapon> weapons = new ArrayList<>();
 		//We need to keep grabbing the weapon with the highest battlepoints until the stage battlepoints are atleast 50.
@@ -149,6 +152,36 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	}
 	
 	public Stage nextHighestFoeBPWithDupWeapon(int BPtoCompare, String spfs) {
+		HashMap<Integer, Integer> foeBPMap = new HashMap<>();
+		for(Adventure card : getHand()) {
+			if(card instanceof Foe) {
+				foeBPMap.put(Integer.valueOf(getHand().indexOf(card)), ((Foe)card).getFoeBP(spfs));
+			}
+		}
+		ValueComparator valueComparator = new ValueComparator(foeBPMap);
+		TreeMap<Integer, Integer> sortedFoeBPMap = new TreeMap<>(valueComparator);
+		int indexOfHighestBPFoe = sortedFoeBPMap.lastKey().intValue();
+		Foe f = (Foe)getHand().get(indexOfHighestBPFoe);
+		List<Object> duplicateWeapons = Arrays.asList(findDuplicateWeapons().toArray());
+		
+		int totalBP = 0;
+		totalBP += f.getFoeBP(spfs);
+		totalBP += ((Weapon)duplicateWeapons.get(0)).getBattlePoints();
+		while(totalBP >= BPtoCompare) {
+			totalBP -= ((Weapon)duplicateWeapons.get(0)).getBattlePoints();
+			duplicateWeapons.remove(0);
+			if(duplicateWeapons.isEmpty()) {
+				break;
+			}
+			totalBP += ((Weapon)duplicateWeapons.get(0)).getBattlePoints();
+		}
+		if(totalBP < BPtoCompare) {
+			ArrayList<Weapon> weapon = new ArrayList<>();
+			if(duplicateWeapons != null) {
+				weapon.add((Weapon)duplicateWeapons.get(0));
+			}
+			return new Stage(f, weapon);
+		}
 		return null;
 	}
 	
@@ -167,25 +200,25 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	
 	public void play1(Quest q) {
 		QuestHandler qh = QuestHandler.getInstance();
-				if(q.getStages().get(qh.getCurrentStage()).getTest() != null) {
-					nextBid();
-	    			if(q.getParticipants().size() == 1 && q.getParticipants().contains(this)) {
-						discardAfterWinningTest();
-					}
-	            } else {
-		//			sort available allies/amour/weapons in decreasing order of BPs
-	            	int amtPlayed = 0;
-	            	ArrayList<Adventure> playableCards = grabAndSortPlayableCardsInDecreasingOrderOfBPs();
-	            	if(qh.getCurrentStage() == q.getNumStages() - 1) { //if it's the last stage
-	            		for(Adventure card : playableCards) {
-							Players.notifyListeners("card played", this, card);
-						}
-				    } else if (hasAllyOrAmour(playableCards)) {
-						amtPlayed += playUpToTwoAlliesOrAmours(playableCards);
-					} else if(amtPlayed < 2 && hasEnoughWeapons(2-amtPlayed)) {
-						playWeakestWeapons(playableCards, 2-amtPlayed);
-					}
-				}
+		if(q.getStages().get(qh.getCurrentStage()).getTest() != null) {
+			nextBid(q);
+	    	if(q.getParticipants().size() == 1 && q.getParticipants().contains(this)) { //this guy one
+				discardAfterWinningTest();
+			}
+	    } else {
+	        //sort available allies/amour/weapons in decreasing order of BPs
+	       	int amtPlayed = 0;
+	        ArrayList<Adventure> playableCards = grabAndSortPlayableCardsInDecreasingOrderOfBPs();
+	        if(qh.getCurrentStage() == q.getNumStages() - 1) { //if it's the last stage
+	           	for(Adventure card : playableCards) {
+	           		Players.notifyListeners("card played", this, card);
+	           	}
+			} else if (hasAllyOrAmour(playableCards)) {
+				amtPlayed += playUpToTwoAlliesOrAmours(playableCards);
+			} else if(amtPlayed < 2) {
+				playWeakestWeapons(playableCards, 2-amtPlayed);
+			}
+	    }	
 	}
 	
 	//helper methods for play1
@@ -194,18 +227,62 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	}
 	
 	public boolean hasAllyOrAmour(ArrayList<Adventure> playableCards) {
+		for(Adventure a : playableCards) {
+			if(a instanceof Ally || a instanceof Amour) {
+				return true;
+			}
+		}
 		return false;
 	}
 	
 	public int playUpToTwoAlliesOrAmours(ArrayList<Adventure> playableCards) {
-		return 0;
-	}
-	
-	public boolean hasEnoughWeapons(int req) {
-		return false;
+		int count = 0;
+		for(Adventure a : playableCards) {
+			if(count >= 2) {
+				break;
+			}
+			if(a instanceof Amour && getAmour().size() > 0) {
+				Players.notifyListeners("card played", this, a);
+				playableCards.remove(a);
+				count ++;
+			}
+			if(a instanceof Ally) {
+				Players.notifyListeners("card played", this, a);
+				playableCards.remove(a);
+				count ++;
+			}
+		}
+		return count;
 	}
 	
 	public int playWeakestWeapons(ArrayList<Adventure> playableCards, int req) {
+		//Want the weakest first, so reverse the list
+		Collections.reverse(playableCards);
+		int count = 0;
+		//now play the weakest weapons
+		for(Adventure a : playableCards) {
+			if(count >= req) {
+				break;
+			}
+			if(a instanceof Weapon) {
+				Players.notifyListeners("card played", this, a);
+				playableCards.remove(a);
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public boolean containsFoeWithLessThan20BP(Quest q) {
+		for(Adventure a : getHand()) {
+			if(a instanceof Foe && ((Foe)a).getFoeBP(q.getSpecialFoes()) < 20) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public int numFoesWithLessThan20BP(Quest q) {
 		return 0;
 	}
 }

@@ -438,6 +438,10 @@ public abstract class Player {
 		return bid;
 	}
 	
+	public void setBid(int bid) {
+		this.bid = bid;
+	}
+	
 	public void drawCard(int j, AdventureDeck deck) { // to do: when player receives card from AD, remove card from AD
 		if(deck.size() == 0) {
 			Players.notifyListeners("deck empty", this, j);
@@ -566,10 +570,11 @@ public abstract class Player {
 	}
 	
 	//discarding foes with BP less than 20 0r 25 ....needed for AI
-	public void DiscardFoesOfLessThansomethingPoints(int point) {
+	public void discardFoesOfLessThansomethingPoints(int point) {
 		for(Adventure a : getHand()) {
 			if(a instanceof Foe && a.getBattlePoints() < point) {
-				getHand().remove(a);
+				remove(getHand(), PlayGame.getInstance().getADiscard(), a);
+				Players.notifyListeners("card discarded", this, a);
 			}
 		}
 	}

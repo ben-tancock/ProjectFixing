@@ -83,7 +83,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	}
 
 	@Override
-	public int nextBid() {
+	public int nextBid(Quest q) {
 		//if(foes of less than 25 points are in hand AND first round) {
 		//	return numFoesWithLessThan25Points;
 		//}

@@ -14,7 +14,7 @@ public interface AIStrategies {
 	public boolean doIParticipantInQuest(Players p, Quest q);
 	
 	//Deciding on how much to bid.
-	public int nextBid();
+	public int nextBid(Quest q);
 	
 	//Deciding on which cards to discard if test is won.
 	public List<Adventure> discardAfterWinningTest();
