@@ -534,7 +534,7 @@ public class PlayGame extends Application{
 					setBehaviour(view.getPlayer4Surface());
 				}
 			}
-			
+			//
 		}
 		
 	}
