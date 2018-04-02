@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -214,6 +215,28 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	
 	public void play2(Quest q) {
 		
+	}
+	
+	public boolean foesWithlessThan25Points(Quest q) {
+		for(Adventure a : getHand()) {
+			if(a instanceof Foe && ((Foe) a).getFoeBP(q.getSpecialFoes())< 25) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//finding duplicate foes
+	public ArrayList<Foe> findDuplicateFoes() {
+		ArrayList<Foe> duplicateFoes = new ArrayList<Foe>();
+		Set<Foe>testFoes = new HashSet<>();
+		for(Adventure a : getHand()) {
+			if(a instanceof Foe && !testFoes.add((Foe) a)) {
+				duplicateFoes.add((Foe) a);
+			}
+		}
+		
+		return duplicateFoes;
 	}
 	
 	public ArrayList decideWhatToPlay() {
