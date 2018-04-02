@@ -15,6 +15,7 @@ import javafx.scene.Node;
 //import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Adventure;
 import model.AdventureDeck;
@@ -55,7 +56,7 @@ public class PlayGame extends Application{
 	private static boolean isTie; // tournament tie
 	private static boolean isQuest;
 	private static boolean isSettingUpStage;
-	private static boolean overflow;
+	private static boolean Overflow;
 	
 	
 	
@@ -332,7 +333,9 @@ public class PlayGame extends Application{
 			if(sDeck.get(i) instanceof Tournament) {
 				sDeck.set(0, sDeck.get(i));
 			}
-		}
+		}	
+		
+		setHand(p);
 		
 		for(Player pl : players.getPlayers()) {
 			pl.setHandState(CardStates.FACE_DOWN);
@@ -357,7 +360,8 @@ public class PlayGame extends Application{
 		}
 		
 		//we want to make sure that allies have the right BP/Bids
-		allyCheck();
+		System.out.println("bp before ally check: " + p.getBattlePoints());
+		allyCheck(p);
 		
 		if(qh != null && qh.getCard() != null) {
 			view.update(null, players, sDeck, sDiscard, qh.getCard());
@@ -365,7 +369,15 @@ public class PlayGame extends Application{
 			view.update(null, players, sDeck, sDiscard, null);
 		}
 		
-		if(overflow) {
+		if(qh != null) {
+			for(Ally a : p.getAllies()) {
+				
+					a.ability(qh.getCard().getName(), p.getAllies()); // TO DO: handle for null (no story card drawn)
+			}
+		}
+		
+		
+		if(Overflow) {
 			//view.cardOverflowPrompt(p, numCards)
 			System.out.println("test overflow");
 			view.cardOverflowPrompt(p, p.getHand().size() - 12);
@@ -390,30 +402,32 @@ public class PlayGame extends Application{
 	
 	
 	public static void cardClicked(Adventure a, Player p) {
-		System.out.println("test card clicked");
-		QuestHandler qh = QuestHandler.getInstance();
+		System.out.println("bp before ally check: " + p.getBattlePoints());
 		
-		if(overflow) {
-			if (a instanceof Amour) {
-				if(p.getAmour().size() < 1) {
-					p.remove(p.getHand(), p.getAmour(), a);
-				} else {
-					view.promptTooManyAmour();
-					p.remove(p.getHand(), aDiscard, a); //discard if amour is already on playing field.
-				}
+		if(Overflow) {
+			if(a instanceof Weapon) {
+				p.remove(p.getHand(), aDiscard, a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if (a instanceof Foe) {
+				p.remove(p.getHand(), aDiscard, a);
+				view.update(null, players, sDeck, sDiscard, null);
+			}
+			else if (a instanceof Amour) {
+				p.remove(p.getHand(), p.getAmour(), a);
+				view.update(null, players, sDeck, sDiscard, null);
 			}
 			else if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
-				allyCheck();
-			} else {
-				p.remove(p.getHand(), aDiscard, a); //discard if test, weapon, or foe
+				view.update(null, players, sDeck, sDiscard, null);
+				allyCheck(p);
 			}
 			
 			// when an overflow is done, a prompt MAY follow it, but the prompt needs to wait until the overflow is done
 			// for now the only solution i can think of is moving all the prompts to happen after overflow and on doTurn
 			if(p.getHand().size() - 12 <= 0) {
 				System.out.println("test end overflow");
-				overflow = false;
+				Overflow = false;
 				if(isTournament) {
 					//prompt 
 				}
@@ -426,17 +440,24 @@ public class PlayGame extends Application{
 				//doTurn(p);
 			}
 		}
+		else if(a.getName().equals("mordred")) {
+			p.remove(p.getHand(), aDiscard, a);
+			doMordred(p);
+		}
 		else if(isPlaying) {
-			System.out.println("test isplaying execute");
+			System.out.println("test is playing execute");
 			if(a instanceof Weapon) {
 				p.remove(p.getHand(), p.getWeapons(), a);
+				view.update(null, players, sDeck, sDiscard, null);
 			}
 			else if (a instanceof Amour) {
 				p.remove(p.getHand(), p.getAmour(), a);
+				view.update(null, players, sDeck, sDiscard, null);
 			}
 			else if(a instanceof Ally) {
 				p.remove(p.getHand(), p.getAllies(), a);
-				allyCheck();
+				view.update(null, players, sDeck, sDiscard, null);
+				allyCheck(p);
 			}
 			else {
 				
@@ -447,7 +468,7 @@ public class PlayGame extends Application{
 			
 		}
 		else if(isSettingUpStage) {
-			
+			QuestHandler qh = QuestHandler.getInstance();
 			if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && !qh.getFoeSelected()) {
 				if(a instanceof Foe) {
 					//stage counter increased only after the foe has chosen weapons
@@ -459,6 +480,7 @@ public class PlayGame extends Application{
 					p.getHand().remove(a);
 					model.Stage stage = new model.Stage((Test)a);
 					qh.getCard().addStage(stage);
+					view.update(null, players, sDeck, sDiscard, qh.getCard());
 					qh.nextStage();
 					qh.onEnd();
 				}
@@ -472,8 +494,10 @@ public class PlayGame extends Application{
 		}
 		else {
 			if(a instanceof Ally) {
+				System.out.println("card bp: " + ((Ally) a).getBattlePoints());
 				p.remove(p.getHand(), p.getAllies(), a);
-				allyCheck();
+				view.update(null, players, sDeck, sDiscard, null);
+				allyCheck(p);
 			} else if (a instanceof Foe && a.getName().equals("mordred")) {
 				//play mordred
 			}
@@ -482,8 +506,127 @@ public class PlayGame extends Application{
 				//view.update(null, players, sDeck, sDiscard, null);
 			}
 		}
-		view.update(null, players, sDeck, sDiscard, qh.getCard());
+		allyCheck(p);
+		System.out.println("bp after ally check: " + p.getBattlePoints());
 	}
+	
+	public static void doMordred(Player p) {
+		// TO DO: have event handlers for ALL players Ally cards in play
+		// have all players ally cards do that bring to front thing to make them easier to see
+		
+		for(int i = 0; i < PlayGame.getInstance().getPlayers().getPlayers().size(); i++) {
+			System.out.println(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName());
+			if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() != p.getName()) {
+				if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() == "Player 1") {
+					System.out.println("test behaviour p1");
+					setBehaviour(view.getPlayerSurface());
+				}
+				else if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() == "Player 2") {
+					System.out.println("test behaviour p2");
+					setBehaviour(view.getPlayer2Surface());
+				}
+				else if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() == "Player 3") {
+					System.out.println("test behaviour p3");
+					setBehaviour(view.getPlayer3Surface());
+				}
+				else {
+					System.out.println("test behaviour p4");
+					setBehaviour(view.getPlayer4Surface());
+				}
+			}
+			
+		}
+		
+	}
+	
+	public static void setBehaviour(HBox field) {
+		for(Node n : field.getChildren()) {
+			n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					System.out.println("test field card clicked");
+				}
+				
+			});
+			
+			/*n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					((HBox)n).setPadding(new Insets(0, 0, 0, 0));
+				}
+			});
+			
+			n.setOnMouseExited(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					((HBox)n).setPadding(new Insets(0, -50, 0, 0));	
+				}
+			});*/
+		}
+		
+		
+	}
+	
+	public static void setBehaviour(VBox field) {
+		for(Node n : field.getChildren()) {
+			n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+
+				@Override
+				public void handle(MouseEvent arg0) {
+					System.out.println("test field card clicked");
+				}
+				
+			});
+			
+		/*	n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					((VBox)n).setPadding(new Insets(0, 0, 0, 0));
+				}
+			});
+			
+			n.setOnMouseExited(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					((VBox)n).setPadding(new Insets(0, -50, 0, 0));	
+				}
+			});*/
+		}
+	}
+	
+	public static void setHand(Player p) {
+		while(p.getHand().size() < 12) {
+			p.drawCard(1, aDeck);
+		}
+		
+		Ally gawain = new Ally("sir_gawain", 10, 0);
+		Ally pellinore = new Ally ("king_pellinore", 10, 0);
+		Ally percival = new Ally ("sir_percival", 5, 0);
+		Ally tristan = new Ally ("sir_tristan", 10, 0);
+		Ally arthur = new Ally ("king_arthur", 10, 2);
+		Ally guinevere = new Ally ("queen_guinevere", 0, 3);
+		Ally merlin = new Ally ("merlin", 0, 0);
+		Ally galahad = new Ally ("sir_galahad", 15, 0);
+		Ally laneclot = new Ally ("sir_lancelot", 15, 0);
+		Ally iseult = new Ally ("queen_iseult", 0, 2);
+		Foe mordred = new Foe ("mordred", 30, 30);
+		
+		p.getHand().set(0, gawain);
+		p.getHand().set(1, pellinore);
+		p.getHand().set(2, percival);
+		p.getHand().set(3, tristan);
+		p.getHand().set(4, arthur);
+		p.getHand().set(5, guinevere);
+		p.getHand().set(6, merlin);
+		p.getHand().set(7, galahad);
+		p.getHand().set(8, laneclot);
+		p.getHand().set(9, iseult);
+		p.getHand().set(10, mordred);
+		//p.getHand().set(11, gawain);
+		
+	}
+	
 	
 	public static void allyClicked(Ally a) {
 		if(a.getName() == "merlin") {
@@ -494,8 +637,20 @@ public class PlayGame extends Application{
 		}
 	}
 	
-	public static void allyCheck() {
+	public static void allyCheck(Player p) {
+		//System.out.println("test ally check");
 		QuestHandler qh = QuestHandler.getInstance();
+		for(Ally a : p.getAllies()) {
+			if(qh != null) {
+				//System.out.println("test ally ability");
+				a.ability(qh.getCard().getName(), p.getAllies()); // TO DO: handle for null (no story card drawn)
+			}
+			else {
+				//System.out.println("test ally ability quest null");
+				a.ability(p.getAllies());
+			}
+		}
+		/*QuestHandler qh = QuestHandler.getInstance();
 		for(Player p : players.getPlayers()) {
 			for(Ally a : p.getAllies()) {
 				//Check Sir Percival
@@ -530,7 +685,7 @@ public class PlayGame extends Application{
 				
 				//Check Merlin
 			}
-		}
+		}*/
 	}
 	
 	
@@ -544,7 +699,7 @@ public class PlayGame extends Application{
 			}*/
 			
 			
-			overflow = true;
+			Overflow = true;
 			doTurn(p);
 			//view.cardOverflowPrompt(p, p.getHand().size() - 12);
 			//int numDiscard = p.getHand().size() - 12;

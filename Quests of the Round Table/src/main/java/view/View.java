@@ -99,8 +99,12 @@ public class View extends Application {
 	private HBox player1Cards;
 	private HBox player2Cards;
 	private HBox player3Cards;
+	private HBox player4Cards;
 	private HBox stageSpace;
 	private HBox player1PlayingSurface;
+	private VBox player2PlayingSurface;
+	private HBox player3PlayingSurface;
+	private VBox player4PlayingSurface;
 	public Button endButton;
 	
 	private static List<ControlHandler> listeners = new ArrayList<ControlHandler>();
@@ -131,8 +135,36 @@ public class View extends Application {
 		return playerSpace;
 	}
 	
+	/*public HBox getSurface(int i) {
+		if(i == 1) {
+			return getPlayerSurface();
+		}
+		else if (i == 2) {
+			return getPlayer2Surface();
+		}
+		else if (i == 3) {
+			return getPlayer3Surface();
+		}
+		else {
+			return getPlayer4Surface();
+		}
+		
+	}*/
+	
 	public HBox getPlayerSurface() {
 		return player1PlayingSurface;
+	}
+	
+	public VBox getPlayer2Surface() {
+		return player2PlayingSurface;
+	}
+	
+	public HBox getPlayer3Surface() {
+		return player3PlayingSurface;
+	}
+	
+	public VBox getPlayer4Surface() {
+		return player4PlayingSurface;
 	}
 	
 	//player 2
@@ -422,16 +454,17 @@ public class View extends Application {
 		player1Cards = new HBox();
 		player2Cards = new HBox();
 		player3Cards = new HBox();
-		VBox player4Cards = new VBox();
+		player4Cards = new HBox();
 		
 		player1PlayingSurface = new HBox();
 		HBox player1ShieldSurface = new HBox();
-		VBox player2PlayingSurface = new VBox();
+		//VBox player2PlayingSurface = new VBox();
+		player2PlayingSurface = new VBox();
 		VBox player2ShieldSurface = new VBox();
-		HBox player3PlayingSurface = new HBox();
+		player3PlayingSurface = new HBox();
 		HBox player3ShieldSurface = new HBox();
 		VBox player4ShieldSurface = new VBox();
-		VBox player4PlayingSurface = new VBox();
+		player4PlayingSurface = new VBox();
 		HBox storyDeckSpace = new HBox();
 		HBox questStageSpace = new HBox(-50);
 		
@@ -439,24 +472,6 @@ public class View extends Application {
 		endButton.setText("End Turn");
 		endButton.setPrefSize(100, 100);
 		endButton.setAlignment(Pos.BASELINE_CENTER);
-		
-		
-		/*finishedButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent arg0) {
-				if(twoPlayerStage != null) {
-					twoPlayerStage.getScene().getRoot().setEffect(null);
-				} else if(threePlayerStage != null) {
-					threePlayerStage.getScene().getRoot().setEffect(null);
-				} else if(fourPlayerStage != null) {
-					fourPlayerStage.getScene().getRoot().setEffect(null);
-				}
-				dialog.close();
-				buttonClicked = true;
-			}
-		});*/
-		
-		//endButton.setOnMouseClicked(viewController);
 		
 		if(quest != null) {
 			for(model.Stage stage : quest.getStages()) {
@@ -743,6 +758,18 @@ public class View extends Application {
 	
 	public HBox getPlayerCards() {
 		return player1Cards;
+	}
+	
+	public HBox getPlayer2Cards() {
+		return player2Cards;
+	}
+	
+	public HBox getPlayer3Cards() {
+		return player3Cards;
+	}
+	
+	public HBox getPlayer4Cards() {
+		return player4Cards;
 	}
 	
 	public VBox discardPileForStoryDeck(StoryDiscard sDiscard) {

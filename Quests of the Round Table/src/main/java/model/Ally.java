@@ -64,17 +64,78 @@ public class Ally extends Adventure{
 		bids = b;
 	}
 	
-	public void ability(String Qname, List<Ally> a) {
-		
+	public void ability(List<Ally> pAllies) {
+		System.out.println("test ability");
+		if (this.getName() == "sir_tristan") {
+			setBattlePoints(10);
+			for(Ally a : pAllies) {
+				if (a.getName() == "queen_iseult") {
+					System.out.println("Tristan ability execute");
+					setBattlePoints(20);
+				}
+			}
+		}
+		else if (this.getName() == "queen_iseult") {
+			setBids(2);
+			for(Ally a : pAllies) {
+				if (a.getName() == "sir_tristan") {
+					System.out.println("Iseult ability execute");
+					setBids(4);
+				}
+			}
+		}
+		else{
+			// do nothing
+		}
+	}
+	
+	public void ability(String Qname, List<Ally> pAllies) {
+		System.out.println("test ability");
 		if(this.getName() == "sir_gawain") {
+			setBattlePoints(10);
 			if(Qname == "test_of_the_green_knight") {
 				System.out.println("test gawain");
+				setBattlePoints(20);
+			}
+		}
+		else if (this.getName() == "king_pellinore") {
+			setBids(0);
+			if(Qname == "search_for_the_questing_beast") {
+				System.out.println("test pellinore");
+				setBids(4);
 			}
 		}
 		else if(this.getName() == "sir_percival") {
+			setBattlePoints(5);
 			if(Qname == "search_for_the_holy_grail") {
 				System.out.println("test percival");
+				setBattlePoints(20);
 			}
+		}
+		else if (this.getName() == "sir_lancelot") {
+			setBattlePoints(15);
+			if(Qname == "defend_the_queen's_honor") {
+				setBattlePoints(25);
+			}
+		}	
+		else if (this.getName() == "sir_tristan") {
+			setBattlePoints(10);
+			for(Ally a : pAllies) {
+				if (a.getName() == "queen_iseult") {
+					setBattlePoints(20);
+				}
+			}	
+		}
+		else if (this.getName() == "queen_iseult") {
+			setBids(2);
+			for(Ally a : pAllies) {
+				if (a.getName() == "sir_tristan") {
+					setBids(4);
+				}
+			}
+		}
+		else{
+			// do nothing
 		}
 			
 	}
