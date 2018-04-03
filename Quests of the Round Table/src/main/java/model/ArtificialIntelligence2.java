@@ -6,12 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import control.QuestHandler;
+
 public class ArtificialIntelligence2 extends Player implements AIStrategies {
 
 	@Override
 	public boolean doIParticipateInTournament(Players p, Tournament t) {
-		//getTo50BPWithAsFewCardsAsPossible()
-		
+		Players participants = new Players();
+		participants.getPlayers().addAll(t.getParticipants());
+		//adding the partcipating AI
+		participants.getPlayers().add(this);
+		decideWhatToPlay();
 		return true;
 	}
 
@@ -24,35 +29,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 			return true;
 		}
 		return false;
-	/*	if(checkWinOrEvolve(p, p.getPlayers().size())){
-			Players participants = new Players();
-			participants.getPlayers().addAll(q.getParticipants());
-			//adding AI to participants
-			participants.getPlayers().add(this);
-			if(checkWinOrEvolve(p, p.getPlayers().size())) {
-				List <Adventure>strongestHand = getStrongestHand();
-				for(Adventure a : strongestHand) {
-					Players.notifyListeners("card played", this, a);
-				}
-			}else {
-				Set<Weapon>duplicateWeapons = findDuplicateWeapons();
-				for(Weapon w : duplicateWeapons) {
-					Players.notifyListeners("card played", this, w);
-				}
-			}
-			return true;
-		}
-		//if(Someone else could win/evolve by winning quest) {
-		//	return false;
-		//} else if(There are enough foes in hand(-1 if they have test) and they have increasing battle points) {
-		//  q.setup2(); {
-		//		last stage is atleast 40
-		//		second last stage is a test
-		//		setup stages in valid order to have weakest foes without weapons
-		//  }
-		//	return true;
-		//}
-		return false;*/
+	
 	}
 
 	@Override
@@ -214,9 +191,44 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	}
 	
 	public void play2(Quest q) {
-		
+		QuestHandler questHandler = QuestHandler.getInstance();
+		if(q.getStages().get(questHandler.getCurrentStage()).getTest() != null) {
+			//nextBid
+			//last stage
+		}else if(questHandler.getCurrentStage() == q.getNumStages() - 1) {
+			//
+		}else {
+			incrementOf10WithAmourFirst();
+		}
 	}
 	
+	public ArrayList<Adventure> incrementOf10WithAmourFirst(){
+		ArrayList<Adventure> increasingCards = new ArrayList<Adventure>();
+		int bpCounter = 1;
+		for(Adventure a : getHand()) {
+			if(a instanceof Amour && (a.getBattlePoints() / 10 == bpCounter) && 
+					(!(increasingCards.contains(a)))) {
+				increasingCards.add(a);
+				bpCounter++;
+			}
+		}
+		for (Adventure a : getHand()) {
+			if(a instanceof Ally && (a.getBattlePoints() / 10 == bpCounter) && 
+					(!(increasingCards.contains(a)))) {
+				increasingCards.add(a);
+				bpCounter++;
+			}
+		}
+		for(Adventure a : getHand()) {
+			if(a instanceof Weapon && (a.getBattlePoints() / 10 == bpCounter)) {
+				increasingCards.add(a);
+				bpCounter++;
+			}
+		}
+		return increasingCards;
+	}
+	
+	//foes with less than 25 battle points
 	public boolean foesWithlessThan25Points(Quest q) {
 		for(Adventure a : getHand()) {
 			if(a instanceof Foe && ((Foe) a).getFoeBP(q.getSpecialFoes())< 25) {
@@ -225,6 +237,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		}
 		return false;
 	}
+	
 	
 	//finding duplicate foes
 	public ArrayList<Foe> findDuplicateFoes() {
@@ -239,7 +252,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		return duplicateFoes;
 	}
 	
-	public ArrayList decideWhatToPlay() {
+	public ArrayList<Adventure> decideWhatToPlay() {
 		ArrayList<Adventure> cardsToPlay = new ArrayList<>();
 		int aipoints = 0;
 		for(Adventure a : getStrongestHand(IncreasingOrDecreasing.INCREASING)) {
