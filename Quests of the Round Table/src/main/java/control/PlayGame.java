@@ -378,7 +378,6 @@ public class PlayGame extends Application{
 		
 		
 		if(Overflow) {
-			//view.cardOverflowPrompt(p, numCards)
 			System.out.println("test overflow");
 			view.cardOverflowPrompt(p, p.getHand().size() - 12);
 		}
