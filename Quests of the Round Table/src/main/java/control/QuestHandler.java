@@ -264,10 +264,15 @@ public class QuestHandler {
 	
 	public boolean playQuest() {
 		if(pg.getFoe() && numFoughtFoe == 0) {
+			
 			pg.getView().announceFoe();
-			for(Player p : getCard().getParticipants()) {
-				p.drawCard(1, deck);
+			System.out.println("Current participants: ");
+			for(Player part : quest.getParticipants()) {
+				System.out.println(part.getName());
 			}
+			pg.getView().rotate(pg);
+			quest.getParticipants().get(0).drawCard(1, deck);
+			playCards(quest.getParticipants().get(0));
 			/*
 			getCard().getStages().get(getCurrentStage()).getFoe().setState(CardStates.FACE_UP);
 			for(Weapon w : getCard().getStages().get(getCurrentStage()).getFoe().getWeapons()) {
@@ -284,7 +289,11 @@ public class QuestHandler {
 				System.out.println("test sponsoring");
 				askForSponsor(pg.getPlayers().getPlayers().get(0));
 			}
+			else if(PlayGame.getInstance().getSettingUpStage()) {
+				
+			}
 			else {
+				System.out.println("TEST ASKING FOR PARTICIPANT");
 				askForParticipant();
 			}
 		}
@@ -292,7 +301,7 @@ public class QuestHandler {
 	}
 	
 	public void onEnd() {
-		if(PlayGame.getInstance().getSettingUpStage()) {
+		if (currentStage == getCard().getNumStages() - 1 && PlayGame.getInstance().getSettingUpStage() == true){
 			if(foeSelected && selectedFoe != null) {
 				((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).setTranslateY(50);
 				((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).translateYProperty();
@@ -312,12 +321,37 @@ public class QuestHandler {
 				selectedFoe = null;
 				selectedWeapons = new ArrayList<>();
 			}
-		} else if (currentStage > getCard().getNumStages() - 1){
+			System.out.println("TEST LEAVE STAGE SETUP");
 			PlayGame.setSettingUpStage(false);
 			currentStage = 0;
 			isAskingForParticipants = true;
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
+			pg.getView().rotate(pg);
+		} else if(PlayGame.getInstance().getSettingUpStage()) {
+			System.out.println("Current Stage: " + getCurrentStage());
+			System.out.println("TEST STAGE SETUP");
+			if(foeSelected && selectedFoe != null) {
+				((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).setTranslateY(50);
+				((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(selectedFoe))).translateYProperty();
+				for(Weapon w : selectedWeapons) {
+					((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(w))).setTranslateY(50);
+					((HBox)PlayGame.getInstance().getView().getPlayerCards().getChildren().get(players.getPlayers().get(0).getHand().indexOf(w))).translateYProperty();
+				}
+				model.Stage stage = new model.Stage(selectedFoe, selectedWeapons);
+				players.getPlayers().get(0).getHand().remove(selectedFoe);
+				for(Weapon w : selectedWeapons) {
+					players.getPlayers().get(0).getHand().remove(w);
+				}
+				getCard().addStage(stage);
+				PlayGame.getInstance().getView().update(null, players, PlayGame.getInstance().getSDeck(), PlayGame.getInstance().getSDiscard(), getCard());
+				nextStage();
+				foeSelected = false;
+				selectedFoe = null;
+				selectedWeapons = new ArrayList<>();
+			}
 		} else if(numAsked >= pg.getPlayers().getPlayers().size() - 1 && getCard().getParticipants().size() > 0) {
 			//all players but the sponsor have been asked to participate and at least 1 participates.
+			System.out.println("TEST PARTICIPANTS DOING QUEST");
 			isAskingForParticipants = false;
 			currentStage++;
 			if(getCurrentStage() < getCard().getNumStages()) {
@@ -331,6 +365,7 @@ public class QuestHandler {
 					pg.setBidding(true);
 				}
 			} else {
+				System.out.println("TEST ENDING QUEST");
 				pg.setFoe(false);
 				pg.setBidding(false);
 				resolveQuest();
@@ -393,6 +428,9 @@ public class QuestHandler {
 	public void askForParticipant() {
 		if(!players.getPlayers().get(0).equals(getCard().getSponsor())) {
 			askParticipant(0);
+		} else {
+			pg.getView().rotate(pg);
+			pg.getView().rotate(pg);
 		}
 	}
 	
@@ -417,10 +455,11 @@ public class QuestHandler {
 		            System.out.println(pg.getPlayers().getPlayers().get(0).getName() + " sponsors the Quest");
 		            //players.getPlayers().get(0).drawCard(1, deck);
 		            //playCards(players.getPlayers().get(0));
-		            isSponsored = true;
+		            //isSponsored = true;
 		            PlayGame.setSettingUpStage(true);
 		            //pg.getView().promptStageSetup();
 		            // TO DO: NEED BUTTON FOR SUBMITTING STAGE (change end button functionality?) 
+		            isSponsored = true;
 		            setupStage(players.getPlayers().get(0));
 		            // -------------------------------------------------------------------------
 		            getCard().setSponsor(p);
