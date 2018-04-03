@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import control.PlayGame;
+import control.QuestHandler;
 
 public abstract class Player {
 	private static final Logger logger = LogManager.getLogger(Player.class);
@@ -558,6 +559,10 @@ public abstract class Player {
 		}
 	}
 	
+	public void sponsor(Quest q) {
+		q.setSponsor(this);
+	}
+	
 	public void remove(List<? extends Card> from, List<? extends Card> to, Card c) {
 		((List<Card>)to).add(c);
 		from.remove(c);
@@ -580,6 +585,9 @@ public abstract class Player {
 	}
 	
 	public boolean validBid(int numBids) {
+		if(numBids > QuestHandler.getInstance().getCurrentBid()) {
+			return true;
+		}
 		return false;
 	}
 

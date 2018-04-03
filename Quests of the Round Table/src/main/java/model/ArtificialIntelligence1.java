@@ -283,6 +283,12 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 	}
 	
 	public int numFoesWithLessThan20BP(Quest q) {
-		return 0;
+		int numFoes = 0;
+		for(Adventure a : getHand()) {
+			if(a instanceof Foe && ((Foe) a).getFoeBP(q.getSpecialFoes()) < 20) {
+				numFoes ++;
+			}
+		}
+		return numFoes;
 	}
 }
