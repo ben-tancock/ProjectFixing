@@ -335,7 +335,7 @@ public class PlayGame extends Application{
 			}
 		}	
 		
-		setHand(p);
+		//setHand(p);
 		
 		for(Player pl : players.getPlayers()) {
 			pl.setHandState(CardStates.FACE_DOWN);
@@ -594,7 +594,7 @@ public class PlayGame extends Application{
 			});*/
 		}
 	}
-	
+	/*
 	public static void setHand(Player p) {
 		while(p.getHand().size() < 12) {
 			p.drawCard(1, aDeck);
@@ -625,7 +625,7 @@ public class PlayGame extends Application{
 		p.getHand().set(10, mordred);
 		//p.getHand().set(11, gawain);
 		
-	}
+	}*/
 	
 	
 	public static void allyClicked(Ally a) {

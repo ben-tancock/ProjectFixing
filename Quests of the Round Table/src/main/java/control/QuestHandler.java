@@ -41,6 +41,7 @@ public class QuestHandler {
 	private PlayGame pg;
 	private static QuestHandler instance;
 	private boolean isSponsored;
+	private static int currentBid;
 	
 	public QuestHandler(Quest c, Players p, Player pr, PlayGame game, AdventureDeck d, AdventureDiscard di) {
 		quest = c;
@@ -80,6 +81,10 @@ public class QuestHandler {
 	
 	public ArrayList<Weapon> getSelectedWeapons() {
 		return selectedWeapons;
+	}
+	
+	public int getCurrentBid() {
+		return currentBid;
 	}
 
 	/*public boolean playQuest() {

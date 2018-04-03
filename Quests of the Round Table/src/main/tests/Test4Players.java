@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.junit.Rule;
 import org.junit.Test;
 
+import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.CardStates;
@@ -96,8 +97,30 @@ public class Test4Players {
 		
 		PlayGame playGame = new PlayGame(players, aDeck, aDiscard, sDeck, sDiscard);
 		playGame.getView().update(null, playGame.getPlayers(), playGame.getSDeck(),playGame.getSDiscard(), null);
-		playGame.doTurn(players.getPlayers().get(0));
+		PlayGame.doTurn(players.getPlayers().get(0));
 		player1.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "boar_hunt");
+		player1.sponsor(QuestHandler.getInstance().getCard());
+		assertEquals(QuestHandler.getInstance().getCard().getSponsor(), player1);
+		ArrayList<Adventure> stage1List = new ArrayList<>();
+		player1.remove(player1.getHand(), stage1List, player1.getHand().get(0));
+		QuestHandler.getInstance().getCard().addStage(new Stage((Foe)stage1List.get(0), new ArrayList<Weapon>()));
+		assertEquals(player1.getHand().size(), 11);
+		assertEquals((QuestHandler.getInstance().getCard().getStages().get(0).getFoe().getFoeBP(QuestHandler.getInstance().getCard().getSpecialFoes())), 10);
+		ArrayList<Adventure> stage2List = new ArrayList<>();
+		player1.remove(player1.getHand(), stage2List, player1.getCard(0));
+		player1.remove(player1.getHand(), stage2List, player1.getCard(0));
+		player1.remove(player1.getHand(), stage2List, player1.getCard(0));
+		ArrayList<Weapon> weaponList = new ArrayList<>();
+		weaponList.add((Weapon)stage2List.get(1));
+		weaponList.add((Weapon)stage2List.get(2));
+		QuestHandler.getInstance().getCard().addStage(new Stage((Foe)stage2List.get(0), weaponList));
+		assertEquals(player1.getHand().size(), 8);
+		assertEquals(QuestHandler.getInstance().getCard().getStages().get(1).getFoe().getFoeBP(QuestHandler.getInstance().getCard().getSpecialFoes()), 30);
+		QuestHandler.getInstance().getCard().addParticipant(player2);
+		QuestHandler.getInstance().getCard().addParticipant(player3);
+		QuestHandler.getInstance().getCard().addParticipant(player4);
+		
+		/*
 		for(Player p : players.getPlayers()) { //this is handled in PlayGame after a story card is played all the way through, so we put it here to catch it.
 			p.setHandState(CardStates.FACE_DOWN);
 		}
@@ -105,7 +128,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 27);
 		assertEquals(playGame.getSDiscard().size(), 1);
 		playGame.getView().rotate(playGame);
-		playGame.doTurn(players.getPlayers().get(0));
+		PlayGame.doTurn(players.getPlayers().get(0));
 		player2.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "prosperity_throughout_the_realm");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
@@ -123,7 +146,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 25);
 		assertEquals(playGame.getSDiscard().size(), 3);
 		playGame.getView().rotate(playGame);
-		playGame.doTurn(players.getPlayers().get(0));
+		playGame.doTurn(players.getPlayers().get(0));*/
 	}
 	
 	@Test
