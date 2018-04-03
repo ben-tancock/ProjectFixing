@@ -1762,4 +1762,8 @@ public class View extends Application {
 	
 	public void allDown() { // will set all cards face down
 	}
+	
+	public void announceFoe() {
+		
+	}
 }
