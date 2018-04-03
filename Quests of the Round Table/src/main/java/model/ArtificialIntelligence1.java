@@ -63,7 +63,7 @@ public class ArtificialIntelligence1 extends Player implements AIStrategies {
 		if(getBid() > 0) {
 			return 0;
 		}
-		if(containsFoeWithLessThan20BP(q)) {
+		if(containsFoeWithLessThan20BP(q) && validBid(numFoesWithLessThan20BP(q))) {
 		    setBid(numFoesWithLessThan20BP(q));
 		    return getBid();
 		}

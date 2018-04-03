@@ -578,5 +578,9 @@ public abstract class Player {
 			}
 		}
 	}
+	
+	public boolean validBid(int numBids) {
+		return false;
+	}
 
 }
