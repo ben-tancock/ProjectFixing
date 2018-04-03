@@ -192,13 +192,20 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	
 	public void play2(Quest q) {
 		QuestHandler questHandler = QuestHandler.getInstance();
+		
 		if(q.getStages().get(questHandler.getCurrentStage()).getTest() != null) {
 			//nextBid
 			//last stage
 		}else if(questHandler.getCurrentStage() == q.getNumStages() - 1) {
-			//
+			ArrayList<Adventure>strongestValidCombination = getStrongestHand(IncreasingOrDecreasing.DECREASING);
+			for(Adventure a : strongestValidCombination) {
+				Players.notifyListeners("card played", this, a);
+			}
 		}else {
 			incrementOf10WithAmourFirst();
+			for(Adventure a : incrementOf10WithAmourFirst()) {
+				Players.notifyListeners("card played", this, a);
+			}
 		}
 	}
 	
