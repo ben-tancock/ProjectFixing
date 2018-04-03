@@ -33,9 +33,10 @@ public class QuestUserLobby extends Application {
 	}
 	
 	public void update(String user, HashMap<String, String> users, String time) {
+		System.out.println("Setting up connected users stage");
 		VBox userSetup = new VBox();
-		Label connectedTime = new Label("Connected Time " + time);
-		Label connectedUsers = new Label("List of connected Users: ");
+		Label connectedTimeLabel = new Label("Connected Time " + time);
+		Label connectedUsersLabel = new Label("List of connected Users: ");
 		ListView<String>userListView = new ListView<>();
 		ObservableList<String> userList = FXCollections.observableArrayList();
 		
@@ -43,7 +44,13 @@ public class QuestUserLobby extends Application {
 			userList.add(entry.getValue());
 		}
 		userListView.setItems(userList);
-		userSetup.getChildren().addAll(connectedTime, connectedUsers, userListView);
+		userSetup.getChildren().add(connectedTimeLabel);
+		userSetup.getChildren().add(connectedUsersLabel);
+		userSetup.getChildren().add(userListView);
+		
+		System.out.println(connectedTimeLabel.getText());
+		System.out.println(connectedUsersLabel.getText());
+		System.out.println(userListView.getItems().toString());
 		
 		Button startGame = new Button("Start Game");
 		startGame.setPrefSize(300, 100);
@@ -55,7 +62,7 @@ public class QuestUserLobby extends Application {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				primStage.setScene(new Scene(userSetup, 800, 600, Color.BISQUE));
+				primStage.setScene(new Scene(userSetup, 800, 600));
 				primStage.show();
 				
 			}
