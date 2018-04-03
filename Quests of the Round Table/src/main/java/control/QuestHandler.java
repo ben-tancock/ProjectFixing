@@ -42,6 +42,7 @@ public class QuestHandler {
 	private static QuestHandler instance;
 	private boolean isSponsored;
 	private static int currentBid;
+	private static int numFoughtFoe;
 	
 	public QuestHandler(Quest c, Players p, Player pr, PlayGame game, AdventureDeck d, AdventureDiscard di) {
 		quest = c;
@@ -262,14 +263,21 @@ public class QuestHandler {
 	}*/
 	
 	public boolean playQuest() {
-		if(pg.getFoe()) { // has a foe been encountered?
-			
+		if(pg.getFoe() && numFoughtFoe == 0) {
+			pg.getView().announceFoe();
+			for(Player p : getCard().getParticipants()) {
+				p.drawCard(1, deck);
+			}
+			/*
+			getCard().getStages().get(getCurrentStage()).getFoe().setState(CardStates.FACE_UP);
+			for(Weapon w : getCard().getStages().get(getCurrentStage()).getFoe().getWeapons()) {
+				w.setState(CardStates.FACE_UP);
+			}
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);*/
 		}
-		else if(pg.getBidding()) { // has a test been encountered?
-			Player bidWinner = promptPlayerToBid(getCard().getParticipants(), getCard().getStages().get(currentStage).getBids());
-			getCard().getParticipants().clear();
-			getCard().addParticipant(bidWinner);
-			
+		else if(pg.getBidding()) {
+			getCard().getStages().get(getCurrentStage()).getTest().setState(CardStates.FACE_UP);
+			pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
 		}
 		else { // if not bidding or playing against a foe, asking to sponsor/participate
 			if(!isSponsored) {
@@ -306,10 +314,27 @@ public class QuestHandler {
 			}
 		} else if (currentStage > getCard().getNumStages() - 1){
 			PlayGame.setSettingUpStage(false);
+			currentStage = 0;
 			isAskingForParticipants = true;
 		} else if(numAsked >= pg.getPlayers().getPlayers().size() - 1 && getCard().getParticipants().size() > 0) {
 			//all players but the sponsor have been asked to participate and at least 1 participates.
-			
+			isAskingForParticipants = false;
+			currentStage++;
+			if(getCurrentStage() < getCard().getNumStages()) {
+				if(getCard().getStages().get(getCurrentStage() - 1).getFoe() != null) {
+					numFoughtFoe = 0;
+					pg.setFoe(true);
+					pg.setBidding(false);
+				} else if(getCard().getStages().get(getCurrentStage() - 1).getTest() != null) {
+					currentBid = getCard().getStages().get(getCurrentBid()).getBids();
+					pg.setFoe(false);
+					pg.setBidding(true);
+				}
+			} else {
+				pg.setFoe(false);
+				pg.setBidding(false);
+				resolveQuest();
+			}
 		} else {
 			System.out.println("NORMAL QUEST ROTATE");
 			pg.getView().rotate(PlayGame.getInstance());
@@ -617,6 +642,10 @@ public class QuestHandler {
 	
 	public Quest getCard() {
 		return quest;
+	}
+	
+	public void resolveQuest() {
+		
 	}
 
 	public static class QuestControlHandler extends ControlHandler {

@@ -119,8 +119,9 @@ public class Test4Players {
 		QuestHandler.getInstance().getCard().addParticipant(player2);
 		QuestHandler.getInstance().getCard().addParticipant(player3);
 		QuestHandler.getInstance().getCard().addParticipant(player4);
+		player3.playCard(player3.getCard(0), true);
+		player4.playCard(player4.getCard(0), true);
 		
-		/*
 		for(Player p : players.getPlayers()) { //this is handled in PlayGame after a story card is played all the way through, so we put it here to catch it.
 			p.setHandState(CardStates.FACE_DOWN);
 		}
@@ -137,7 +138,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 26);
 		assertEquals(playGame.getSDiscard().size(), 2);
 		playGame.getView().rotate(playGame);
-		playGame.doTurn(players.getPlayers().get(0));
+		PlayGame.doTurn(players.getPlayers().get(0));
 		player3.drawCard(playGame.getSDeck(), playGame.getSDiscard(), "chivalrous_deed");
 		for(Player p : players.getPlayers()) {
 			p.setHandState(CardStates.FACE_DOWN);
@@ -146,7 +147,7 @@ public class Test4Players {
 		assertEquals(playGame.getSDeck().size(), 25);
 		assertEquals(playGame.getSDiscard().size(), 3);
 		playGame.getView().rotate(playGame);
-		playGame.doTurn(players.getPlayers().get(0));*/
+		PlayGame.doTurn(players.getPlayers().get(0));
 	}
 	
 	@Test
