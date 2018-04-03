@@ -330,7 +330,7 @@ public class PlayGame extends Application{
 		TournamentHandler th = TournamentHandler.getInstance();
 		//
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Tournament) {
+			if(sDeck.get(i) instanceof Quest) {
 				sDeck.set(0, sDeck.get(i));
 			}
 		}	
