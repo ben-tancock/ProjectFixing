@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.lang.reflect.Type;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -34,7 +35,7 @@ public class QuestClient extends Application {
     TextField userNameField;
     String userName;
     Stage connectStage;
-    QuestUserLobby lobby = new QuestUserLobby();
+    static QuestUserLobby lobby = new QuestUserLobby();
 	
     public static void main(String... argv) {
         WebSocketClient webSocketClient = new StandardWebSocketClient();
@@ -51,7 +52,7 @@ public class QuestClient extends Application {
 		}
         
         stompClient.start();
-        //System.out.println("session id: " + session.getSessionId());
+       // System.out.println("session id: " + session.getSessionId());
         //new Scanner(System.in).nextLine(); //Don't close immediately.
         Application.launch(argv);
     }
@@ -65,7 +66,7 @@ public class QuestClient extends Application {
 		HBox userSpace = new HBox(5);
 		Label userLabel = new Label("User Name: ");
 		Button connect = new Button("Connect");
-		buttons.getChildren().add(connect);
+		//buttons.getChildren().add(connect);
 		buttons.getChildren().addAll(connect);
 		userNameField = new TextField();
 		connect.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -73,7 +74,7 @@ public class QuestClient extends Application {
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
-
+				System.out.println("connectButton clicked");
 				String name = "{\"name\":\"" + userNameField.getText() + "\"}";
 				userName = userNameField.getText();
 				session.subscribe("/users", new StompFrameHandler() {
@@ -85,23 +86,24 @@ public class QuestClient extends Application {
 					}
 
 					@Override
-					public void handleFrame(StompHeaders arg0, Object arg1) {
+					public void handleFrame(StompHeaders headers, Object payload) {
 						// TODO Auto-generated method stub
-						Object message = ((ServerMessage)arg1).getMessage();
+						Object message = ((ServerMessage)payload).getMessage();
 						HashMap<String, String> userMap = (HashMap<String, String>)message;
 						for(Entry<String, String> entry : userMap.entrySet()) {
 							System.out.println(entry.getKey());
 							System.out.println(entry.getValue());
 						}
-						String time = ((ServerMessage)arg1).getTime().toString();
-						
+						String time = ((ServerMessage)payload).getTime().toString();
+						System.out.println("i got to lobby 222");
 						Platform.runLater(new Runnable() {
 
 							@Override
 							public void run() {
 								// TODO Auto-generated method stub
 								try {
-									lobby.start(primaryStage);
+									System.out.println("i got to lobby");
+									lobby.start(connectStage);
 									lobby.update(userName, userMap, time);
 									
 								}catch(Exception e) {
@@ -127,7 +129,7 @@ public class QuestClient extends Application {
     
 	
 	
-	public static class SessionHandler extends StompSessionHandlerAdapter{
+	static class SessionHandler extends StompSessionHandlerAdapter{
 		
 		private void showHeaders(StompHeaders headers) {
 	    		for (Map.Entry<String,List<String>> e:headers.entrySet()) {
@@ -143,7 +145,7 @@ public class QuestClient extends Application {
 	    		}	
     		}
 		
-		@Override
+		/*@Override
 		public void handleFrame(StompHeaders headers, @Nullable java.lang.Object payload) {
 			Object message = ((ServerMessage)payload).getMessage();
 			HashMap<String, String> userMap = (HashMap<String, String>)message;
@@ -163,7 +165,7 @@ public class QuestClient extends Application {
 				
 			});
 			
-		}
+		}*/
 		
 		@Override
 		public Type getPayloadType(StompHeaders headers) {

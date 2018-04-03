@@ -6,8 +6,9 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 
-
+@Controller
 public class ServerMessageController {
 
 	ConcurrentHashMap<String, String> users;
@@ -21,11 +22,12 @@ public class ServerMessageController {
 	
 	@MessageMapping("/register")
 	@SendTo("/users")
-	public void connect( ConnectMessage message, @Header("simpSessionId") String sessionId) {
+	public ServerMessage connect( ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
 		users.put(sessionId, message.getName());
 		ServerMessage serverMessage = new ServerMessage(users);
 		System.out.println("Sending: " + serverMessage.toString());
 		System.out.println(sessionId);
+		return serverMessage;
 	}
 }
