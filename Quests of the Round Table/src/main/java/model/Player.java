@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,22 +51,38 @@ public abstract class Player implements Serializable {
 	
 	public Player fromMap(HashMap<String, String> playerMap) {
 		System.out.println("GOT HERE");
-		name = playerMap.get("name");
-		System.out.println("name = " + name);
-		/*rank = playerMap.get("rank");
-		System.out.println("rank = " + rank);
-		focused = Boolean.parseBoolean(playerMap.get("focused"));
-		System.out.println("focused = " + focused);
-		dealer = Boolean.parseBoolean(playerMap.get("dealer"));
-		System.out.println("dealer = " + dealer);
-		shields = Integer.parseInt(playerMap.get("shields"));
-		System.out.println("shields = " + shields);
-		shieldName = playerMap.get("shieldName");
-		System.out.println("shieldName = " + shieldName);
-		bid = Integer.parseInt(playerMap.get("bid"));
-		System.out.println("bid = " + bid);
-		aBP = Integer.parseInt(playerMap.get("aBP"));
-		System.out.println("aBP = " + aBP);*/
+		if(playerMap.get("name") != null) {
+			name = playerMap.get("name");
+			System.out.println("name = " + name);
+		}
+		/*
+		if(playerMap.get("rank") != null || playerMap.get("rank") != "") {
+			System.out.println(playerMap.get("rank"));
+		}
+		if(playerMap.get("focused") != null) {
+			focused = Boolean.parseBoolean(playerMap.get("focused"));
+			System.out.println("focused = " + focused);
+		}
+		if(playerMap.get("dealer") != null) {
+			dealer = Boolean.parseBoolean(playerMap.get("dealer"));
+			System.out.println("dealer = " + dealer);
+		}
+		if(playerMap.get("shields") != null) {
+			shields = Integer.parseInt(playerMap.get("shields"));
+			System.out.println("shields = " + shields);
+		}
+		if(playerMap.get("shieldName") != null) {
+			shieldName = playerMap.get("shieldName");
+			System.out.println("shieldName = " + shieldName);
+		}
+		if(playerMap.get("bid") != null) {
+			bid = Integer.parseInt(playerMap.get("bid"));
+			System.out.println("bid = " + bid);
+		}
+		if(playerMap.get("aBP") != null) {
+			aBP = Integer.parseInt(playerMap.get("aBP"));
+			System.out.println("aBP = " + aBP);
+		}*/
 		return this;
 	}
 	

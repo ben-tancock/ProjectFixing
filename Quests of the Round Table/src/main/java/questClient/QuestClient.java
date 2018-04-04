@@ -100,8 +100,8 @@ public class QuestClient extends Application {
 						Object message = ((ServerMessage)payload).getMessage();
 						HashMap<String, HashMap<String, String>> receivedMap = (HashMap<String, HashMap<String, String>>)message;
 						HashMap<String, Player> userMap = new HashMap<>();
+						System.out.println("" + receivedMap.get("0").get("name"));
 						for(Entry<String, HashMap<String, String>> entry : receivedMap.entrySet()) {
-							System.out.println(entry.getKey());
 							Player player = new Person();
 							player = player.fromMap(entry.getValue());
 							userMap.put(entry.getKey(), player);

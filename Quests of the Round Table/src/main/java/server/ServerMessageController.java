@@ -32,7 +32,6 @@ public class ServerMessageController {
 	public ServerMessage connect( ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
 		players.addHuman();
-		
 		players.getPlayers().get(i).setName(message.getName());
 		users.put(sessionId, players.getPlayers().get(i));
 		ServerMessage serverMessage = new ServerMessage(users);
@@ -40,5 +39,11 @@ public class ServerMessageController {
 		System.out.println(sessionId);
 		i++;
 		return serverMessage;
+	}
+	
+	@MessageMapping("selectShield")
+	@SendTo("/shieldChange")
+	public ServerMessage shieldChange(@Header("simpSessionId") String sessionId) {
+		return null;
 	}
 }
