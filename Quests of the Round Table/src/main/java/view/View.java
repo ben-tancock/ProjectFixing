@@ -1262,7 +1262,7 @@ public class View extends Application {
 		List<Button> foeWeaponCards = new ArrayList<>();
 		for(int cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
 			Button button = new Button();
-			button.setBackground(makeBground(p.getHand().get(cardIndex).getName()));
+			button.setBackground(makeBground(stageCards.get(cardIndex).getName()));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
 			foeWeaponCards.add(button);
@@ -1270,7 +1270,7 @@ public class View extends Application {
 		List<Button> playerSurfaceCards = new ArrayList<>();
 		for(int cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
 			Button button = new Button();
-			button.setBackground(makeBground(p.getHand().get(cardIndex).getName()));
+			button.setBackground(makeBground(p.getPlayingSurface().get(cardIndex).getName()));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
 			playerSurfaceCards.add(button);
@@ -1317,7 +1317,7 @@ public class View extends Application {
 		System.out.println("Stage Cards size: " + stageCards.size());
 		for(int cardIndex = 0; cardIndex < stageCards.size(); cardIndex++) {
 			Button button = new Button();
-			button.setBackground(makeBground(p.getHand().get(cardIndex).getName()));
+			button.setBackground(makeBground(stageCards.get(cardIndex).getName()));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
 			foeWeaponCards.add(button);
@@ -1325,7 +1325,7 @@ public class View extends Application {
 		List<Button> playerSurfaceCards = new ArrayList<>();
 		for(int cardIndex = 0; cardIndex < p.getPlayingSurface().size(); cardIndex++) {
 			Button button = new Button();
-			button.setBackground(makeBground(p.getHand().get(cardIndex).getName()));
+			button.setBackground(makeBground(p.getPlayingSurface().get(cardIndex).getName()));
 			button.setMinWidth(75);
 			button.setMinHeight(100);
 			playerSurfaceCards.add(button);
