@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,7 +15,11 @@ import org.apache.logging.log4j.Logger;
 import control.PlayGame;
 import control.QuestHandler;
 
-public abstract class Player {
+public abstract class Player implements Serializable {
+	/**
+	 * Player class needed to be serializable
+	 */
+	private static final long serialVersionUID = 9067267335225726349L;
 	private static final Logger logger = LogManager.getLogger(Player.class);
 	private String name;
 	private String rank;
@@ -37,10 +42,31 @@ public abstract class Player {
 		amour = new ArrayList<Amour>();
 		dealer = false;
 		focused = false;
-		rank = "";
+		rank = "squire";
 		bid = 0;
 		aBP = 0;
 		shieldName = "";
+	}
+	
+	public Player fromMap(HashMap<String, String> playerMap) {
+		System.out.println("GOT HERE");
+		name = playerMap.get("name");
+		System.out.println("name = " + name);
+		/*rank = playerMap.get("rank");
+		System.out.println("rank = " + rank);
+		focused = Boolean.parseBoolean(playerMap.get("focused"));
+		System.out.println("focused = " + focused);
+		dealer = Boolean.parseBoolean(playerMap.get("dealer"));
+		System.out.println("dealer = " + dealer);
+		shields = Integer.parseInt(playerMap.get("shields"));
+		System.out.println("shields = " + shields);
+		shieldName = playerMap.get("shieldName");
+		System.out.println("shieldName = " + shieldName);
+		bid = Integer.parseInt(playerMap.get("bid"));
+		System.out.println("bid = " + bid);
+		aBP = Integer.parseInt(playerMap.get("aBP"));
+		System.out.println("aBP = " + aBP);*/
+		return this;
 	}
 	
 	// Getters and Setters --------------------------------
@@ -98,7 +124,11 @@ public abstract class Player {
 	}
 	
 	public int getHandState() {
-		return hand.get(0).getState();
+		if(hand.size() > 0) {
+			return hand.get(0).getState();
+		} else {
+			return CardStates.FACE_DOWN;
+		}
 	}
 	
 	public ArrayList<Adventure> getStrongestHand(int increasingOrDecreasing) {
@@ -589,6 +619,11 @@ public abstract class Player {
 			return true;
 		}
 		return false;
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 }

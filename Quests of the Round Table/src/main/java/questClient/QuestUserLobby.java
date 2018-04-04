@@ -14,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.Player;
 
 public class QuestUserLobby extends Application {
 
@@ -32,7 +33,7 @@ public class QuestUserLobby extends Application {
 		Application.launch(args);
 	}
 	
-	public void update(String user, HashMap<String, String> users, String time) {
+	public void update(String user, HashMap<String, Player> users, String time) {
 		System.out.println("Setting up connected users stage");
 		VBox userSetup = new VBox();
 		Label connectedTimeLabel = new Label("Connected Time " + time);
@@ -40,8 +41,8 @@ public class QuestUserLobby extends Application {
 		ListView<String>userListView = new ListView<>();
 		ObservableList<String> userList = FXCollections.observableArrayList();
 		
-		for(Entry<String, String> entry : users.entrySet()) {
-			userList.add(entry.getValue());
+		for(Entry<String, Player> entry : users.entrySet()) {
+			userList.add(entry.getValue().getName());
 		}
 		userListView.setItems(userList);
 		userSetup.getChildren().add(connectedTimeLabel);
@@ -54,7 +55,7 @@ public class QuestUserLobby extends Application {
 		
 		Button startGame = new Button("Start Game");
 		startGame.setPrefSize(300, 100);
-		if(user.equals(users.get(0))) {
+		if(user.equals(users.get("0").getName())) {
 			userSetup.getChildren().add(startGame);
 		}
 		Platform.runLater(new Runnable() {
