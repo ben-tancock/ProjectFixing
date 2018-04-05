@@ -3,14 +3,28 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ally extends Adventure{
+	/**
+	 * seialUID
+	 */
+	private static final long serialVersionUID = -3903402141872395001L;
 	String name;
 	int bp;
 	int bids;
 	int state;
 	boolean ally;
 	
-	public Ally(String n, int b, int bs) {
+	public Ally() {
+		name = "";
+		bp = 0;
+		state = 0;
+		bids = 0;
+	}
+	
+	public Ally(String n, int b, int bs, int state) {
 		name = n;
 		bp = b;
 		bids = bs;

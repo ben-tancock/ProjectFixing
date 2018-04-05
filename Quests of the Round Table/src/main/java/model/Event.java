@@ -1,6 +1,13 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Event extends Story{
+	/**
+	 * serialUID
+	 */
+	private static final long serialVersionUID = 3242305892572996470L;
 	String name;
 	int state;
 	boolean event;

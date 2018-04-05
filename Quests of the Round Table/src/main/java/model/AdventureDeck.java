@@ -14,31 +14,31 @@ public class AdventureDeck extends ArrayList<Adventure>{
 	 */
 	public void addWeapon(int j, String name, int bp) {
 		for (int i = 0; i < j; i++) {
-			add(new Weapon(name, bp));
+			add(new Weapon(name, bp, CardStates.FACE_DOWN));
 		}
 	}
 	
 	public void addFoe(int j, String name, int lbp, int hbp) {
 		for (int i = 0; i < j; i++) {
-			add(new Foe(name, lbp, hbp));
+			add(new Foe(name, lbp, hbp, CardStates.FACE_DOWN));
 		}
 	}
 	
 	public void addAlly(int j, String name, int lbp, int hbp) {
 		for (int i = 0; i < j; i++) {
-			add(new Ally(name, lbp, hbp));
+			add(new Ally(name, lbp, hbp, CardStates.FACE_DOWN));
 		}
 	}
 	
 	public void addTest(int j, String name, int b) {
 		for (int i = 0; i < j; i++) {
-			add(new Test(name, b));
+			add(new Test(name, b, CardStates.FACE_DOWN));
 		}
 	}
 	
 	public void addAmour(int j, String name, int bp) {
 		for (int i = 0; i < j; i++) {
-			add(new Amour(name, bp));
+			add(new Amour(name, bp, CardStates.FACE_DOWN));
 		}
 	}
 	

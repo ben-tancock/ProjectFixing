@@ -39,6 +39,8 @@ import javafx.stage.Stage;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Player;
+import model.Person;
+import model.PlayerPOJO;
 import model.Players;
 import model.Story;
 import model.StoryDeck;
@@ -163,13 +165,23 @@ public class QuestUserLobby extends Application {
 					e.printStackTrace();
 				}
 				List<Object> gameObjects = (List<Object>) ((ServerMessage)payLoad).getMessage();
-				ArrayList<String> deck = (ArrayList<String>)gameObjects.get(1);
+				//ArrayList<String> deck = (ArrayList<String>)gameObjects.get(1);
 				ObjectMapper mapper = new ObjectMapper();
-				Players players = mapper.convertValue(gameObjects.get(0), Players.class);
-				StoryDeck sDeck = mapper.convertValue(gameObjects.get(1), StoryDeck.class);
-				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(2), StoryDiscard.class);
-			
-				//view.update(null, players, sDeck, sDiscard, null);
+				//Players players = mapper.convertValue(gameObjects.get(0), Players.class);
+				StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
+				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
+				List<HashMap<String, String>> receivedMap = (List<HashMap<String, String>>)gameObjects.get(2);
+				List<Player> playersList = new ArrayList<>();
+				for(int i = 0; i < receivedMap.size(); i++) {
+					System.out.println(receivedMap.get(i));
+					PlayerPOJO pojo = mapper.convertValue(receivedMap.get(i), PlayerPOJO.class);
+					//Player player = new Person();
+					//player = player.fromPOJO(pojo);
+					//playersList.add(player);
+				}
+				Players players = new Players();
+				//players.setPlayers(playersList);
+				view.update(null, players, sDeck, sDiscard, null);
 			}
 		});
 	}

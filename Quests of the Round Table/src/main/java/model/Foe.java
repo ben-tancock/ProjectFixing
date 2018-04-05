@@ -2,7 +2,14 @@ package model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Foe extends Adventure{
+	/**
+	 * serialUID
+	 */
+	private static final long serialVersionUID = 8675627747171217655L;
 	private String name;
 	private int bp1;
 	private int bp2;
@@ -10,7 +17,15 @@ public class Foe extends Adventure{
 	private ArrayList<Weapon> weapons;
 	boolean foe;
 	
-	public Foe(String n, int b1, int b2) {
+	public Foe() {
+		name = "";
+		bp1 = 0;
+		bp2 = 0;
+		state = 0;
+		weapons = new ArrayList<Weapon>();
+	}
+	
+	public Foe(String n, int b1, int b2, int state) {
 		name = n;
 		bp1 = b1;
 		bp2 = b2;

@@ -3,6 +3,10 @@ package model;
 import java.util.ArrayList;
 
 public class Quest extends Story {
+	/**
+	 * serialUID
+	 */
+	private static final long serialVersionUID = -5178521137718405369L;
 	private String name;
 	private ArrayList<Stage> stages;
 	private Player sponsor;
