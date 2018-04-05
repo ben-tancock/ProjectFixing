@@ -2,7 +2,14 @@ package model;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Tournament extends Story{
+	/**
+	 * serialUID
+	 */
+	private static final long serialVersionUID = 7283184923215419552L;
 	private String name;
 	private int bonus;
 	private int state;

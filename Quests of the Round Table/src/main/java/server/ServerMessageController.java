@@ -1,6 +1,7 @@
 package server;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Player;
+import model.PlayerPOJO;
 import model.Players;
 import model.StoryDeck;
 import model.StoryDiscard;
@@ -44,8 +46,10 @@ public class ServerMessageController {
 		shieldNames = new ArrayList<>();
 		userCounter = 0;
 		aDeck = new AdventureDeck();
+		aDeck.shuffle();
 		aDiscard = new AdventureDiscard();
 		sDeck = new StoryDeck();
+		sDeck.shuffle();
 		sDiscard = new StoryDiscard();
 	}
 	
@@ -56,6 +60,7 @@ public class ServerMessageController {
 		players.addHuman();
 		players.getPlayers().get(userCounter).setName(message.getName());
 		players.getPlayers().get(userCounter).setShieldName("shield_" + userCounter);
+		players.getPlayers().get(userCounter).drawCard(12, aDeck);
 		users.put(sessionId, players.getPlayers().get(userCounter));
 		ServerMessage serverMessage = new ServerMessage(users);
 		System.out.println("Sending: " + serverMessage.toString());
@@ -79,16 +84,25 @@ public class ServerMessageController {
 	            .create(SimpMessageType.MESSAGE);
 		System.out.println("STARTING GAME FROM SERVER");
 		List<Object> gameStuff = new ArrayList<>();
-		gameStuff.add(players);
+		ArrayList<PlayerPOJO> sendingPlayers = new ArrayList<>();
+		for(Player p : players.getPlayers()) {
+			PlayerPOJO pPojo = new PlayerPOJO(p.getName(), p.getRankString(), p.getDealer(), p.isFocused(),
+					p.getShields(), p.getShieldName(), p.getHand(), p.getAllies(), p.getWeapons(), 
+					p.getAmour(), p.getBid(), p.getABP());
+			sendingPlayers.add(pPojo);
+		}
+		
 		gameStuff.add(sDeck);
 		System.out.println(sDeck.size());
 		gameStuff.add(sDiscard);
+		gameStuff.add(sendingPlayers);
 		ServerMessage serverMessage = new ServerMessage(gameStuff);
-		
-		for(Entry<String, Player> entry : users.entrySet()) {
-			System.out.println("Sending to: " + entry.getValue().getName());
-			template.convertAndSend("/users/startGame-" + entry.getValue().getName(), serverMessage, createHeaders(entry.getKey()));
-			players.rotate();
+		if(sendingPlayers.size() == 2) {
+			template.convertAndSend("/users/startGame-" + users.get("0").getName(), serverMessage);
+			gameStuff.remove(sendingPlayers);
+			Collections.reverse(sendingPlayers);
+			gameStuff.add(sendingPlayers);
+			template.convertAndSend("/users/startGame-" + users.get("1").getName(), serverMessage);
 		}
 	}
 	

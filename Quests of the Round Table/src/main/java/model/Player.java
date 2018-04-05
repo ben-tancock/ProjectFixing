@@ -21,7 +21,6 @@ import control.PlayGame;
 import control.QuestHandler;
 
 @JsonDeserialize(using = PlayerDeserializer.class)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Player implements Serializable {
 	/**
 	 * Player class needed to be serializable
@@ -34,8 +33,8 @@ public abstract class Player implements Serializable {
 	private boolean focused;
 	private int shields;
 	private String shieldName;
-	private ArrayList<Adventure> hand;
-	private ArrayList<Ally> allies;
+	private List<Adventure> hand;
+	private List<Ally> allies;
 	private List<Weapon> weapons;
 	private List<Amour> amour;
 	//private List<Adventure> bidCards;
@@ -50,7 +49,9 @@ public abstract class Player implements Serializable {
 		amour = new ArrayList<Amour>();
 		dealer = false;
 		focused = false;
+		name = "";
 		rank = "squire";
+		shields = 0;
 		bid = 0;
 		aBP = 0;
 		shieldName = "";
@@ -67,9 +68,52 @@ public abstract class Player implements Serializable {
 			System.out.println("shieldName = " + shieldName);
 		}
 		/*
-		if(playerMap.get("rank") != null || playerMap.get("rank") != "") {
-			System.out.println(playerMap.get("rank"));
+		if(!playerMap.get("rank").equals(null) || !playerMap.get("rank").equals("")) {
+			System.out.println(playerMap.get("rank").getClass());
 		}
+		System.out.println("GOT HERE");
+		if(playerMap.get("focused") != null) {
+			focused = Boolean.parseBoolean(playerMap.get("focused"));
+			System.out.println("focused = " + focused);
+		}
+		if(playerMap.get("dealer") != null) {
+			dealer = Boolean.parseBoolean(playerMap.get("dealer"));
+			System.out.println("dealer = " + dealer);
+		}
+		if(playerMap.get("shields") != null) {
+			shields = Integer.parseInt(playerMap.get("shields"));
+			System.out.println("shields = " + shields);
+		}
+		
+		if(playerMap.get("bid") != null) {
+			bid = Integer.parseInt(playerMap.get("bid"));
+			System.out.println("bid = " + bid);
+		}
+		if(playerMap.get("aBP") != null) {
+			aBP = Integer.parseInt(playerMap.get("aBP"));
+			System.out.println("aBP = " + aBP);
+		}*/
+		return this;
+	}
+	
+	public Player fromPOJO(PlayerPOJO pojo) {
+		name = pojo.getName();
+		shieldName = pojo.getShieldName();
+		rank = pojo.getRank();
+		focused = pojo.getFocused();
+		dealer = pojo.getDealer();
+		shields = pojo.getShields();
+		bid = pojo.getBid();
+		aBP = pojo.getaBP();
+		hand = pojo.getHand();
+		weapons = pojo.getWeapons();
+		allies = pojo.getAllies();
+		amour = pojo.getAmour();
+		/*
+		if(!playerMap.get("rank").equals(null) || !playerMap.get("rank").equals("")) {
+			System.out.println(playerMap.get("rank").getClass());
+		}
+		System.out.println("GOT HERE");
 		if(playerMap.get("focused") != null) {
 			focused = Boolean.parseBoolean(playerMap.get("focused"));
 			System.out.println("focused = " + focused);
