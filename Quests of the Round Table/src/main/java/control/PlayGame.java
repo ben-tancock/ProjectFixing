@@ -56,12 +56,9 @@ public class PlayGame extends Application{
 	private static boolean isTie; // tournament tie
 	private static boolean isQuest;
 	private static boolean isSettingUpStage;
-	private static boolean Overflow;
-	
-	
+	private static boolean overflow;
 	
 	private static boolean isFoe;
-	
 	
 	private static boolean isBidding;
 	private static boolean isPlaying;
@@ -377,7 +374,7 @@ public class PlayGame extends Application{
 		}
 		
 		
-		if(Overflow) {
+		if(overflow) {
 			System.out.println("test overflow");
 			view.cardOverflowPrompt(p, p.getHand().size() - 12);
 		}
@@ -403,7 +400,7 @@ public class PlayGame extends Application{
 	public static void cardClicked(Adventure a, Player p) {
 		System.out.println("bp before ally check: " + p.getBattlePoints());
 		
-		if(Overflow) {
+		if(overflow) {
 			if(a instanceof Weapon) {
 				p.remove(p.getHand(), aDiscard, a);
 				view.update(null, players, sDeck, sDiscard, null);
@@ -426,7 +423,7 @@ public class PlayGame extends Application{
 			// for now the only solution i can think of is moving all the prompts to happen after overflow and on doTurn
 			if(p.getHand().size() - 12 <= 0) {
 				System.out.println("test end overflow");
-				Overflow = false;
+				overflow = false;
 				if(isTournament) {
 					//prompt 
 				}
@@ -698,7 +695,7 @@ public class PlayGame extends Application{
 			}*/
 			
 			
-			Overflow = true;
+			overflow = true;
 			doTurn(p);
 			//view.cardOverflowPrompt(p, p.getHand().size() - 12);
 			//int numDiscard = p.getHand().size() - 12;

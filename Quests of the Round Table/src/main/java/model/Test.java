@@ -4,6 +4,7 @@ public class Test extends Adventure{
 	private int minbid;
 	private String name;
 	private int state;
+	boolean test;
 	
 	public Test(String n, int mb) {
 		name = n;

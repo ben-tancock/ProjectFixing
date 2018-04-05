@@ -4,6 +4,7 @@ public class Weapon extends Adventure{
 	private String name;
 	private int battlepoints;
 	private int state;
+	boolean weapon;
 	
 	public Weapon(String n, int bp) {
 		name = n;

@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,14 +8,25 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import control.PlayGame;
 import control.QuestHandler;
 
-public abstract class Player {
+@JsonDeserialize(using = PlayerDeserializer.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public abstract class Player implements Serializable {
+	/**
+	 * Player class needed to be serializable
+	 */
+	private static final long serialVersionUID = 9067267335225726349L;
 	private static final Logger logger = LogManager.getLogger(Player.class);
 	private String name;
 	private String rank;
@@ -30,6 +42,7 @@ public abstract class Player {
 	private int bid;
 	private int aBP;
 	
+	
 	public Player() {
 		hand = new ArrayList<Adventure>();
 		allies = new ArrayList<Ally>();
@@ -37,13 +50,52 @@ public abstract class Player {
 		amour = new ArrayList<Amour>();
 		dealer = false;
 		focused = false;
-		rank = "";
+		rank = "squire";
 		bid = 0;
 		aBP = 0;
 		shieldName = "";
 	}
 	
+	public Player fromMap(HashMap<String, String> playerMap) {
+		System.out.println("GOT HERE");
+		if(playerMap.get("name") != null) {
+			name = playerMap.get("name");
+			System.out.println("name = " + name);
+		}
+		if(playerMap.get("shieldName") != null) {
+			shieldName = playerMap.get("shieldName");
+			System.out.println("shieldName = " + shieldName);
+		}
+		/*
+		if(playerMap.get("rank") != null || playerMap.get("rank") != "") {
+			System.out.println(playerMap.get("rank"));
+		}
+		if(playerMap.get("focused") != null) {
+			focused = Boolean.parseBoolean(playerMap.get("focused"));
+			System.out.println("focused = " + focused);
+		}
+		if(playerMap.get("dealer") != null) {
+			dealer = Boolean.parseBoolean(playerMap.get("dealer"));
+			System.out.println("dealer = " + dealer);
+		}
+		if(playerMap.get("shields") != null) {
+			shields = Integer.parseInt(playerMap.get("shields"));
+			System.out.println("shields = " + shields);
+		}
+		
+		if(playerMap.get("bid") != null) {
+			bid = Integer.parseInt(playerMap.get("bid"));
+			System.out.println("bid = " + bid);
+		}
+		if(playerMap.get("aBP") != null) {
+			aBP = Integer.parseInt(playerMap.get("aBP"));
+			System.out.println("aBP = " + aBP);
+		}*/
+		return this;
+	}
+	
 	// Getters and Setters --------------------------------
+
 	public String getName() {
 		return name;
 	}
@@ -98,7 +150,11 @@ public abstract class Player {
 	}
 	
 	public int getHandState() {
-		return hand.get(0).getState();
+		if(hand.size() > 0) {
+			return hand.get(0).getState();
+		} else {
+			return CardStates.FACE_DOWN;
+		}
 	}
 	
 	public ArrayList<Adventure> getStrongestHand(int increasingOrDecreasing) {
@@ -244,8 +300,6 @@ public abstract class Player {
 		return false;
 	}
 	
-	
-	
 	public void setHandState(int state) {
 		for(Adventure card : hand) {
 			card.setState(state);
@@ -374,7 +428,6 @@ public abstract class Player {
 		System.out.println(this.getHand().toString());	
 	}
 	// Getters and Setters --------------------------------
-	
 	
 	public Adventure playCard(Adventure card, boolean toPlayingSurface) {
 		boolean success;
@@ -589,6 +642,12 @@ public abstract class Player {
 			return true;
 		}
 		return false;
+	}
+	
+	@JsonProperty("wrapper")
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 }

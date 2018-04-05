@@ -1,9 +1,17 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Story implements Card{
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Story implements Card, Serializable{
+
+	/**
+	 * serialUID
+	 */
+	private static final long serialVersionUID = 1815140237857098763L;
 	private String name;
 	private int state;
 	

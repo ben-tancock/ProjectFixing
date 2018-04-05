@@ -2,13 +2,19 @@ package model;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import control.ControlHandler;
+import control.PlayGame;
 import control.PlayGame.PlayGameControlHandler;
 
-public class Players {
+public class Players implements Serializable{
+	/**
+	 * Serial UID
+	 */
+	private static final long serialVersionUID = -7894244999511351813L;
 	
 	public List<Player> persons = new ArrayList<Player>();
 	//private List<PropertyChangeListener> listener = new ArrayList<PropertyChangeListener>();
@@ -17,6 +23,23 @@ public class Players {
 	public Players() {
 		
 	}
+	
+	public Players rotate() {
+		// for now, will switch focus between just two players
+		System.out.println("test rotate");
+		Players reversed = new Players();
+		reversed = this;
+				
+		// we should probably make Players have methods that do this???
+		List<Player> persons = new ArrayList<Player>();
+		persons = getPlayers(); 
+		Player temp = persons.get(0);
+		persons.add(temp);
+		persons.remove(0);
+		reversed.setPlayers(persons);
+		return reversed;
+	}
+	
 	
 	
 	//adding adventure cards to each player

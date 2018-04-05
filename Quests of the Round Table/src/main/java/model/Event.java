@@ -3,6 +3,7 @@ package model;
 public class Event extends Story{
 	String name;
 	int state;
+	boolean event;
 	
 	public Event(String n) {
 		name = n;

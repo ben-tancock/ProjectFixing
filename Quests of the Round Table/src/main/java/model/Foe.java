@@ -8,6 +8,7 @@ public class Foe extends Adventure{
 	private int bp2;
 	private int state;
 	private ArrayList<Weapon> weapons;
+	boolean foe;
 	
 	public Foe(String n, int b1, int b2) {
 		name = n;

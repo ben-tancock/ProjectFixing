@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -15,6 +16,11 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -26,6 +32,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Person;
+import model.Player;
 
 public class QuestClient extends Application {
 	static StompSession session = null;
@@ -80,7 +88,7 @@ public class QuestClient extends Application {
 				session.subscribe("/users", new StompFrameHandler() {
 
 					@Override
-					public Type getPayloadType(StompHeaders arg0) {
+					public Type getPayloadType(StompHeaders headers) {
 						// TODO Auto-generated method stub
 						return ServerMessage.class;
 					}
@@ -88,11 +96,15 @@ public class QuestClient extends Application {
 					@Override
 					public void handleFrame(StompHeaders headers, Object payload) {
 						// TODO Auto-generated method stub
+						System.out.println("GOT REPLY");
 						Object message = ((ServerMessage)payload).getMessage();
-						HashMap<String, String> userMap = (HashMap<String, String>)message;
-						for(Entry<String, String> entry : userMap.entrySet()) {
-							System.out.println(entry.getKey());
-							System.out.println(entry.getValue());
+						HashMap<String, HashMap<String, String>> receivedMap = (HashMap<String, HashMap<String, String>>)message;
+						HashMap<String, Player> userMap = new HashMap<>();
+						System.out.println("" + receivedMap.get("0").get("name"));
+						for(Entry<String, HashMap<String, String>> entry : receivedMap.entrySet()) {
+							Player player = new Person();
+							player = player.fromMap(entry.getValue());
+							userMap.put(entry.getKey(), player);
 						}
 						String time = ((ServerMessage)payload).getTime().toString();
 						System.out.println("i got to lobby 222");
