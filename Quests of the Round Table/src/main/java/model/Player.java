@@ -13,9 +13,15 @@ import java.util.Map.Entry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import control.PlayGame;
 import control.QuestHandler;
 
+@JsonDeserialize(using = PlayerDeserializer.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class Player implements Serializable {
 	/**
 	 * Player class needed to be serializable
@@ -36,6 +42,7 @@ public abstract class Player implements Serializable {
 	private int bid;
 	private int aBP;
 	
+	
 	public Player() {
 		hand = new ArrayList<Adventure>();
 		allies = new ArrayList<Ally>();
@@ -55,6 +62,10 @@ public abstract class Player implements Serializable {
 			name = playerMap.get("name");
 			System.out.println("name = " + name);
 		}
+		if(playerMap.get("shieldName") != null) {
+			shieldName = playerMap.get("shieldName");
+			System.out.println("shieldName = " + shieldName);
+		}
 		/*
 		if(playerMap.get("rank") != null || playerMap.get("rank") != "") {
 			System.out.println(playerMap.get("rank"));
@@ -71,10 +82,7 @@ public abstract class Player implements Serializable {
 			shields = Integer.parseInt(playerMap.get("shields"));
 			System.out.println("shields = " + shields);
 		}
-		if(playerMap.get("shieldName") != null) {
-			shieldName = playerMap.get("shieldName");
-			System.out.println("shieldName = " + shieldName);
-		}
+		
 		if(playerMap.get("bid") != null) {
 			bid = Integer.parseInt(playerMap.get("bid"));
 			System.out.println("bid = " + bid);
@@ -87,6 +95,7 @@ public abstract class Player implements Serializable {
 	}
 	
 	// Getters and Setters --------------------------------
+
 	public String getName() {
 		return name;
 	}
@@ -291,8 +300,6 @@ public abstract class Player implements Serializable {
 		return false;
 	}
 	
-	
-	
 	public void setHandState(int state) {
 		for(Adventure card : hand) {
 			card.setState(state);
@@ -421,7 +428,6 @@ public abstract class Player implements Serializable {
 		System.out.println(this.getHand().toString());	
 	}
 	// Getters and Setters --------------------------------
-	
 	
 	public Adventure playCard(Adventure card, boolean toPlayingSurface) {
 		boolean success;
@@ -638,6 +644,7 @@ public abstract class Player implements Serializable {
 		return false;
 	}
 	
+	@JsonProperty("wrapper")
 	@Override
 	public String toString() {
 		return getName();

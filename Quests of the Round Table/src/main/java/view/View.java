@@ -201,7 +201,7 @@ public class View extends Application {
 		// TODO Auto-generated method stub
 		VBox startPane = new VBox(50);
 		primStage = primaryStage;
-		
+		/*
 		//rules button
 		rulesButton.setPrefSize(300, 100);
 		//2 player button
@@ -216,7 +216,7 @@ public class View extends Application {
 		Scene scene = new Scene(startPane, 1220, 700,Color.BISQUE);
 		primStage.setScene(scene);
 		primStage.setTitle("Quest of the Round Table");
-		primStage.show();
+		primStage.show();*/
 	}
 	public HBox storyCards() {
 		HBox storyCards = new HBox(-70.5);

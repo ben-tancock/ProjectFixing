@@ -6,9 +6,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import control.QuestHandler;
 
+@JsonDeserialize(as = ArtificialIntelligence2.class)
 public class ArtificialIntelligence2 extends Player implements AIStrategies {
+
+	/**
+	 * Serial UID
+	 */
+	private static final long serialVersionUID = -8305381973346570592L;
 
 	@Override
 	public boolean doIParticipateInTournament(Players p, Tournament t) {

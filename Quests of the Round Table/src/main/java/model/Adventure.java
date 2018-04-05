@@ -1,7 +1,18 @@
 package model;
 
-public abstract class Adventure implements Card{
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(using = AdventureDeserializer.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public abstract class Adventure implements Card, Serializable{
 	
+	/**
+	 * serialUID
+	 */
+	private static final long serialVersionUID = 7893632617414867861L;
 	private String name;
 	private int state;
 	private int battlePoints;

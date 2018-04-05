@@ -88,7 +88,7 @@ public class QuestClient extends Application {
 				session.subscribe("/users", new StompFrameHandler() {
 
 					@Override
-					public Type getPayloadType(StompHeaders arg0) {
+					public Type getPayloadType(StompHeaders headers) {
 						// TODO Auto-generated method stub
 						return ServerMessage.class;
 					}

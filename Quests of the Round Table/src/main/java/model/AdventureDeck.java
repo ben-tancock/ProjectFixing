@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class AdventureDeck extends ArrayList<Adventure>{
-
 	/**
 	 * added this to scare off warnings and to make it serial as well
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2493754048201757916L;
 	
 	/**
 	 * During initialization the deck is setup

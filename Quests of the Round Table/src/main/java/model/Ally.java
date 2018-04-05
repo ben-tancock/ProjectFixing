@@ -8,6 +8,7 @@ public class Ally extends Adventure{
 	int bp;
 	int bids;
 	int state;
+	boolean ally;
 	
 	public Ally(String n, int b, int bs) {
 		name = n;

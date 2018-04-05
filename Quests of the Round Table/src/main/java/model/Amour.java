@@ -4,6 +4,7 @@ public class Amour extends Adventure{
 	private String name;
 	private int bp;
 	private int state;
+	boolean amour;
 	
 	public Amour(String n, int b) {
 		name = n;

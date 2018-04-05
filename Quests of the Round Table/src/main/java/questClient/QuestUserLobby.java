@@ -1,12 +1,27 @@
 package questClient;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
+
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -16,15 +31,24 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import model.AdventureDeck;
+import model.AdventureDiscard;
 import model.Player;
+import model.Players;
+import model.Story;
+import model.StoryDeck;
+import model.StoryDiscard;
+import view.View;
 
 public class QuestUserLobby extends Application {
 
 	private static Stage primStage;
+	private String userName;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -44,42 +68,56 @@ public class QuestUserLobby extends Application {
 		VBox userSetup = new VBox();
 		Label connectedTimeLabel = new Label("Connected Time " + time);
 		Label connectedUsersLabel = new Label("List of connected Users: ");
-		
+		userName = user;
 		HBox userInfo = new HBox();
 		final ObservableList<Image> shields = getShieldImages();
-		final ObservableList<ComboBox<Image>> shieldBoxes = FXCollections.observableArrayList();
-		ListView<String>userListView = new ListView<>();
-		ObservableList<String> userList = FXCollections.observableArrayList();
+		final ObservableList<ImageView> shieldBoxList = FXCollections.observableArrayList();
+		ListView<HBox>userListView = new ListView<>();
+		ObservableList<HBox> userList = FXCollections.observableArrayList();
 		for(Entry<String, Player> entry : users.entrySet()) {
-			userList.add(entry.getValue().getName());
-			shieldBoxes.add(createShieldComboBox(shields));
+			HBox listBox = new HBox(5);
+			listBox.getChildren().add(new Label(entry.getValue().getName()));
+			listBox.getChildren().add(new ImageView(shields.get(Integer.parseInt(entry.getKey()))));
+			userList.add(listBox);
 		}
 		userListView.setItems(userList);
 		userInfo.getChildren().add(userListView);
-		userInfo.getChildren().addAll(shieldBoxes);
+		userInfo.getChildren().addAll(shieldBoxList);
 		userSetup.getChildren().add(connectedTimeLabel);
 		userSetup.getChildren().add(connectedUsersLabel);
 		userSetup.getChildren().add(userInfo);
+		
+		System.out.println(users.get("0").getShields());
+		System.out.println(users.get("0").getRankString());
 		
 		System.out.println(connectedTimeLabel.getText());
 		System.out.println(connectedUsersLabel.getText());
 		System.out.println(userListView.getItems().toString());
 		
+		subscribeToStartGame();
+		
 		Button startGame = new Button("Start Game");
 		startGame.setPrefSize(300, 100);
+		startGame.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent arg0) {
+				startGame(users.size());
+			}
+		});
 		if(user.equals(users.get("0").getName())) {
 			userSetup.getChildren().add(startGame);
 		}
+		showStage(userSetup);
+	}
+	
+	public void showStage(VBox userSetup) {
 		Platform.runLater(new Runnable() {
-
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				primStage.setScene(new Scene(userSetup, 800, 600));
-				primStage.show();
-				
+				primStage.show();	
 			}
-			
 		});
 	}
 	
@@ -87,12 +125,56 @@ public class QuestUserLobby extends Application {
 		final ObservableList<Image> shields = FXCollections.observableArrayList();
 		
 		for(int i = 1; i < 5; i++) {
-			shields.add(new Image("/playingCards/shield_"+ i + ".jpg", 20, 20, true, true));
+			shields.add(new Image("/playingCards/shield_"+ i + ".jpg", 50, 50, true, true));
 		}
 		
 		return shields;
 	}
 	
+	public void startGame(int numPlayers) {
+		if(numPlayers > 1) {
+			QuestClient.session.send("/app/startGame", "{}");
+		}
+	}
+	
+	public void subscribeToStartGame() {
+		QuestClient.session.subscribe("/users/startGame-" + userName, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payLoad) {
+				System.out.println("GOT START GAME REPLY");
+				startView(payLoad);
+			}
+		});
+	}
+	
+	public void startView(Object payLoad) {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				View view = new View();
+				try {
+					view.start(primStage);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				List<Object> gameObjects = (List<Object>) ((ServerMessage)payLoad).getMessage();
+				ArrayList<String> deck = (ArrayList<String>)gameObjects.get(1);
+				ObjectMapper mapper = new ObjectMapper();
+				Players players = mapper.convertValue(gameObjects.get(0), Players.class);
+				StoryDeck sDeck = mapper.convertValue(gameObjects.get(1), StoryDeck.class);
+				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(2), StoryDiscard.class);
+			
+				//view.update(null, players, sDeck, sDiscard, null);
+			}
+		});
+	}
+	
+	/* For use if we get there...
 	class ImageListCell extends ListCell<Image> {
 		private final ImageView view;
 		
@@ -114,13 +196,13 @@ public class QuestUserLobby extends Application {
 		}
 	}
 	
-	private ComboBox<Image> createShieldComboBox(ObservableList<Image> shields) {
+	private ComboBox<Image> createShieldComboBox(ObservableList<Image> shields, int i) {
 		ComboBox<Image> shieldCombo = new ComboBox<>();
 		shieldCombo.getItems().addAll(shields);
 		shieldCombo.setButtonCell(new ImageListCell());
 		shieldCombo.setCellFactory(listView -> new ImageListCell());
-		shieldCombo.getSelectionModel().select(0);
+		shieldCombo.getSelectionModel().select(i);
 		return shieldCombo;
-	}
+	}*/
 
 }

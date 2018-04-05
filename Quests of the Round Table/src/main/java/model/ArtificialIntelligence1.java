@@ -9,10 +9,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import control.QuestHandler;
 
+@JsonDeserialize(as = ArtificialIntelligence1.class)
 public class ArtificialIntelligence1 extends Player implements AIStrategies {
 
+	/**
+	 * SerialUID
+	 */
+	private static final long serialVersionUID = 6693981383834255191L;
+	public boolean AI1;
 	@Override
 	public boolean doIParticipateInTournament(Players p, Tournament t) {
 		//check if current participants including AI can win/evolve 
