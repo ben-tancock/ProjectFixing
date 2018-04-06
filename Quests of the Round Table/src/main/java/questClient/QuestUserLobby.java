@@ -40,11 +40,11 @@ import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Player;
 import model.Person;
-import model.PlayerPOJO;
 import model.Players;
 import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
+import model.pojo.PlayerPOJO;
 import view.View;
 
 public class QuestUserLobby extends Application {
@@ -175,12 +175,12 @@ public class QuestUserLobby extends Application {
 				for(int i = 0; i < receivedMap.size(); i++) {
 					System.out.println(receivedMap.get(i));
 					PlayerPOJO pojo = mapper.convertValue(receivedMap.get(i), PlayerPOJO.class);
-					//Player player = new Person();
-					//player = player.fromPOJO(pojo);
-					//playersList.add(player);
+					Player player = new Person();
+					player = player.fromPOJO(pojo);
+					playersList.add(player);
 				}
 				Players players = new Players();
-				//players.setPlayers(playersList);
+				players.setPlayers(playersList);
 				view.update(null, players, sDeck, sDiscard, null);
 			}
 		});

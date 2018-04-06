@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import control.PlayGame;
 import control.QuestHandler;
+import model.pojo.PlayerPOJO;
 
 @JsonDeserialize(using = PlayerDeserializer.class)
 public abstract class Player implements Serializable {
@@ -103,12 +104,62 @@ public abstract class Player implements Serializable {
 		focused = pojo.getFocused();
 		dealer = pojo.getDealer();
 		shields = pojo.getShields();
-		bid = pojo.getBid();
-		aBP = pojo.getaBP();
 		hand = pojo.getHand();
-		weapons = pojo.getWeapons();
 		allies = pojo.getAllies();
 		amour = pojo.getAmour();
+		weapons = pojo.getWeapons();
+		bid = pojo.getBid();
+		aBP = pojo.getaBP();
+		/*
+		ArrayList<Adventure> handList = new ArrayList<>();
+		for(AdventurePOJO aPojo : pojo.getHand()) {
+			if(aPojo instanceof AllyPOJO) {
+				Ally ally = new Ally();
+				ally = ally.fromPOJO((AllyPOJO)aPojo);
+				handList.add(ally); 
+			} else if(aPojo instanceof AmourPOJO) {
+				Amour amour = new Amour();
+				amour = amour.fromPOJO((AmourPOJO)aPojo);
+				handList.add(amour);
+			} else if(aPojo instanceof FoePOJO) {
+				Foe foe = new Foe();
+				foe = foe.fromPOJO((FoePOJO)aPojo);
+				handList.add(foe);
+			} else if(aPojo instanceof TestPOJO) {
+				Test test = new Test();
+				test = (Test) test.fromPOJO((TestPOJO)aPojo);
+				handList.add(test);
+			} else if(aPojo instanceof WeaponPOJO) {
+				Weapon weapon = new Weapon();
+				weapon = weapon.fromPOJO((WeaponPOJO)aPojo);
+				handList.add(weapon);
+			}
+		}
+		hand = handList;
+		
+		ArrayList<Weapon> weaponList = new ArrayList<>();
+		for(WeaponPOJO wPojo : pojo.getWeapons()) {
+			Weapon weapon = new Weapon();
+			weapon = weapon.fromPOJO((WeaponPOJO)wPojo);
+			weaponList.add(weapon);
+		}
+		weapons = weaponList;
+		
+		ArrayList<Ally> allyList = new ArrayList<>();
+		for(AllyPOJO aPojo : pojo.getAllies()) {
+			Ally ally = new Ally();
+			ally = ally.fromPOJO((AllyPOJO)aPojo);
+			allyList.add(ally);
+		}
+		allies = allyList;
+		
+		ArrayList<Amour> amourList = new ArrayList<>();
+		for(AmourPOJO aPojo : pojo.getAmour()) {
+			Amour amour = new Amour();
+			amour = amour.fromPOJO((AmourPOJO)aPojo);
+			handList.add(amour);
+		}
+		amour = amourList;
 		/*
 		if(!playerMap.get("rank").equals(null) || !playerMap.get("rank").equals("")) {
 			System.out.println(playerMap.get("rank").getClass());

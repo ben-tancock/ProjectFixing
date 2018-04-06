@@ -1,35 +1,39 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(as = Ally.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Ally extends Adventure{
+public class Ally extends Adventure implements Serializable{
 	/**
 	 * seialUID
 	 */
 	private static final long serialVersionUID = -3903402141872395001L;
-	String name;
-	int bp;
-	int bids;
-	int state;
+	private String name;
+	private int battlePoints;
+	private int bids;
+	private int state;
 	boolean ally;
 	
 	public Ally() {
 		name = "";
-		bp = 0;
+		battlePoints = 0;
 		state = 0;
 		bids = 0;
 	}
 	
 	public Ally(String n, int b, int bs, int state) {
 		name = n;
-		bp = b;
+		battlePoints = b;
 		bids = bs;
 		state = CardStates.FACE_DOWN;
 	}
+	
 	/*
 	public void playAlly() {
 		switch(name) {
@@ -54,9 +58,8 @@ public class Ally extends Adventure{
 		return name;
 	}
 	
-	@Override
 	public int getBattlePoints() {
-		return bp;
+		return battlePoints;
 	}
 	
 	public int getBids() {
@@ -72,7 +75,7 @@ public class Ally extends Adventure{
 	}
 	
 	public void setBattlePoints(int b) {
-		bp = b;
+		battlePoints = b;
 	}
 	
 	public void setBids(int b) {
