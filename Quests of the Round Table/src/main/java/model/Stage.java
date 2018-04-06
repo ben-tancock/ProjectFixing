@@ -11,7 +11,7 @@ public class Stage {
 	
 	public Stage(Test t) {
 		test = t;
-		bids = t.getMinbid();
+		bids = t.getMinBid();
 	}
 	
 	public Stage(Foe f, ArrayList<Weapon> weapons) {

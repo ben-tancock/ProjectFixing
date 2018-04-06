@@ -1,32 +1,40 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(as = Amour.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Amour extends Adventure{
+public class Amour extends Adventure implements Serializable{
 	/**
 	 * serialUID
 	 */
 	private static final long serialVersionUID = 877658934314322713L;
 	private String name;
-	private int bp;
+	private int battlePoints;
 	private int state;
 	boolean amour;
 	
 	public Amour() {
 		name = "";
-		bp = 0;
+		battlePoints = 0;
 		state = 0;
 	}
 	
 	public Amour(String n, int b, int state) {
 		name = n;
-		bp = b;
+		battlePoints = b;
 		state = CardStates.FACE_DOWN;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public int getState() {
@@ -37,8 +45,11 @@ public class Amour extends Adventure{
 		state = s;
 	}
 	
-	@Override
+	public void setBattlePoints(int battlePoints) {
+		this.battlePoints = battlePoints;
+	}
+	
 	public int getBattlePoints() {
-		return bp;
+		return battlePoints;
 	}
 }

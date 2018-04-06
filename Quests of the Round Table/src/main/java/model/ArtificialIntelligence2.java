@@ -132,7 +132,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 	public Stage weakestFoeWithNoWeapons(Quest questCard) {
 		int indexOfCardWithLowestBp;
 		ArrayList<Foe> foes = new ArrayList<Foe>();
-		int smallestBp = getHand().get(0).getBattlePoints();
+		//int smallestBp = getHand().get(0).getBattlePoints();
 		for(Adventure a : getHand()) {
 			if(a instanceof Foe) {
 				foes.add((Foe)a);
@@ -176,6 +176,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 		}
 	}
 	
+	
 	public boolean incrementByTenPerStage(Quest q) {
 		int bpCounter = 1;
 		ArrayList<Adventure>cardsWithTenBp = new ArrayList<Adventure>();
@@ -216,6 +217,7 @@ public class ArtificialIntelligence2 extends Player implements AIStrategies {
 			}
 		}
 	}
+	
 	
 	public ArrayList<Adventure> incrementOf10WithAmourFirst(){
 		ArrayList<Adventure> increasingCards = new ArrayList<Adventure>();

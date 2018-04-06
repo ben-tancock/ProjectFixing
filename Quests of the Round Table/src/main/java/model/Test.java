@@ -1,9 +1,13 @@
 package model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+@JsonDeserialize(as = Test.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Test extends Adventure{
+public class Test extends Adventure implements Serializable{
 	/**
 	 * serialUID
 	 */
@@ -29,7 +33,7 @@ public class Test extends Adventure{
 		return name;
 	}
 	
-	public int getMinbid() {
+	public int getMinBid() {
 		return minBid;
 	}
 	

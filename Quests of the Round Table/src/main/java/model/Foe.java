@@ -1,11 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+@JsonDeserialize(as = Foe.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Foe extends Adventure{
+public class Foe extends Adventure implements Serializable{
 	/**
 	 * serialUID
 	 */

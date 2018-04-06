@@ -1,4 +1,4 @@
-package model;
+package model.pojo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,12 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import model.Adventure;
+import model.Ally;
+import model.Amour;
+import model.Player;
+import model.Weapon;
 
 public class PlayerPOJO implements Serializable{
 	private static final long serialVersionUID = 9067267335225726349L;
@@ -127,7 +133,4 @@ public class PlayerPOJO implements Serializable{
 	public void setaBP(int aBP) {
 		this.aBP = aBP;
 	}
-	
-	
-	
 }

@@ -17,14 +17,19 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
+import model.Ally;
+import model.Amour;
+import model.Foe;
 import model.Player;
-import model.PlayerPOJO;
 import model.Players;
 import model.StoryDeck;
 import model.StoryDiscard;
-
+import model.Test;
+import model.Weapon;
+import model.pojo.PlayerPOJO;
 @Controller
 public class ServerMessageController {
 
