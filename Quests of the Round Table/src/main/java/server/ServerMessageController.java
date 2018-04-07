@@ -59,7 +59,7 @@ public class ServerMessageController {
 	}
 	
 	@MessageMapping("/register")
-	@SendTo("/users")
+	@SendTo("/users/register")
 	public ServerMessage connect( ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
 		players.addHuman();
