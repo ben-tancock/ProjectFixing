@@ -85,7 +85,7 @@ public class QuestClient extends Application {
 				System.out.println("connectButton clicked");
 				String name = "{\"name\":\"" + userNameField.getText() + "\"}";
 				userName = userNameField.getText();
-				session.subscribe("/users", new StompFrameHandler() {
+				session.subscribe("/users/register", new StompFrameHandler() {
 
 					@Override
 					public Type getPayloadType(StompHeaders headers) {

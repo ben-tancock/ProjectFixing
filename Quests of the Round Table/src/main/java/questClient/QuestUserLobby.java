@@ -38,6 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.AdventureDeck;
 import model.AdventureDiscard;
+import model.CardStates;
 import model.Player;
 import model.Person;
 import model.Players;
@@ -139,6 +140,7 @@ public class QuestUserLobby extends Application {
 		}
 	}
 	
+	boolean started;
 	public void subscribeToStartGame() {
 		QuestClient.session.subscribe("/users/startGame-" + userName, new StompFrameHandler() {
 			@Override
@@ -149,7 +151,10 @@ public class QuestUserLobby extends Application {
 			@Override
 			public void handleFrame(StompHeaders headers, Object payLoad) {
 				System.out.println("GOT START GAME REPLY");
-				startView(payLoad);
+				if(!started) {
+					startView(payLoad);
+					started = true;
+				}
 			}
 		});
 	}
@@ -169,6 +174,7 @@ public class QuestUserLobby extends Application {
 				ObjectMapper mapper = new ObjectMapper();
 				//Players players = mapper.convertValue(gameObjects.get(0), Players.class);
 				StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
+				sDeck.subList(sDeck.size() - sDeck.size()/2, sDeck.size()).clear();
 				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
 				List<HashMap<String, String>> receivedMap = (List<HashMap<String, String>>)gameObjects.get(2);
 				List<Player> playersList = new ArrayList<>();
@@ -177,6 +183,9 @@ public class QuestUserLobby extends Application {
 					PlayerPOJO pojo = mapper.convertValue(receivedMap.get(i), PlayerPOJO.class);
 					Player player = new Person();
 					player = player.fromPOJO(pojo);
+					if(!userName.equals(player.getName())) {
+						player.setHandState(CardStates.FACE_DOWN);
+					}
 					playersList.add(player);
 				}
 				Players players = new Players();
