@@ -174,7 +174,8 @@ public class QuestUserLobby extends Application {
 				ObjectMapper mapper = new ObjectMapper();
 				//Players players = mapper.convertValue(gameObjects.get(0), Players.class);
 				StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
-				sDeck.subList(sDeck.size() - sDeck.size()/2, sDeck.size()).clear();
+				
+				
 				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
 				List<HashMap<String, String>> receivedMap = (List<HashMap<String, String>>)gameObjects.get(2);
 				List<Player> playersList = new ArrayList<>();
@@ -188,6 +189,7 @@ public class QuestUserLobby extends Application {
 					}
 					playersList.add(player);
 				}
+				resizeStoryDeck(sDeck, playersList.size());
 				Players players = new Players();
 				players.setPlayers(playersList);
 				view.update(null, players, sDeck, sDiscard, null);
@@ -225,5 +227,9 @@ public class QuestUserLobby extends Application {
 		shieldCombo.getSelectionModel().select(i);
 		return shieldCombo;
 	}*/
+	
+	public void resizeStoryDeck(StoryDeck sDeck, int numPlayers) {
+		sDeck.subList(sDeck.size() - sDeck.size()/numPlayers, sDeck.size()).clear();;
+	}
 
 }
