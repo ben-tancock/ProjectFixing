@@ -102,12 +102,12 @@ public class ServerMessageController {
 		gameStuff.add(sDiscard);
 		gameStuff.add(sendingPlayers);
 		ServerMessage serverMessage = new ServerMessage(gameStuff);
-		if(sendingPlayers.size() == 2) {
-			template.convertAndSend("/users/startGame-" + users.get("0").getName(), serverMessage);
+		
+		for(int i = 0; i < sendingPlayers.size(); i++) {
+			template.convertAndSend("/users/startGame-" + users.get(Integer.toString(i)).getName(), serverMessage);
 			gameStuff.remove(sendingPlayers);
-			Collections.reverse(sendingPlayers);
+			sendingPlayers = rotate(sendingPlayers);
 			gameStuff.add(sendingPlayers);
-			template.convertAndSend("/users/startGame-" + users.get("1").getName(), serverMessage);
 		}
 	}
 	
@@ -117,4 +117,11 @@ public class ServerMessageController {
         headerAccessor.setLeaveMutable(true);
         return headerAccessor.getMessageHeaders();
     }
+	
+	public ArrayList<PlayerPOJO> rotate(ArrayList<PlayerPOJO> sendingList) {
+		PlayerPOJO temp = sendingList.get(0);
+		sendingList.add(temp);
+		sendingList.remove(0);
+		return sendingList;
+	}
 }
