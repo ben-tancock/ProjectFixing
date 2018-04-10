@@ -118,7 +118,7 @@ public class PlayGame extends Application{
 		
 		/* this changes the amount of actual cards in story deck...
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Tournament) {
+			if(sDeck.get(i) instanceof Quest && sDeck.get(i).getName().equals("test_of_the_questing_beast")) {
 				sDeck.set(0, sDeck.get(i));
 				sDeck.remove(i);
 			}
@@ -327,21 +327,24 @@ public class PlayGame extends Application{
 		TournamentHandler th = TournamentHandler.getInstance();
 		//
 		for(int i = 0; i < sDeck.size(); i++) {
-			if(sDeck.get(i) instanceof Quest) {
+			if(sDeck.get(i) instanceof Quest && sDeck.get(i).getName().equals("search_for_the_questing_beast")) {
 				sDeck.set(0, sDeck.get(i));
 			}
 		}	
 		
-		//setHand(p);
+		setHand(p);
 		
 		for(Player pl : players.getPlayers()) {
 			pl.setHandState(CardStates.FACE_DOWN);
 			if(qh != null && qh.getCard() != null) {
-				view.update(null, players, sDeck, sDiscard, qh.getCard());
+				//view.update(null, players, sDeck, sDiscard, qh.getCard());
 			} else { 
-				view.update(null, players, sDeck, sDiscard, null);
+				//view.update(null, players, sDeck, sDiscard, null);
 			}
 		}
+		view.update(null, players, sDeck, sDiscard, null);
+		
+		
 		boolean seeCards = view.seeCardPrompt(p);
 		if(seeCards) {
 			p.setHandState(CardStates.FACE_UP);
@@ -437,8 +440,11 @@ public class PlayGame extends Application{
 			}
 		}
 		else if(a.getName().equals("mordred")) {
-			p.remove(p.getHand(), aDiscard, a);
-			doMordred(p);
+			if(view.mordredPrompt() == true) {
+				p.remove(p.getHand(), aDiscard, a);
+				view.update(null, players, sDeck, sDiscard, null);
+				doMordred(p);
+			}
 		}
 		else if(isPlaying) {
 			System.out.println("test is playing execute");
@@ -511,44 +517,43 @@ public class PlayGame extends Application{
 		// have all players ally cards do that bring to front thing to make them easier to see
 		
 		for(int i = 0; i < PlayGame.getInstance().getPlayers().getPlayers().size(); i++) {
-			System.out.println(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName());
-			if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() != p.getName()) {
-				if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() == "Player 1") {
-					System.out.println("test behaviour p1");
-					setBehaviour(view.getPlayerSurface());
-				}
-				else if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() == "Player 2") {
-					System.out.println("test behaviour p2");
-					setBehaviour(view.getPlayer2Surface());
-				}
-				else if(PlayGame.getInstance().getPlayers().getPlayers().get(i).getName() == "Player 3") {
-					System.out.println("test behaviour p3");
-					setBehaviour(view.getPlayer3Surface());
-				}
-				else {
-					System.out.println("test behaviour p4");
-					setBehaviour(view.getPlayer4Surface());
-				}
+			Player q = PlayGame.getInstance().getPlayers().getPlayers().get(i);
+			
+			if(i == 1) {
+				setBehaviour(view.getPlayer2Surface(), q);
 			}
-			//
+			
+			else if(i == 2) {
+				setBehaviour(view.getPlayer3Surface(), q);
+			}
+			
+			else if(i == 3) {
+				setBehaviour(view.getPlayer4Surface(), q);
+			}
+			
 		}
 		
 	}
 	
-	public static void setBehaviour(HBox field) {
+	public static void setBehaviour(HBox field, Player p) {
 		for(Node n : field.getChildren()) {
 			n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-
+				
 				@Override
 				public void handle(MouseEvent arg0) {
-					System.out.println("test field card clicked");
+					System.out.println("test field card clicked: " + p.getName());
+					int i = field.getChildren().indexOf(n);
+					System.out.println("test field card clicked: " + p.getHand().get(i).getName());
+					p.remove(p.getAllies(), aDiscard, p.getAllies().get(i));
+					view.update(null, players, sDeck, sDiscard, null);
 				}
 				
 			});
 			
-			/*n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
+			n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
+					System.out.println("test mouse enter");
 					((HBox)n).setPadding(new Insets(0, 0, 0, 0));
 				}
 			});
@@ -558,21 +563,24 @@ public class PlayGame extends Application{
 				public void handle(MouseEvent arg0) {
 					((HBox)n).setPadding(new Insets(0, -50, 0, 0));	
 				}
-			});*/
+			});
 		}
 		
 		
 	}
 	
-	public static void setBehaviour(VBox field) {
+	public static void setBehaviour(VBox field, Player p) {
 		for(Node n : field.getChildren()) {
 			n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 
 				@Override
 				public void handle(MouseEvent arg0) {
-					System.out.println("test field card clicked");
+					System.out.println("test field card clicked: Player " + p.getName());
+					int i = field.getChildren().indexOf(n);
+					System.out.println("test field card clicked: " + p.getHand().get(i).getName());
+					p.remove(p.getAllies(), aDiscard, p.getAllies().get(i));
+					view.update(null, players, sDeck, sDiscard, null);
 				}
-				
 			});
 			
 		/*	n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
@@ -590,26 +598,26 @@ public class PlayGame extends Application{
 			});*/
 		}
 	}
-	/*
+	
 	public static void setHand(Player p) {
 		while(p.getHand().size() < 12) {
 			p.drawCard(1, aDeck);
 		}
 		
-		Ally gawain = new Ally("sir_gawain", 10, 0);
-		Ally pellinore = new Ally ("king_pellinore", 10, 0);
-		Ally percival = new Ally ("sir_percival", 5, 0);
-		Ally tristan = new Ally ("sir_tristan", 10, 0);
-		Ally arthur = new Ally ("king_arthur", 10, 2);
-		Ally guinevere = new Ally ("queen_guinevere", 0, 3);
-		Ally merlin = new Ally ("merlin", 0, 0);
-		Ally galahad = new Ally ("sir_galahad", 15, 0);
-		Ally laneclot = new Ally ("sir_lancelot", 15, 0);
-		Ally iseult = new Ally ("queen_iseult", 0, 2);
-		Foe mordred = new Foe ("mordred", 30, 30);
+		Test qBeast = new Test("test_of_the_questing_beast", 0, CardStates.FACE_DOWN);
+		Ally pellinore = new Ally ("king_pellinore", 10, 0, CardStates.FACE_DOWN);
+		Ally percival = new Ally ("sir_percival", 5, 0, CardStates.FACE_DOWN);
+		Ally tristan = new Ally ("sir_tristan", 10, 0, CardStates.FACE_DOWN);
+		Ally arthur = new Ally ("king_arthur", 10, 2, CardStates.FACE_DOWN);
+		Ally guinevere = new Ally ("queen_guinevere", 0, 3, CardStates.FACE_DOWN);
+		Ally merlin = new Ally ("merlin", 0, 0, CardStates.FACE_DOWN);
+		Ally galahad = new Ally ("sir_galahad", 15, 0, CardStates.FACE_DOWN);
+		Ally laneclot = new Ally ("sir_lancelot", 15, 0, CardStates.FACE_DOWN);
+		Ally iseult = new Ally ("queen_iseult", 0, 2, CardStates.FACE_DOWN);
+		Foe mordred = new Foe ("mordred", 30, 30, CardStates.FACE_DOWN);
 		
-		p.getHand().set(0, gawain);
-		p.getHand().set(1, pellinore);
+		p.getHand().set(0, qBeast);
+		/*p.getHand().set(1, pellinore);
 		p.getHand().set(2, percival);
 		p.getHand().set(3, tristan);
 		p.getHand().set(4, arthur);
@@ -618,10 +626,10 @@ public class PlayGame extends Application{
 		p.getHand().set(7, galahad);
 		p.getHand().set(8, laneclot);
 		p.getHand().set(9, iseult);
-		p.getHand().set(10, mordred);
+		p.getHand().set(10, mordred);*/
 		//p.getHand().set(11, gawain);
 		
-	}*/
+	}
 	
 	
 	public static void allyClicked(Ally a) {
@@ -646,42 +654,7 @@ public class PlayGame extends Application{
 				a.ability(p.getAllies());
 			}
 		}
-		/*QuestHandler qh = QuestHandler.getInstance();
-		for(Player p : players.getPlayers()) {
-			for(Ally a : p.getAllies()) {
-				//Check Sir Percival
-				if(qh !=  null && qh.getCard() != null) {
-					if(a.getName().equals("sir_percival") ) {
-						if(qh.getCard().getName().equals("search_for_the_holy_grail")) {
-							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 20)");
-							a.setBattlePoints(20);
-						} else {
-							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 5)");
-							a.setBattlePoints(5);
-						}
-					} 
-					//Check Sir Gawain
-					else if(a.getName().equals("sir_gawain")) {
-						if(qh.getCard().getName().equals("test_of_the_green_knight")) {
-							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 20)");
-							a.setBattlePoints(20);
-						}else {
-							System.out.println(a.getName() + "'s battlepoints are set to: " + a.getBattlePoints() + "(should be 10)");
-							a.setBattlePoints(10);
-						} 
-					}
-				}
-				//Check King Pellinore
-				
-				//Check Queen Iseult
-				
-				//Check Sir Lancelot
-				
-				//Check Sir Tristan
-				
-				//Check Merlin
-			}
-		}*/
+		
 	}
 	
 	
@@ -930,6 +903,22 @@ public class PlayGame extends Application{
 		@Override
 		public void onUpdate() {
 			System.out.println("update");
+			
+			for(Node n : view.getPlayerSurface().getChildren()) {
+				n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent arg0) {
+						((HBox)n).setPadding(new Insets(0, 0, 0, 0));
+					}
+				});
+				n.setOnMouseExited(new javafx.event.EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent arg0) {
+						((HBox)n).setPadding(new Insets(0, -50, 0, 0));	
+					}
+				});
+			}
+			
 			for(Node n : view.getPlayerCards().getChildren()) {
 				n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 					@Override
@@ -960,7 +949,7 @@ public class PlayGame extends Application{
 
 					@Override
 					public void handle(MouseEvent arg0) {
-						System.out.println("test field card clicked");
+						//System.out.println("test field card clicked");
 					}
 					
 				});
