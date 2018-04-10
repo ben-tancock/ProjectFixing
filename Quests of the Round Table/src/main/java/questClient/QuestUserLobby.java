@@ -72,6 +72,7 @@ public class QuestUserLobby extends Application {
 		Label connectedTimeLabel = new Label("Connected Time " + time);
 		Label connectedUsersLabel = new Label("List of connected Users: ");
 		userName = user;
+		System.out.println("USER = " + userName);
 		HBox userInfo = new HBox();
 		final ObservableList<Image> shields = getShieldImages();
 		final ObservableList<ImageView> shieldBoxList = FXCollections.observableArrayList();
@@ -135,9 +136,14 @@ public class QuestUserLobby extends Application {
 	}
 	
 	public void startGame(int numPlayers) {
-		if(numPlayers > 1) {
-			QuestClient.session.send("/app/startGame", "{}");
+		if(numPlayersBetween2And4(numPlayers)) {
+			ClientGame clientGame = new ClientGame();
+			clientGame.startGame(userName, primStage);
 		}
+	}
+	
+	public boolean numPlayersBetween2And4(int numPlayers) {
+		return numPlayers > 1 && numPlayers < 5;
 	}
 	
 	boolean started;
@@ -152,47 +158,10 @@ public class QuestUserLobby extends Application {
 			public void handleFrame(StompHeaders headers, Object payLoad) {
 				System.out.println("GOT START GAME REPLY");
 				if(!started) {
-					startView(payLoad);
+					ClientGame clientGame = new ClientGame();
+					clientGame.startView(payLoad, primStage, userName);
 					started = true;
 				}
-			}
-		});
-	}
-	
-	public void startView(Object payLoad) {
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				View view = new View();
-				try {
-					view.start(primStage);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				List<Object> gameObjects = (List<Object>) ((ServerMessage)payLoad).getMessage();
-				//ArrayList<String> deck = (ArrayList<String>)gameObjects.get(1);
-				ObjectMapper mapper = new ObjectMapper();
-				//Players players = mapper.convertValue(gameObjects.get(0), Players.class);
-				StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
-				
-				
-				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
-				List<HashMap<String, String>> receivedMap = (List<HashMap<String, String>>)gameObjects.get(2);
-				List<Player> playersList = new ArrayList<>();
-				for(int i = 0; i < receivedMap.size(); i++) {
-					System.out.println(receivedMap.get(i));
-					PlayerPOJO pojo = mapper.convertValue(receivedMap.get(i), PlayerPOJO.class);
-					Player player = new Person();
-					player = player.fromPOJO(pojo);
-					if(!userName.equals(player.getName())) {
-						player.setHandState(CardStates.FACE_DOWN);
-					}
-					playersList.add(player);
-				}
-				resizeStoryDeck(sDeck, playersList.size());
-				Players players = new Players();
-				players.setPlayers(playersList);
-				view.update(null, players, sDeck, sDiscard, null);
 			}
 		});
 	}
@@ -228,8 +197,5 @@ public class QuestUserLobby extends Application {
 		return shieldCombo;
 	}*/
 	
-	public void resizeStoryDeck(StoryDeck sDeck, int numPlayers) {
-		sDeck.subList(sDeck.size() - sDeck.size()/numPlayers, sDeck.size()).clear();;
-	}
-
+	
 }

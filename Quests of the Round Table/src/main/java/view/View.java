@@ -61,7 +61,7 @@ import model.StoryDeck;
 import model.StoryDiscard;
 import model.Test;
 import model.Weapon;
-import control.PlayGame.PlayGameControlHandler;
+import questClient.ClientGame.PlayGameControlHandler;
 import control.QuestHandler.QuestControlHandler;
 
 public class View extends Application {
@@ -265,8 +265,10 @@ public class View extends Application {
 	public void update(MouseEvent event, Players players, StoryDeck sDeck, StoryDiscard sDiscard, Quest quest) {
 		if(players.getPlayers().size() == 2) {
 			setupFor2Players(event, players, sDeck, sDiscard, quest);
+			notifyUpdate();
 		} else if (players.getPlayers().size() == 3) {
 			setUpFor3Players(event, players,sDeck, sDiscard, quest);
+			notifyUpdate();
 		} else {
 			setUpFor4Players(event, players, sDeck, sDiscard, quest);
 			notifyUpdate();
@@ -1748,7 +1750,7 @@ public class View extends Application {
 	}
 	
 	public void notifyUpdate() {
-		//System.out.println("TESTSETESTSAGDSAGDSGSADGASD");
+		System.out.println("TESTSETESTSAGDSAGDSGSADGASD");
 		if(listeners.get(0) != null) {
 			listeners.get(0).onUpdate();
 		}
