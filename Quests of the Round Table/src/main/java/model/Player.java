@@ -599,7 +599,7 @@ public abstract class Player implements Serializable {
 		}
 		logger.info("Story card drawn by " + getName() + ": " + storyDiscard.get(current).getName());
 		logger.info("Story Deck Count: " + storyDeck.size() + " Story Discard Pile Count: " + storyDiscard.size());
-		if (storyDiscard.get(current) instanceof Quest) {
+		/*if (storyDiscard.get(current) instanceof Quest) {
 			Players.notifyListeners("quest drawn", this);
 		}
 		else if (storyDiscard.get(current) instanceof Event) {
@@ -607,7 +607,7 @@ public abstract class Player implements Serializable {
 		}
 		else if (storyDiscard.get(current) instanceof Tournament) {
 			Players.notifyListeners("tournament drawn", this);
-		}
+		}*/
 	}
 	
 	public void discard(Adventure card, AdventureDiscard discardPile, boolean onPlaySurface) throws Exception { // discard either from hand or allies in play, implement allies later
