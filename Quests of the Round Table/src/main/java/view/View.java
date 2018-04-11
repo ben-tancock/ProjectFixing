@@ -201,7 +201,7 @@ public class View extends Application {
 		// TODO Auto-generated method stub
 		VBox startPane = new VBox(50);
 		primStage = primaryStage;
-		/*
+		
 		//rules button
 		rulesButton.setPrefSize(300, 100);
 		//2 player button
@@ -216,7 +216,7 @@ public class View extends Application {
 		Scene scene = new Scene(startPane, 1220, 700,Color.BISQUE);
 		primStage.setScene(scene);
 		primStage.setTitle("Quest of the Round Table");
-		primStage.show();*/
+		primStage.show();
 	}
 	public HBox storyCards() {
 		HBox storyCards = new HBox(-70.5);
@@ -661,18 +661,28 @@ public class View extends Application {
 	public HBox playedCards(List<Adventure> playingSurface, int index) {
 		HBox playedCards = new HBox(-50);
 		
-		for(Adventure a: playingSurface) {
+		for(Adventure a : playingSurface) {
 			Image card;
 			if(a.getState() == CardStates.FACE_UP) {
 				card = new Image("/playingCards/" + a.getName() + ".jpg", 75, 100, true, true);
 			} else {
 				card = new Image("/playingCards/adventure_back.jpg", 75, 100, true, true);
 			}
+			
+			
+			
 			ImageView theCard = new ImageView(card);
+			theCard.setSmooth(true);
+			
 			if(index == 1 || index == 2) {
 				theCard.setRotate(180);
 			}
-			playedCards.getChildren().add(theCard);
+			
+			HBox theCardBox = new HBox();
+			theCardBox.getChildren().add(theCard);
+			theCardBox.setPadding(new Insets(0, -50, 0, 0));
+			playedCards.getChildren().add(theCardBox);
+		
 		}
 		if(playedCards.getChildren().isEmpty()) {
 			playedCards.setMinHeight(100);
@@ -1433,136 +1443,7 @@ public class View extends Application {
 	}
 	
 	
-	/*public boolean cardOverflowPrompt(Player p, int numCards) {
-		cardClicked = false;
-		buttonClicked = false;
-		System.out.println(numCards);
-		PlayGame pg = PlayGame.getInstance();
-		QuestHandler qh = QuestHandler.getInstance();
-		
-		VBox window = new VBox();
-		Label discardCountLabel = new Label();
-		discardCountLabel.setText("Number of cards to play or discard: " + numCards);
-		if(qh != null && qh.getCard() != null) {
-			logger.info("view of card overflow invoked with acive quest, " + p.getName() + " must now discard a card or play an Ally/Amour.");
-		} else {
-			logger.info("view of card overflow invoked, " + p.getName() + " must now discard a card or play an Ally.");
-		}
-		List<Button> allyAmourCards = new ArrayList<>();
-		List<Button> otherCards = new ArrayList<>();
-		for(int cardIndex = 0; cardIndex < p.getHand().size(); cardIndex++) {
-			if(qh != null && qh.getCard() != null) {
-				
-				if(p.getHand().get(cardIndex) instanceof Ally || (p.getHand().get(cardIndex) instanceof Amour && p.getAmour().size() == 0) || p.getHand().get(cardIndex).getName().equals("mordred")) {
-					Button button = new Button();
-					final int index = cardIndex;
-					button.setBackground(makeBground(p.getHand().get(index).getName()));
-					button.setMinWidth(75);
-					button.setMinHeight(100);
-					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent arg0) {
-							if(p.getHand().get(index).getName().equals("mordred")) {
-								notifyMordredPicked(p,(Foe)p.getHand().get(index));
-								cardClicked = true;
-								dialog.close();
-							} else {
-								p.getHand().get(index).setState(CardStates.FACE_UP);
-								update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), qh.getCard());
-								logger.info("Controller notified that " + p.getName() + " played an Ally or Amour.");
-								notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
-								dialog.close();
-								cardClicked = true;
-							}
-						}
-					});
-					allyAmourCards.add(button);
-				} else {
-					Button button = new Button();
-					final int index = cardIndex;
-					button.setBackground(makeBground(p.getHand().get(index).getName()));
-					button.setMinWidth(75);
-					button.setMinHeight(100);
-					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent arg0) {
-							logger.info("Controller notified that " + p.getName() + " discarded a card.");
-							notifyPlayerCardDiscarded(p, p.getHand().get(index), false);
-							dialog.close();
-							cardClicked = true;
-						}
-					});
-					otherCards.add(button);
-				}
-			}
-			else {
-				if(p.getHand().get(cardIndex) instanceof Ally || p.getHand().get(cardIndex).getName().equals("mordred")) {
-					Button button = new Button();
-					final int index = cardIndex;
-					button.setBackground(makeBground(p.getHand().get(index).getName()));
-					button.setMinWidth(75);
-					button.setMinHeight(100);
-					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent arg0) {
-							if(p.getHand().get(index).getName().equals("mordred")) {
-								notifyMordredPicked(p, (Foe)p.getHand().get(index));
-								cardClicked = true;
-								dialog.close();
-							} else {
-								p.getHand().get(index).setState(CardStates.FACE_UP);
-								update(arg0, pg.getPlayers(), pg.getSDeck(), pg.getSDiscard(), null);
-								logger.info("Controller notified that" + p.getName() + " played an Ally.");
-								notifyPlayerCardPlayed(arg0, p, p.getHand().get(index));
-								dialog.close();
-								cardClicked = true;
-							}
-						}
-					});
-					allyAmourCards.add(button);
-				} else {
-					Button button = new Button();
-					final int index = cardIndex;
-					button.setBackground(makeBground(p.getHand().get(index).getName()));
-					button.setMinWidth(75);
-					button.setMinHeight(100);
-					button.setOnMouseClicked(new EventHandler<MouseEvent>() {
-						@Override
-						public void handle(MouseEvent arg0) {
-							logger.info("Controller notified that " + p.getName() + "discarded a card.");
-							notifyPlayerCardDiscarded(p, p.getHand().get(index), false);
-							dialog.close();
-							cardClicked = true;
-						}
-					});
-					otherCards.add(button);
-				}
-			}
-		}
-		HBox firstCardButtons = new HBox();
-		//cards.add(finishedButton);
-		firstCardButtons.getChildren().addAll(allyAmourCards);
-		firstCardButtons.setMaxHeight(100);
-		HBox secondCardButtons = new HBox();
-		secondCardButtons.getChildren().addAll(otherCards);
-		secondCardButtons.setMaxHeight(100);
-		window.getChildren().add(discardCountLabel);
-		window.getChildren().add(firstCardButtons);
-		window.getChildren().add(secondCardButtons);
-		window.setAlignment(Pos.CENTER);
-		window.setMaxHeight(discardCountLabel.getHeight() + firstCardButtons.getHeight() + secondCardButtons.getHeight());
-		Scene scene = new Scene(window, (75 * (allyAmourCards.size() + otherCards.size())) + 100, 250, Color.AQUA);
-		dialog = new CustomDialog("Card OverFlow", primStage, scene);
-		dialog.showAndWait();
-		if(cardClicked) {
-			if(numCards > 1) {
-				cardOverflowPrompt(p, numCards-= 1);
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}*/
+	
 	
 	public void promptTooManyAmour() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -1697,6 +1578,36 @@ public class View extends Application {
 		dialog.showAndWait();
 		//p.getPlayers().get(index)
 		return cardClicked;
+	}
+	
+	public boolean mordredPrompt() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Mordred Dialog");
+		alert.setContentText("Would you like to use Mordred's ability to delete an opponent's ally card?");	
+		alert.initModality(Modality.NONE);
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == ButtonType.OK){
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return false;
+		}	
+	}
+	
+	public boolean notEnoughPrompt() {
+		System.out.println("TEST PROMPT");
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Not enough cards");
+		alert.setContentText("You do not have enough cards to sponsor this quest");	
+		alert.initModality(Modality.NONE);
+		Optional<ButtonType> result = alert.showAndWait();
+		
+		if (result.get() == ButtonType.OK){
+			return true;
+		} else {
+		    // ... user chose CANCEL or closed the dialog
+			return false;
+		}	
 	}
 	
 	//notify when a story card has been clicked

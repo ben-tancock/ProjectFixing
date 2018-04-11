@@ -78,7 +78,7 @@ public class QuestClient extends Application {
 		buttons.getChildren().addAll(connect);
 		userNameField = new TextField();
 		connect.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
+			
 			@Override
 			public void handle(MouseEvent event) {
 				// TODO Auto-generated method stub
