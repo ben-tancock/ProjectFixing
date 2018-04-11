@@ -31,6 +31,8 @@ import org.springframework.web.socket.adapter.standard.StandardWebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
@@ -44,6 +46,7 @@ import model.StoryDiscard;
 import model.Test;
 import model.Weapon;
 import model.pojo.PlayerPOJO;
+import util.ServerSubscribeEndpoints;
 
 @Controller
 public class ServerMessageController implements ApplicationListener<SessionDisconnectEvent>{
@@ -77,8 +80,8 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		numUsersLeft = 0;
 	}
 	
-	@MessageMapping("/register")
-	@SendTo("/users/register")
+	@MessageMapping(ServerMaps.REGISTER)
+	@SendTo(ServerSubscribeEndpoints.REGISTER)
 	public ServerMessage connect(ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
 		players.addHuman();
@@ -87,8 +90,6 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		players.getPlayers().get(userCounter).drawCard(12, aDeck);
 		users.put(Integer.valueOf(userCounter), players.getPlayers().get(userCounter));
 		ServerMessage serverMessage = new ServerMessage(users);
-		System.out.println("Sending: " + serverMessage.toString());
-		System.out.println(sessionId);
 		userCounter++;
 		connectMessage = message;
 		return serverMessage;
@@ -103,10 +104,74 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		return null;
 	}*/
 	
-	@MessageMapping("/startGame")
-	public void startGame(SimpMessageHeaderAccessor headerAccessor) {
-		
+	@MessageMapping(ServerMaps.START_GAME)
+	public void startGame() {
 		System.out.println("STARTING GAME FROM SERVER");
+		
+		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.START_GAME);
+	}
+	
+	public ArrayList<PlayerPOJO> rotate(ArrayList<PlayerPOJO> sendingList) {
+		PlayerPOJO temp = sendingList.get(0);
+		sendingList.add(temp);
+		sendingList.remove(0);
+		return sendingList;
+	}
+	
+	@MessageMapping(ServerMaps.STORY_DRAW)
+	@SendTo(ServerSubscribeEndpoints.STORY_DRAW)
+	public ServerMessage drawStoryCard(ConnectMessage message) {
+		for(Player p : players.getPlayers()) {
+			if(p.getName().equals(message.getName())) {
+				p.drawCard(sDeck, sDiscard);
+				break;
+			}
+		}
+		return mapGameStuffWithoutPlayers();
+	}
+	
+	@MessageMapping(ServerMaps.PLAYED_CARD)
+	public void playCard(List<Object> playerAndCard) {
+		ObjectMapper mapper = new ObjectMapper();
+		PlayerPOJO playerSent = mapper.convertValue(playerAndCard.get(0), PlayerPOJO.class);
+		for(Player p : players.getPlayers()) {
+			if(p.getName().equals(playerSent.getName())) {
+				p.getHand().clear();
+				p.getHand().addAll(playerSent.getHand());
+				p.getAllies().clear();
+				p.getAllies().addAll(playerSent.getAllies());
+				p.getAmour().clear();
+				p.getAmour().addAll(playerSent.getAmour());
+				p.getWeapons().clear();
+				p.getWeapons().addAll(playerSent.getWeapons());
+				break;
+			}
+		}
+		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.PLAYED_CARD);
+	}
+
+	@Override
+	public void onApplicationEvent(SessionDisconnectEvent disconnectEvent) {
+		System.out.println("Client disconnected: " + (Integer.parseInt(disconnectEvent.getSessionId()) - numUsersLeft));
+		users.remove(Integer.parseInt(disconnectEvent.getSessionId()) - numUsersLeft);
+		players.getPlayers().remove(Integer.parseInt(disconnectEvent.getSessionId()) - numUsersLeft);
+		userCounter--;
+		System.out.println(users.size());
+		System.out.println(players.getPlayers().size());
+		ServerMessage serverMessage = new ServerMessage(users);
+		numUsersLeft++;
+		template.convertAndSend(ServerSubscribeEndpoints.REGISTER, serverMessage);
+	}
+	
+	public ServerMessage mapGameStuffWithoutPlayers() {
+		List<Object> gameStuff = new ArrayList<>();
+		gameStuff.add(sDeck);
+		gameStuff.add(sDiscard);
+		ServerMessage serverMessage = new ServerMessage(gameStuff);
+		return serverMessage;
+	}
+	
+	public void mapGameStuffWithPlayersAndSend(String endpoint) {
 		List<Object> gameStuff = new ArrayList<>();
 		ArrayList<PlayerPOJO> sendingPlayers = new ArrayList<>();
 		for(Player p : players.getPlayers()) {
@@ -123,56 +188,10 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		ServerMessage serverMessage = new ServerMessage(gameStuff);
 		
 		for(int i = 0; i < sendingPlayers.size(); i++) {
-			template.convertAndSend("/users/startGame-" + users.get(i).getName(), serverMessage);
+			template.convertAndSend(endpoint + users.get(i).getName(), serverMessage);
 			gameStuff.remove(sendingPlayers);
 			sendingPlayers = rotate(sendingPlayers);
 			gameStuff.add(sendingPlayers);
 		}
 	}
-	
-	private MessageHeaders createHeaders(String sessionId) {
-        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setSessionId(sessionId);
-        headerAccessor.setLeaveMutable(true);
-        return headerAccessor.getMessageHeaders();
-    }
-	
-	public ArrayList<PlayerPOJO> rotate(ArrayList<PlayerPOJO> sendingList) {
-		PlayerPOJO temp = sendingList.get(0);
-		sendingList.add(temp);
-		sendingList.remove(0);
-		return sendingList;
-	}
-	
-	@MessageMapping("/storyDraw")
-	@SendTo("/users/storyDraw")
-	public ServerMessage drawStoryCard(ConnectMessage message) {
-		for(Player p : players.getPlayers()) {
-			if(p.getName().equals(message.getName())) {
-				p.drawCard(sDeck, sDiscard);
-				break;
-			}
-		}
-		
-		List<Object> gameStuff = new ArrayList<>();
-		gameStuff.add(sDeck);
-		gameStuff.add(sDiscard);
-		ServerMessage serverMessage = new ServerMessage(gameStuff);
-		return serverMessage;
-	}
-
-	@Override
-	public void onApplicationEvent(SessionDisconnectEvent arg0) {
-		System.out.println("Client disconnected: " + (Integer.parseInt(arg0.getSessionId()) - numUsersLeft));
-		users.remove(Integer.parseInt(arg0.getSessionId()) - numUsersLeft);
-		players.getPlayers().remove(Integer.parseInt(arg0.getSessionId()) - numUsersLeft);
-		userCounter--;
-		System.out.println(users.size());
-		System.out.println(players.getPlayers().size());
-		ServerMessage serverMessage = new ServerMessage(users);
-		numUsersLeft++;
-		template.convertAndSend("/users/register", serverMessage);
-	}
-	
-	
 }

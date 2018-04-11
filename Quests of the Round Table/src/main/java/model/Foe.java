@@ -18,7 +18,7 @@ public class Foe extends Adventure implements Serializable{
 	private int bp2;
 	private int state;
 	private ArrayList<Weapon> weapons;
-	boolean foe;
+	public boolean foe;
 	
 	public Foe() {
 		name = "";

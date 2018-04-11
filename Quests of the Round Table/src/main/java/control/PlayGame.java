@@ -902,7 +902,6 @@ public class PlayGame extends Application{
 		
 		@Override
 		public void onUpdate() {
-			System.out.println("update");
 			
 			for(Node n : view.getPlayerSurface().getChildren()) {
 				n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
@@ -926,6 +925,7 @@ public class PlayGame extends Application{
 						System.out.println("this is a " + players.getPlayers().get(0).getHand().get(view.getPlayerCards().getChildren().indexOf(n)).getName());
 						Player p = players.getPlayers().get(0);
 						Adventure a = players.getPlayers().get(0).getHand().get(view.getPlayerCards().getChildren().indexOf(n));
+						System.out.println("update");
 						cardClicked(a, p);						
 					}
 				});
@@ -1026,7 +1026,7 @@ public class PlayGame extends Application{
 				}); 
 			}
 		}
-	}
-	// END PGCONTROL HANDLER --------------------------------------------
+	}// END PGCONTROL HANDLER --------------------------------------------
+	//END PlayGame
 }
 

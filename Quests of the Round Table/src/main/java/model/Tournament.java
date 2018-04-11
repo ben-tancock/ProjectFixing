@@ -14,7 +14,7 @@ public class Tournament extends Story{
 	private int bonus;
 	private int state;
 	private ArrayList<Player> participants;
-	boolean tournament;
+	public boolean tournament;
 	
 	public Tournament(String n, int b) {
 		name = n;

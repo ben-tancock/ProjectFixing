@@ -199,9 +199,10 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// TODO Auto-generated method stub
+		
 		VBox startPane = new VBox(50);
 		primStage = primaryStage;
-		
+		/*
 		//rules button
 		rulesButton.setPrefSize(300, 100);
 		//2 player button
@@ -216,7 +217,7 @@ public class View extends Application {
 		Scene scene = new Scene(startPane, 1220, 700,Color.BISQUE);
 		primStage.setScene(scene);
 		primStage.setTitle("Quest of the Round Table");
-		primStage.show();
+		primStage.show();*/
 	}
 	public HBox storyCards() {
 		HBox storyCards = new HBox(-70.5);
@@ -396,7 +397,7 @@ public class View extends Application {
 		grid.setHgap(0);
 		
 		
-		player1PlayingSurface = playedCards(players.getPlayers().get(0).getPlayingSurface(), 1);
+		player1PlayingSurface = playedCards(players.getPlayers().get(0).getPlayingSurface(), 0);
 		player1ShieldSurface.getChildren().add(shields(players.getPlayers().get(0), 0));
 		player1ShieldSurface.setAlignment(Pos.BASELINE_CENTER);
 		player1ShieldSurface.setMinWidth(337.5);
@@ -421,12 +422,12 @@ public class View extends Application {
 		
 		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 0, 3);
 		grid.add(player2ShieldSurface, 0, 2);
-		grid.add(player2Cards, 0, 1);
+		grid.add(player2Cards, 3, 0);
 		grid.add(player2PlayingSurface, 1, 2);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 1, 0);
 		grid.add(player3ShieldSurface, 2, 0);
-		grid.add(player3Cards, 3, 0);
+		grid.add(player3Cards, 0, 1);
 		grid.add(player3PlayingSurface, 3, 1);
 		
 		
@@ -659,7 +660,7 @@ public class View extends Application {
 	
 	
 	public HBox playedCards(List<Adventure> playingSurface, int index) {
-		HBox playedCards = new HBox(-50);
+		HBox playedCards = new HBox();
 		
 		for(Adventure a : playingSurface) {
 			Image card;

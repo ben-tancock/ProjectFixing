@@ -7,12 +7,15 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import model.Adventure;
 import model.Ally;
 import model.Amour;
 import model.Player;
 import model.Weapon;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PlayerPOJO implements Serializable{
 	private static final long serialVersionUID = 9067267335225726349L;
 	private static final Logger logger = LogManager.getLogger(Player.class);

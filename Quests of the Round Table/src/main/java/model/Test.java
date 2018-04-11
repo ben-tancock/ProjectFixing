@@ -15,7 +15,7 @@ public class Test extends Adventure implements Serializable{
 	private int minBid;
 	private String name;
 	private int state;
-	boolean test;
+	public boolean test;
 	
 	public Test() {
 		name = "";

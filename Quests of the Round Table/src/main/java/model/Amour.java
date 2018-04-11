@@ -15,7 +15,7 @@ public class Amour extends Adventure implements Serializable{
 	private String name;
 	private int battlePoints;
 	private int state;
-	boolean amour;
+	public boolean amour;
 	
 	public Amour() {
 		name = "";
