@@ -356,8 +356,34 @@ public class ClientGame {
 	public void subscribeToServerMessages() {
 		subscribeToStoryCardDraw();
 		subscribeToCardPlayed();
+		subscribeToAdventureCardsDrawn();
+		subscribeToCardDiscarded();
+		subscribeToParticipantAsk();
+		subscribeToOverflow();
+		subscribeToQuestStart();
+		subscribeToSponsorAsk();
+		subscribeToSponsoringStart();
+		subscribeToSponsoringEnd();
+		subscribeToQuestEnd();
+		subscribeToTournamentStart();
+		subscribeToTournamentEnd();
 	}
-	
+
+	public void subscribeToOverflow() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.OVERFLOW + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders arg0, Object arg1) {
+				overflow = true;
+			}
+			
+		});
+	}
+
 	public void subscribeToStoryCardDraw() {
 		QuestClient.session.subscribe(ServerSubscribeEndpoints.STORY_DRAW, new StompFrameHandler() {
 			@Override
@@ -383,6 +409,146 @@ public class ClientGame {
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
 				mapGameObjectsWithPlayers(payload);
+			}
+		});
+	}
+	
+	public void subscribeToAdventureCardsDrawn() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.PLAYED_CARD + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				mapGameObjectsWithPlayers(payload);
+			}
+		});
+	}
+	
+	public void subscribeToCardDiscarded() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.DISCARDED_CARD + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				mapGameObjectsWithPlayers(payload);
+			}
+		});
+	}
+	
+	public void subscribeToParticipantAsk() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.PARTICIPANT_ASK + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				
+			}
+		});
+	}
+	
+	public void subscribeToQuestStart() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.QUEST_START, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				isQuest = true;
+			}
+		});
+	}
+	
+	public void subscribeToSponsorAsk() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSOR_ASK + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				
+			}
+		});
+	}
+	
+	private void subscribeToSponsoringStart() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSORING_START + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				
+			}
+		});
+	}
+
+	private void subscribeToSponsoringEnd() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSORING_END + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				
+			}
+		});
+	}
+	
+	public void subscribeToQuestEnd() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.QUEST_END, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				isQuest = false;
+			}
+		});
+	}
+	
+	public void subscribeToTournamentStart() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.TOURNAMENT_START, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				isTournament = true;
+			}
+		});
+	}
+	
+	public void subscribeToTournamentEnd() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.TOURNAMENT_END, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				isTournament = false;
 			}
 		});
 	}

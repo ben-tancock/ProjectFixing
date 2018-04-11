@@ -10,7 +10,7 @@ public class QuestServer extends SpringBootServletInitializer{
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-		return application.sources(QuestServer.class);
+		return application.sources(QuestServer.class, ServerMessageController.class, WebSocketConfiguration.class);
 	}
 	
 	public static void main(String[] args) {

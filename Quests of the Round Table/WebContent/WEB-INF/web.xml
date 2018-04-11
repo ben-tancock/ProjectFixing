@@ -10,12 +10,12 @@
                 org.springframework.web.context.support.AnnotationConfigWebApplicationContext
             </param-value>
         </init-param>
-        <init-param>
+        <!--  <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
                 server.WebSocketConfiguration
             </param-value>
-        </init-param>
+        </init-param>-->
     </servlet>
 
     <servlet-mapping>
