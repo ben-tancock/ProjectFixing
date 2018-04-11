@@ -387,10 +387,10 @@ public class View extends Application {
 		player1Cards = playerCards(players.getPlayers().get(0), 0);			
 			
 		//player2Cards
-		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(2), 1));
+		player2Cards.getChildren().add(verticalPlayerCards(players.getPlayers().get(1), 1));
 		
 		//player3 cards
-		player3Cards.getChildren().add(playerCards(players.getPlayers().get(1), 2));
+		player3Cards.getChildren().add(playerCards(players.getPlayers().get(2), 2));
 		
 		grid = new GridPane();
 		grid.setVgap(0);
@@ -422,12 +422,12 @@ public class View extends Application {
 		
 		grid.add(deckView.verticalPlayerRank(players.getPlayers().get(1), 1), 0, 3);
 		grid.add(player2ShieldSurface, 0, 2);
-		grid.add(player2Cards, 3, 0);
+		grid.add(player2Cards, 0, 1);
 		grid.add(player2PlayingSurface, 1, 2);
 		
 		grid.add(deckView.playerRank(players.getPlayers().get(2), 2), 1, 0);
 		grid.add(player3ShieldSurface, 2, 0);
-		grid.add(player3Cards, 0, 1);
+		grid.add(player3Cards, 3, 0);
 		grid.add(player3PlayingSurface, 3, 1);
 		
 		
