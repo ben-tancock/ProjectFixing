@@ -10,7 +10,7 @@ public class Event extends Story{
 	private static final long serialVersionUID = 3242305892572996470L;
 	String name;
 	int state;
-	boolean event;
+	public boolean event;
 	
 	public Event(String n) {
 		name = n;

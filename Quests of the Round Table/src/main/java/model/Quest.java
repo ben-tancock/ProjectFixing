@@ -14,6 +14,7 @@ public class Quest extends Story {
 	private String specialFoes;
 	private final int numStages;
 	private int state;
+	public boolean quest;
 	
 	public Quest(String n, int numStgs, String spFs) {
 		name = n;

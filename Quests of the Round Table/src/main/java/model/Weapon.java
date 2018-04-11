@@ -15,7 +15,7 @@ public class Weapon extends Adventure implements Serializable{
 	private String name;
 	private int battlePoints;
 	private int state;
-	boolean weapon;
+	public boolean weapon;
 	
 	public Weapon() {
 		name = "";

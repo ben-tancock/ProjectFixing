@@ -31,6 +31,8 @@ import org.springframework.web.socket.adapter.standard.StandardWebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import model.Adventure;
 import model.AdventureDeck;
 import model.AdventureDiscard;
@@ -78,7 +80,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		numUsersLeft = 0;
 	}
 	
-	@MessageMapping("/register")
+	@MessageMapping(ServerMaps.REGISTER)
 	@SendTo(ServerSubscribeEndpoints.REGISTER)
 	public ServerMessage connect(ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
@@ -88,8 +90,6 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		players.getPlayers().get(userCounter).drawCard(12, aDeck);
 		users.put(Integer.valueOf(userCounter), players.getPlayers().get(userCounter));
 		ServerMessage serverMessage = new ServerMessage(users);
-		System.out.println("Sending: " + serverMessage.toString());
-		System.out.println(sessionId);
 		userCounter++;
 		connectMessage = message;
 		return serverMessage;
@@ -104,19 +104,12 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		return null;
 	}*/
 	
-	@MessageMapping("/startGame")
+	@MessageMapping(ServerMaps.START_GAME)
 	public void startGame() {
 		System.out.println("STARTING GAME FROM SERVER");
 		
 		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.START_GAME);
 	}
-	
-	private MessageHeaders createHeaders(String sessionId) {
-        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        headerAccessor.setSessionId(sessionId);
-        headerAccessor.setLeaveMutable(true);
-        return headerAccessor.getMessageHeaders();
-    }
 	
 	public ArrayList<PlayerPOJO> rotate(ArrayList<PlayerPOJO> sendingList) {
 		PlayerPOJO temp = sendingList.get(0);
@@ -125,7 +118,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		return sendingList;
 	}
 	
-	@MessageMapping("/storyDraw")
+	@MessageMapping(ServerMaps.STORY_DRAW)
 	@SendTo(ServerSubscribeEndpoints.STORY_DRAW)
 	public ServerMessage drawStoryCard(ConnectMessage message) {
 		for(Player p : players.getPlayers()) {
@@ -135,6 +128,26 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 			}
 		}
 		return mapGameStuffWithoutPlayers();
+	}
+	
+	@MessageMapping(ServerMaps.PLAYED_CARD)
+	public void playCard(List<Object> playerAndCard) {
+		ObjectMapper mapper = new ObjectMapper();
+		PlayerPOJO playerSent = mapper.convertValue(playerAndCard.get(0), PlayerPOJO.class);
+		for(Player p : players.getPlayers()) {
+			if(p.getName().equals(playerSent.getName())) {
+				p.getHand().clear();
+				p.getHand().addAll(playerSent.getHand());
+				p.getAllies().clear();
+				p.getAllies().addAll(playerSent.getAllies());
+				p.getAmour().clear();
+				p.getAmour().addAll(playerSent.getAmour());
+				p.getWeapons().clear();
+				p.getWeapons().addAll(playerSent.getWeapons());
+				break;
+			}
+		}
+		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.PLAYED_CARD);
 	}
 
 	@Override

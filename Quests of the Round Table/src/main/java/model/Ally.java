@@ -18,7 +18,7 @@ public class Ally extends Adventure implements Serializable{
 	private int battlePoints;
 	private int bids;
 	private int state;
-	boolean ally;
+	public boolean ally;
 	
 	public Ally() {
 		name = "";

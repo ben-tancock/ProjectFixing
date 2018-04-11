@@ -251,6 +251,9 @@ public class ClientGame {
 		@Override
 		public void onUpdate() {
 			System.out.println("update");
+			for(Adventure a : players.getPlayers().get(0).getHand()) {
+				System.out.println(a.getClass());
+			}
 			for(Node n : gameView.getPlayerCards().getChildren()) {
 				catchCardClick(n);
 				allowCardsToBeViewedHorizontal(n);
@@ -343,6 +346,7 @@ public class ClientGame {
 					System.out.println("this is a " + players.getPlayers().get(0).getHand().get(gameView.getPlayerCards().getChildren().indexOf(n)).getName());
 					Player p = players.getPlayers().get(0);
 					Adventure a = players.getPlayers().get(0).getHand().get(gameView.getPlayerCards().getChildren().indexOf(n));
+					System.out.println("card class: " + a.getClass());
 					cardClicked(a, p);						
 				}
 			});
@@ -370,7 +374,7 @@ public class ClientGame {
 	}
 	
 	public void subscribeToCardPlayed() {
-		QuestClient.session.subscribe("/users/cardPlayed", new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.PLAYED_CARD + currentUser, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -378,7 +382,7 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
-				
+				mapGameObjectsWithPlayers(payload);
 			}
 		});
 	}
@@ -490,6 +494,7 @@ public class ClientGame {
 			}
 		}
 		else {
+			System.out.println("got here: " + a.getClass());
 			if(a instanceof Ally) {
 				System.out.println("card bp: " + ((Ally) a).getBattlePoints());
 				playCard(p, a);
@@ -581,7 +586,16 @@ public class ClientGame {
 	}
 	
 	public static void playCard(Player p, Adventure a) {
-		p.remove(p.getHand(), p.getAmour(), a);
+		System.out.println("playing card");
+		if(a instanceof Amour) {
+			p.remove(p.getHand(), p.getAmour(), a);
+		} else if( a instanceof Ally) {
+			p.remove(p.getHand(), p.getAllies(), a);
+			System.out.println("hand size: " + p.getHand().size());
+			System.out.println("allies size: " + p.getAllies().size());
+		} else if(a instanceof Weapon) {
+			p.remove(p.getHand(), p.getWeapons(), a);
+		}
 		List<Object> playerAndCard = new ArrayList<>();
 		playerAndCard.add(p);
 		playerAndCard.add(a);
