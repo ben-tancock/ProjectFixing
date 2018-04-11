@@ -1026,7 +1026,7 @@ public class PlayGame extends Application{
 				}); 
 			}
 		}
-	}
-	// END PGCONTROL HANDLER --------------------------------------------
+	}// END PGCONTROL HANDLER --------------------------------------------
+	//END PlayGame
 }
 
