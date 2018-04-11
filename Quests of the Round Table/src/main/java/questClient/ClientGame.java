@@ -94,7 +94,9 @@ public class ClientGame {
 				Players receivedPlayers = new Players();
 				receivedPlayers.setPlayers(playersList);
 				players = receivedPlayers;
-				subscribeToStoryCardDraw();
+				
+				subscribeToServerMessages();
+				
 				view.update(null, receivedPlayers, sDeck, sDiscard, null);
 			}
 		});
@@ -335,20 +337,7 @@ public class ClientGame {
 					}
 				});*/
 				
-				n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
-					@Override
-					public void handle(MouseEvent arg0) {
-						System.out.println("Moving Card");
-						((HBox)n).setPadding(new Insets(0, 0, 0, 0));
-					}
-				});
-				n.setOnMouseExited(new javafx.event.EventHandler<MouseEvent>() {
-					@Override
-					public void handle(MouseEvent arg0) {
-						System.out.println("Moving Card Back");
-						((HBox)n).setPadding(new Insets(0, -50, 0, 0));	
-					}
-				});
+				allowHandCardsToBeViewed(n);
 			}
 			/*
 			for(Node n : gameView.getPlayerSurface().getChildren()) {
@@ -431,6 +420,29 @@ public class ClientGame {
 				}); 
 			}
 		}
+		public void allowHandCardsToBeViewed(Node n) {
+			n.setOnMouseEntered(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					System.out.println("Moving Card");
+					((HBox)n).setPadding(new Insets(0, 0, 0, 0));
+				}
+			});
+			n.setOnMouseExited(new javafx.event.EventHandler<MouseEvent>() {
+				@Override
+				public void handle(MouseEvent arg0) {
+					System.out.println("Moving Card Back");
+					((HBox)n).setPadding(new Insets(0, -50, 0, 0));	
+				}
+			});
+		}
+	}
+	
+	
+	
+	public void subscribeToServerMessages() {
+		subscribeToStoryCardDraw();
+		subscribeToCardPlayed();
 	}
 	
 	public void subscribeToStoryCardDraw() {
@@ -452,8 +464,16 @@ public class ClientGame {
 				System.out.println("storyDiscard: " + sDiscard);
 				storyDiscard = sDiscard;
 				System.out.println("Updating to show story card draw.");
-				gameView.update(null, players, storyDeck, storyDiscard, null);
+				
+				Platform.runLater(new Runnable() {
+					@Override
+					public void run() {
+						gameView.update(null, players, storyDeck, storyDiscard, null);
+					}
+				});
 			}
 		});
 	}
+	
+	
 }
