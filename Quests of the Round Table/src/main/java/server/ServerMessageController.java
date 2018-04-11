@@ -105,30 +105,10 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	}*/
 	
 	@MessageMapping("/startGame")
-	public void startGame(SimpMessageHeaderAccessor headerAccessor) {
-		
+	public void startGame() {
 		System.out.println("STARTING GAME FROM SERVER");
-		List<Object> gameStuff = new ArrayList<>();
-		ArrayList<PlayerPOJO> sendingPlayers = new ArrayList<>();
-		for(Player p : players.getPlayers()) {
-			PlayerPOJO pPojo = new PlayerPOJO(p.getName(), p.getRankString(), p.getDealer(), p.isFocused(),
-					p.getShields(), p.getShieldName(), p.getHand(), p.getAllies(), p.getWeapons(), 
-					p.getAmour(), p.getBid(), p.getABP());
-			sendingPlayers.add(pPojo);
-		}
 		
-		gameStuff.add(sDeck);
-		System.out.println(sDeck.size());
-		gameStuff.add(sDiscard);
-		gameStuff.add(sendingPlayers);
-		ServerMessage serverMessage = new ServerMessage(gameStuff);
-		
-		for(int i = 0; i < sendingPlayers.size(); i++) {
-			template.convertAndSend(ServerSubscribeEndpoints.START_GAME + users.get(i).getName(), serverMessage);
-			gameStuff.remove(sendingPlayers);
-			sendingPlayers = rotate(sendingPlayers);
-			gameStuff.add(sendingPlayers);
-		}
+		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.START_GAME);
 	}
 	
 	private MessageHeaders createHeaders(String sessionId) {
@@ -154,12 +134,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 				break;
 			}
 		}
-		
-		List<Object> gameStuff = new ArrayList<>();
-		gameStuff.add(sDeck);
-		gameStuff.add(sDiscard);
-		ServerMessage serverMessage = new ServerMessage(gameStuff);
-		return serverMessage;
+		return mapGameStuffWithoutPlayers();
 	}
 
 	@Override
@@ -173,5 +148,37 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		ServerMessage serverMessage = new ServerMessage(users);
 		numUsersLeft++;
 		template.convertAndSend(ServerSubscribeEndpoints.REGISTER, serverMessage);
+	}
+	
+	public ServerMessage mapGameStuffWithoutPlayers() {
+		List<Object> gameStuff = new ArrayList<>();
+		gameStuff.add(sDeck);
+		gameStuff.add(sDiscard);
+		ServerMessage serverMessage = new ServerMessage(gameStuff);
+		return serverMessage;
+	}
+	
+	public void mapGameStuffWithPlayersAndSend(String endpoint) {
+		List<Object> gameStuff = new ArrayList<>();
+		ArrayList<PlayerPOJO> sendingPlayers = new ArrayList<>();
+		for(Player p : players.getPlayers()) {
+			PlayerPOJO pPojo = new PlayerPOJO(p.getName(), p.getRankString(), p.getDealer(), p.isFocused(),
+					p.getShields(), p.getShieldName(), p.getHand(), p.getAllies(), p.getWeapons(), 
+					p.getAmour(), p.getBid(), p.getABP());
+			sendingPlayers.add(pPojo);
+		}
+		
+		gameStuff.add(sDeck);
+		System.out.println(sDeck.size());
+		gameStuff.add(sDiscard);
+		gameStuff.add(sendingPlayers);
+		ServerMessage serverMessage = new ServerMessage(gameStuff);
+		
+		for(int i = 0; i < sendingPlayers.size(); i++) {
+			template.convertAndSend(endpoint + users.get(i).getName(), serverMessage);
+			gameStuff.remove(sendingPlayers);
+			sendingPlayers = rotate(sendingPlayers);
+			gameStuff.add(sendingPlayers);
+		}
 	}
 }

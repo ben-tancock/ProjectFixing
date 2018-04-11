@@ -96,64 +96,12 @@ public class ClientGame {
 	}
 	
 	public static class PlayGameControlHandler extends ControlHandler {
-		/*
+		
 		@Override
 		public void onCardOverflow(Player p) {
-			QuestHandler qh = QuestHandler.getInstance();
-			/*while(p.getName() != players.getPlayers().get(0).getName()) {
-				view.rotate(PlayGame.getInstance());
-			}*/
-			
-			
-			//overflow = true;
-		/*}
-		
-		@Override
-		public void onAdventureCardPlayed(Player p, Adventure card, MouseEvent event) {
-			QuestHandler qh = QuestHandler.getInstance();
-			if(card instanceof Ally) {
-				p.remove(p.getHand(), p.getAllies(), card);
-				//had to add this so that when the card is played, the change is instantly made.
-				if(qh != null && qh.getCard() != null) {
-					if(card.getName().equals("sir_percival") && qh.getCard().getName().equals("search_for_the_holy_grail")) {
-						((Ally) card).setBattlePoints(20);
-						System.out.println(card.getName() + "'s battlepoints are set to: " + ((Ally)card).getBattlePoints() + "(should be 20)");
-					} else if(card.getName().equals("sir_gawain") && qh.getCard().getName().equals("test_of_the_green_knight")) {
-						((Ally) card).setBattlePoints(20);
-						System.out.println(card.getName() + "'s battlepoints are set to: " + ((Ally)card).getBattlePoints() + "(should be 20)");
-					} //needs rest of allies that are changed by quests.
-				}
-				//needs allies that are not changed by quests.
-			} else if (card instanceof Amour) {
-				if(p.getAmour().size() >= 1) {
-					card.setState(CardStates.FACE_UP);
-					gameView.promptTooManyAmour();
-				}else {
-					p.remove(p.getHand(), p.getAmour(), card);
-				} 
-			} else if (card instanceof Weapon) {
-				boolean dup = false;
-				for(Weapon w : p.getWeapons()) {
-					if(w.getName().equals(card.getName())) {
-						dup = true;
-					}
-				}
-				if(dup) {
-					card.setState(CardStates.FACE_UP);
-					gameView.promptWeaponDuplicate(p.getName() + "'s playing field");
-				} else {
-					p.remove(p.getHand(), p.getWeapons(), card);
-				}
-			}
-			logger.info(p.getName() + " played " + card.getName() + " to their playing surface.");
-			logger.info(p.getName() + "'s hand count: " + p.getHand().size() + " Adventure Deck Count: " + aDeck.size());
-			if(qh != null && qh.getCard() != null) {
-				gameView.update(event, players, sDeck, sDiscard, qh.getCard());
-			} else {
-				gameView.update(event, players, sDeck, sDiscard, null);
-			}
+			overflow = true;
 		}
-		
+		/*
 		@Override
 		public void onPlayerVictory(Player p) {
 			System.out.println(p.getName() + " has become knight of the round table!");
@@ -166,19 +114,7 @@ public class ClientGame {
 			onDiscardCard(perp, mordred, false);
 			gameView.promptToKillAlly(players, perp);
 		}*/
-		
-		@Override
-		public void onStoryCardDraw(MouseEvent event) {
-			//players.getPlayers().get(0).drawCard(sDeck, sDiscard, "boar_hunt");
-			/*System.out.println("test");
-			players.getPlayers().get(0).drawCard(sDeck, sDiscard);
-			if(sDeck.isEmpty()) {
-				onStoryDeckEmpty();
-			}*/
-			
-			
-		}/*
-		
+		/*
 		@Override
 		public void onStoryDeckEmpty() {
 			QuestHandler qh = QuestHandler.getInstance();
