@@ -43,6 +43,7 @@ import model.Test;
 import model.Tournament;
 import model.Weapon;
 import model.pojo.PlayerPOJO;
+import util.ServerSubscribeEndpoints;
 import view.View;
 
 public class ClientGame {
@@ -64,7 +65,7 @@ public class ClientGame {
 	
 	public void startGame(String userName, Stage primStage) {
 		
-		QuestClient.session.send("/app/startGame", "{}");
+		QuestClient.session.send(ClientSendingEndpoints.START_GAME, "{}");
 		
 	}
 	
@@ -81,7 +82,7 @@ public class ClientGame {
 				}
 				currentUser = userName;
 				
-				mapGameObjects(payLoad);
+				mapGameObjectsWithPlayers(payLoad);
 				
 				subscribeToServerMessages();
 				
@@ -297,7 +298,7 @@ public class ClientGame {
 		
 		@Override
 		public void onRankSet(Player p) {
-			gameView.update(null, players, sDeck, sDiscard, null);
+			QuestClient.session.send("/app/rankset", p);
 		}
 		
 		@Override
@@ -318,18 +319,16 @@ public class ClientGame {
 				catchCardClick(n);
 				allowCardsToBeViewedHorizontal(n);
 			}
-			/*
+			
 			for(Node n : gameView.getPlayerSurface().getChildren()) {
 				n.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
-
 					@Override
 					public void handle(MouseEvent arg0) {
 						System.out.println("test field card clicked");
 					}
-					
 				});
 			}
-	
+			/*
 			view.endButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
@@ -366,7 +365,7 @@ public class ClientGame {
 					@Override
 					public void handle(MouseEvent arg0) {
 						String name = "{\"name\": \"" + currentUser + "\"}";
-						QuestClient.session.send("/app/storyDraw", name.getBytes());
+						QuestClient.session.send(ClientSendingEndpoints.STORY_DRAW, name.getBytes());
 						/*gameView.notifyStoryCardClicked(arg0, sDeck.get(gameView.getCurrentTopStoryCardIndex()));
 						
 						if(winners.size() == 1) {
@@ -420,7 +419,7 @@ public class ClientGame {
 	}
 	
 	public void subscribeToStoryCardDraw() {
-		QuestClient.session.subscribe("/users/storyDraw", new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.STORY_DRAW, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -429,22 +428,7 @@ public class ClientGame {
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
 				System.out.println("GOT REPLY!");
-				List<Object> gameObjects = (List<Object>) ((ServerMessage)payload).getMessage();
-				ObjectMapper mapper = new ObjectMapper();
-				StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
-				System.out.println("storyDeck: " + sDeck);
-				storyDeck = sDeck;
-				StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
-				System.out.println("storyDiscard: " + sDiscard);
-				storyDiscard = sDiscard;
-				System.out.println("Updating to show story card draw.");
-				
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						gameView.update(null, players, storyDeck, storyDiscard, null);
-					}
-				});
+				mapGameObjectsWithoutPlayers(payload);
 			}
 		});
 	}
@@ -598,10 +582,8 @@ public class ClientGame {
 			
 			else if(i == 3) {
 				setBehaviour(gameView.getPlayer4Surface(), q);
-			}
-			
+			}	
 		}
-		
 	}
 	
 	public static void setBehaviour(HBox field, Player p) {
@@ -609,8 +591,6 @@ public class ClientGame {
 			fieldCardClick(n, field, p);
 			allowCardsToBeViewedHorizontal(n);
 		}
-		
-		
 	}
 	
 	public static void setBehaviour(VBox field, Player p) {
@@ -661,7 +641,7 @@ public class ClientGame {
 		List<Object> playerAndCard = new ArrayList<>();
 		playerAndCard.add(p);
 		playerAndCard.add(a);
-		QuestClient.session.send("/app/discardedCard", playerAndCard);
+		QuestClient.session.send(ClientSendingEndpoints.DISCARDED_CARD, playerAndCard);
 	}
 	
 	public static void playCard(Player p, Adventure a) {
@@ -669,10 +649,10 @@ public class ClientGame {
 		List<Object> playerAndCard = new ArrayList<>();
 		playerAndCard.add(p);
 		playerAndCard.add(a);
-		QuestClient.session.send("/app/playedCard", playerAndCard);
+		QuestClient.session.send(ClientSendingEndpoints.PLAYED_CARD, playerAndCard);
 	}
 	
-	public void mapGameObjects(Object payload) {
+	public void mapGameObjectsWithPlayers(Object payload) {
 		List<Object> gameObjects = (List<Object>) ((ServerMessage)payload).getMessage();
 		ObjectMapper mapper = new ObjectMapper();
 		StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
@@ -695,5 +675,27 @@ public class ClientGame {
 		Players receivedPlayers = new Players();
 		receivedPlayers.setPlayers(playersList);
 		players = receivedPlayers;
+		updateView();
+	}
+	
+	public void mapGameObjectsWithoutPlayers(Object payload) {
+		List<Object> gameObjects = (List<Object>) ((ServerMessage)payload).getMessage();
+		ObjectMapper mapper = new ObjectMapper();
+		StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
+		System.out.println("storyDeck: " + sDeck);
+		storyDeck = sDeck;
+		StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
+		System.out.println("storyDiscard: " + sDiscard);
+		storyDiscard = sDiscard;
+		updateView();
+	}
+	
+	public static void updateView() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				gameView.update(null, players, storyDeck, storyDiscard, null);
+			}
+		});
 	}
 }

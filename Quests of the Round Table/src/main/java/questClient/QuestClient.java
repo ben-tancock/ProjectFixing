@@ -34,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Person;
 import model.Player;
+import util.ServerSubscribeEndpoints;
 
 public class QuestClient extends Application {
 	static StompSession session = null;
@@ -85,7 +86,7 @@ public class QuestClient extends Application {
 				System.out.println("connectButton clicked");
 				String name = "{\"name\":\"" + userNameField.getText() + "\"}";
 				userName = userNameField.getText();
-				session.subscribe("/users/register", new StompFrameHandler() {
+				session.subscribe(ServerSubscribeEndpoints.REGISTER, new StompFrameHandler() {
 
 					@Override
 					public Type getPayloadType(StompHeaders headers) {
@@ -128,7 +129,7 @@ public class QuestClient extends Application {
 					}
 					
 				});
-				session.send("/app/register", name.getBytes());
+				session.send(ClientSendingEndpoints.REGISTER, name.getBytes());
 			}
 			
 		});

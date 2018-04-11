@@ -44,6 +44,7 @@ import model.StoryDiscard;
 import model.Test;
 import model.Weapon;
 import model.pojo.PlayerPOJO;
+import util.ServerSubscribeEndpoints;
 
 @Controller
 public class ServerMessageController implements ApplicationListener<SessionDisconnectEvent>{
@@ -78,7 +79,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	}
 	
 	@MessageMapping("/register")
-	@SendTo("/users/register")
+	@SendTo(ServerSubscribeEndpoints.REGISTER)
 	public ServerMessage connect(ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
 		players.addHuman();
@@ -123,7 +124,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		ServerMessage serverMessage = new ServerMessage(gameStuff);
 		
 		for(int i = 0; i < sendingPlayers.size(); i++) {
-			template.convertAndSend("/users/startGame-" + users.get(i).getName(), serverMessage);
+			template.convertAndSend(ServerSubscribeEndpoints.START_GAME + users.get(i).getName(), serverMessage);
 			gameStuff.remove(sendingPlayers);
 			sendingPlayers = rotate(sendingPlayers);
 			gameStuff.add(sendingPlayers);
@@ -145,7 +146,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	}
 	
 	@MessageMapping("/storyDraw")
-	@SendTo("/users/storyDraw")
+	@SendTo(ServerSubscribeEndpoints.STORY_DRAW)
 	public ServerMessage drawStoryCard(ConnectMessage message) {
 		for(Player p : players.getPlayers()) {
 			if(p.getName().equals(message.getName())) {
@@ -162,17 +163,15 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	}
 
 	@Override
-	public void onApplicationEvent(SessionDisconnectEvent arg0) {
-		System.out.println("Client disconnected: " + (Integer.parseInt(arg0.getSessionId()) - numUsersLeft));
-		users.remove(Integer.parseInt(arg0.getSessionId()) - numUsersLeft);
-		players.getPlayers().remove(Integer.parseInt(arg0.getSessionId()) - numUsersLeft);
+	public void onApplicationEvent(SessionDisconnectEvent disconnectEvent) {
+		System.out.println("Client disconnected: " + (Integer.parseInt(disconnectEvent.getSessionId()) - numUsersLeft));
+		users.remove(Integer.parseInt(disconnectEvent.getSessionId()) - numUsersLeft);
+		players.getPlayers().remove(Integer.parseInt(disconnectEvent.getSessionId()) - numUsersLeft);
 		userCounter--;
 		System.out.println(users.size());
 		System.out.println(players.getPlayers().size());
 		ServerMessage serverMessage = new ServerMessage(users);
 		numUsersLeft++;
-		template.convertAndSend("/users/register", serverMessage);
+		template.convertAndSend(ServerSubscribeEndpoints.REGISTER, serverMessage);
 	}
-	
-	
 }

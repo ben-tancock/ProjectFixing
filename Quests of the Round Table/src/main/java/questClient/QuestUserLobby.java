@@ -46,6 +46,7 @@ import model.Story;
 import model.StoryDeck;
 import model.StoryDiscard;
 import model.pojo.PlayerPOJO;
+import util.ServerSubscribeEndpoints;
 import view.View;
 
 public class QuestUserLobby extends Application {
@@ -148,7 +149,7 @@ public class QuestUserLobby extends Application {
 	
 	boolean started;
 	public void subscribeToStartGame() {
-		QuestClient.session.subscribe("/users/startGame-" + userName, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.START_GAME + userName, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
