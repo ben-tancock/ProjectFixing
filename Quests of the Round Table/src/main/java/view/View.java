@@ -843,6 +843,54 @@ public class View extends Application {
 		}*/
 	}
 	
+	public int bidPrompt(int minBid, int maxBid) {
+		TextInputDialog dialog = new TextInputDialog("Bid Request");
+		dialog.setTitle("Maximum amount you can bid (including played ally cards): " + maxBid);
+		//dialog.setHeaderText("Look, a Text Input Dialog");
+		dialog.setContentText("Please enter the amount of cards you'd like to bid: " + "(max " + maxBid + ")");
+
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+		    System.out.println("Bid amount: " + result.get());
+		}
+
+		// The Java 8 way to get the response value (with lambda expression).
+		result.ifPresent(bid -> System.out.println("Bid Amount: " + bid));
+		
+		if(result.isPresent() == false) {
+			return -1;
+		}
+		
+		int returnBid;
+		String toParse = result.get();
+		try {
+			String number = "10";
+			returnBid = Integer.parseInt(toParse);			
+		}
+		catch(NumberFormatException nfe) {
+			return -1;
+		}
+		
+		
+		
+		return returnBid;
+	}
+	
+	public boolean fightingFoePrompt() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle("Fighting Foe");
+		alert.setContentText("Please select the cards you wish to play against this stage's foe.");
+		alert.initModality(Modality.NONE);
+		
+		Optional<ButtonType> result = alert.showAndWait();
+		if(result.get() == ButtonType.OK) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean sponsorPrompt() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Sponsor Dialog");
