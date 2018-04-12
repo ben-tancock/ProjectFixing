@@ -21,12 +21,24 @@ public class Stage {
 		foe = f;
 	}
 	
+	public Stage() {
+		
+	}
+	
 	public Test getTest() {
 		return test;
 	}
 	
 	public Foe getFoe() {
 		return foe;
+	}
+	
+	public void setFoe(Foe f) {
+		this.foe = f;
+	}
+	
+	public void setTest(Test t) {
+		this.test = t;
 	}
 	
 	public int getBattlePoints() {

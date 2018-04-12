@@ -22,6 +22,7 @@ import model.AdventureDeck;
 import model.AdventureDiscard;
 import model.Ally;
 import model.Amour;
+import model.Card;
 import model.CardStates;
 import model.Event;
 import model.Foe;
@@ -470,8 +471,35 @@ public class PlayGame extends Application{
 			
 		}
 		else if(isSettingUpStage) {
+			
 			QuestHandler qh = QuestHandler.getInstance();
-			if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && !qh.getFoeSelected()) {
+			//qh.getCard().getStages().get(0).displayStage();
+			//model.Stage currStage = new model.Stage();
+			model.Stage currStage = qh.getCard().getStages().get(qh.getCurrentStage());
+			if(currStage.getTest() == null && currStage.getFoe() != null && a instanceof Weapon) { // if a Test hasn't been selected and a Foe has, weapons can be added
+				if(currStage.getFoe().getWeapons().size() > 0) {
+					if(!isDuplicate(a, currStage.getFoe().getWeapons())) {
+						stageCardSelected(a, qh, p);
+						currStage.getFoe().addWeapon((Weapon)a);
+					}
+				}
+				else {
+					stageCardSelected(a, qh, p);
+					currStage.getFoe().addWeapon((Weapon)a);
+				}
+			}
+			else if(currStage.getTest() == null && currStage.getFoe() == null) { // if neither a test nor a foe have been selected, you can only select those cards
+				if(a instanceof Test) {
+					stageCardSelected(a, qh, p);
+					currStage.setTest((Test)a);
+				}
+				else if (a instanceof Foe) {
+					stageCardSelected(a, qh, p);
+					currStage.setFoe((Foe)a);
+				}
+			}
+			
+			/*if(qh.getCard().getStages().size() == qh.getCurrentStage() && qh.getCard().getStages().size() < qh.getCard().getNumStages() && !qh.getFoeSelected()) {
 				if(a instanceof Foe) {
 					//stage counter increased only after the foe has chosen weapons
 					qh.setSelectedFoe((Foe)a);
@@ -492,7 +520,7 @@ public class PlayGame extends Application{
 					((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(a))).translateYProperty();
 					qh.getSelectedWeapons().add((Weapon)a);
 				}
-			}
+			}*/
 		}
 		else {
 			if(a instanceof Ally) {
@@ -510,6 +538,42 @@ public class PlayGame extends Application{
 		}
 		allyCheck(p);
 		System.out.println("bp after ally check: " + p.getBattlePoints());
+	}
+	
+	public static void stageCardSelected(Adventure c, QuestHandler qh, Player p) {
+		if(c instanceof Foe) {
+			qh.setSelectedFoe((Foe)c);
+			qh.setFoeSelected(true);
+			((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(c))).setTranslateY(-50);
+			((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(c))).translateYProperty();
+			
+		}
+		else if (c instanceof Weapon) {
+			((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(c))).setTranslateY(-50);
+			((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(c))).translateYProperty();
+			qh.getSelectedWeapons().add((Weapon)c);
+		}
+		else if (c instanceof Test) {
+			qh.setSelectedTest((Test)c);
+			((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(c))).setTranslateY(-50);
+			((HBox)view.getPlayerCards().getChildren().get(p.getHand().indexOf(c))).translateYProperty();
+			/*p.getHand().remove(c);
+			model.Stage stage = new model.Stage((Test)c);
+			qh.getCard().addStage(stage);
+			view.update(null, players, sDeck, sDiscard, qh.getCard());
+			qh.nextStage();
+			qh.onEnd();*/
+		}
+	}
+	
+	public static boolean isDuplicate(Adventure a, ArrayList<Weapon> list) {
+		for (Adventure d : list) {
+			if(d.getName().equals(a.getName())) {
+				System.out.println("DUPLICATE WEAPON");
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static void doMordred(Player p) {
@@ -534,6 +598,8 @@ public class PlayGame extends Application{
 		}
 		
 	}
+	
+
 	
 	public static void setBehaviour(HBox field, Player p) {
 		for(Node n : field.getChildren()) {
