@@ -119,6 +119,7 @@ public class QuestHandler {
 			pg.getView().fightingFoePrompt();
 		}
 		else if (getCard().getStages().get(currentStage).getTest() != null) { // bidding
+			System.out.println("TEST PQ BIDDING");
 			Test t = getCard().getStages().get(currentStage).getTest();
 			pg.setBidding(true);
 			
@@ -263,11 +264,13 @@ public class QuestHandler {
 			
 			if(pg.getBidding()) {
 				if(numBid > 0) {
+					System.out.println("TEST BID");
 					while(!(getCard().getParticipants().get(1).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // when bidding always rotate to participants[1] as next unless first bid
 						pg.getView().rotate(pg);
 					}
 				}
 				else {
+					System.out.println("TEST FIRST BID");
 					while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // if first bid, just rotate to first participant
 						pg.getView().rotate(pg);
 					}
@@ -291,7 +294,7 @@ public class QuestHandler {
 			isAskingForParticipants = false;
 			
 			pg.getView().rotate(pg);
-			while(getCard().getSponsor().getName().equals(pg.getPlayers().getPlayers().get(0).getName())) {
+			while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))) {
 				pg.getView().rotate(pg);
 			}
 			System.out.println("TEST PARTICIPANTS DOING QUEST");
