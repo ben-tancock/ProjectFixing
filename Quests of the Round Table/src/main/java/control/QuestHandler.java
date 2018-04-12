@@ -48,6 +48,7 @@ public class QuestHandler {
 	private static int numFoughtFoe;
 	private static int numBid; // number of players bid so far
 	private static int minBid; // the minimum bid a player has to make when they encounter a test
+	private static int numParticipants;
 	private boolean questUnderway;
 	
 	public QuestHandler(Quest c, Players p, Player pr, PlayGame game, AdventureDeck d, AdventureDiscard di) {
@@ -118,9 +119,41 @@ public class QuestHandler {
 			pg.getView().fightingFoePrompt();
 		}
 		else if (getCard().getStages().get(currentStage).getTest() != null) { // bidding
+			Test t = getCard().getStages().get(currentStage).getTest();
 			pg.setBidding(true);
-			int minBid = 0;
-			pg.getView().bidPrompt(minBid, currPlayer.getMaxBid());
+			
+			if(getCard().getParticipants().size() == 1 && numBid == 0) { // if the last player in the quest encounters a test...
+				if(t.getMinBid() == 0) { // if no min bid is specified on card, min bid is 3
+					minBid = 3;
+				}
+				else {
+					minBid = t.getMinBid();
+				}
+			}
+			else if(minBid == 0) { // iff this is the first bid, set min to value specified on card
+				minBid = t.getMinBid();
+			}
+			
+			
+			int newBid = pg.getView().bidPrompt(minBid, currPlayer.getMaxBid());
+			
+			if(newBid > minBid && newBid <= currPlayer.getMaxBid()) { // if the bid submitted was greater than the previous bid...
+				System.out.println("TEST BID SUCCESS");
+				if(numBid != 0) { // and this was NOT the first bidder
+					getCard().getParticipants().remove(0); // previous bidder drops out
+				}
+				minBid = newBid + 1; // set the new min bid
+			}
+			else { // if the bid was insufficient to stay in the quest...
+				System.out.println("TEST BID INSUFFICIENT");
+				if(numBid == 0) { // and this WAS the first bidder
+					getCard().getParticipants().remove(0); // current bidder drops out
+				}
+				else { // this was NOT the first bidder
+					getCard().getParticipants().remove(1); // current bidder drops out
+				}
+				
+			}
 			numBid++;
 		}
 		
@@ -205,6 +238,8 @@ public class QuestHandler {
 				selectedFoe = null;
 				selectedWeapons = new ArrayList<>();
 				if(currentStage < getCard().getNumStages()-1) {
+					numBid = 0;
+					numFoughtFoe = 0;
 					currentStage++;	
 				}
 				else { // if the sponsor has set up the last stage, begin asking to join
@@ -217,14 +252,39 @@ public class QuestHandler {
 				}
 			}
 		}
-		else if(questUnderway) {
-			if(numFoughtFoe >= getCard().getParticipants().size() || numBid >= getCard().getParticipants().size()) {
+		else if(questUnderway) { // either bidding or fighting foe
+			if(numFoughtFoe > getCard().getParticipants().size() || numBid > getCard().getParticipants().size()) {
 				currentStage++;
+				numFoughtFoe = 0;
+				numBid = 0;
+				pg.setBidding(false);
+				pg.setFoe(false);
 			}
-			pg.getView().rotate(pg);
-			while(getCard().getSponsor().getName().equals(pg.getPlayers().getPlayers().get(0).getName())) {
-				pg.getView().rotate(pg);
+			
+			if(pg.getBidding()) {
+				if(numBid > 0) {
+					while(!(getCard().getParticipants().get(1).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // when bidding always rotate to participants[1] as next unless first bid
+						pg.getView().rotate(pg);
+					}
+				}
+				else {
+					while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // if first bid, just rotate to first participant
+						pg.getView().rotate(pg);
+					}
+				}
+				
 			}
+			else if (pg.getFoe()) {
+				while(!(getCard().getParticipants().get(numFoughtFoe).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // when fighting foe always rotate to participants[numFoughtFoe]
+					pg.getView().rotate(pg);
+				}
+			}
+			else {
+				while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // if not bidding or foe, beginning new stage, rotate to first participant
+					pg.getView().rotate(pg);
+				}
+			}
+			
 		}
 		else if(numAsked >= pg.getPlayers().getPlayers().size() - 1) { // all players have been asked to join the quest, being quest, determine if bidding or fighting foe
 			questUnderway = true;
@@ -377,6 +437,7 @@ public class QuestHandler {
 		if(join) {
 			System.out.println(players.getPlayers().get(0) + " has joined the quest.");
 			getCard().addParticipant(players.getPlayers().get(0));
+			numParticipants++;
 		} else {
 			System.out.println(players.getPlayers().get(0) + " does not join the quest.");
 		}
