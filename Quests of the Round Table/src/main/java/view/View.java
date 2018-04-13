@@ -1585,6 +1585,13 @@ public class View extends Application {
 		alert.showAndWait();
 	}
 	
+	public void setupPrompt(int numStage, int totalStages) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Setup Stage");
+		alert.setContentText("Please select the cards you'd like to play for stage " + numStage + "/" + totalStages);
+		alert.showAndWait();
+	}
+	
 	public boolean promptToKillAlly(Players players, Player perp) {
 		cardClicked = false;
 		
