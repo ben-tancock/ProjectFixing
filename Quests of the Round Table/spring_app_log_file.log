@@ -1464,4 +1464,412 @@ ERROR in ch.qos.logback.core.joran.action.AppenderRefAction - See http://logback
 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
 	at java.lang.Thread.run(Unknown Source)
 "2018-04-13 07:31:29 - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 2 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 16, active threads = 0, queued tasks = 0, completed tasks = 249], outboundChannelpool size = 16, active threads = 0, queued tasks = 0, completed tasks = 105], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+""2018-04-13 07:55:17 - Starting QuestServer on DESKTOP-AOFMA06 with PID 24936 (started by FreeF in C:\Users\FreeF\git\QuestForTheRoundGit\Quests of the Round Table)
+""2018-04-13 07:55:17 - No active profile set, falling back to default profiles: default
+""2018-04-13 07:55:17 - Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5ffead27: startup date [Fri Apr 13 07:55:17 EDT 2018]; root of context hierarchy
+""2018-04-13 07:55:18 - Tomcat initialized with port(s): 8080 (http)
+""2018-04-13 07:55:18 - Starting service [Tomcat]
+""2018-04-13 07:55:18 - Starting Servlet Engine: Apache Tomcat/9.0.7
+""2018-04-13 07:55:18 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_161\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_162/bin/server;C:/Program Files/Java/jre1.8.0_162/bin;C:/Program Files/Java/jre1.8.0_162/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\RogueKiller;C:\Program Files\Git\cmd;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\;C:\Users\FreeF\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Heroku\bin;C:\Users\FreeF\Documents\School-Related\COMP3004\Project Related\eciplseJ2EE\eclipse-jee-oxygen-3-win32-x86_64\eclipse;C:\Program Files (x86)\EaseUS\Todo Backup\bin\x64\;.]
+""2018-04-13 07:55:18 - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+""2018-04-13 07:55:18 - Initializing Spring embedded WebApplicationContext
+""2018-04-13 07:55:18 - Root WebApplicationContext: initialization completed in 1289 ms
+""2018-04-13 07:55:19 - Servlet dispatcherServlet mapped to [/]
+""2018-04-13 07:55:19 - Mapping filter: 'characterEncodingFilter' to: [/*]
+""2018-04-13 07:55:19 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+""2018-04-13 07:55:19 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+""2018-04-13 07:55:19 - Mapping filter: 'requestContextFilter' to: [/*]
+""2018-04-13 07:55:19 - Initializing ExecutorService  'clientInboundChannelExecutor'
+""2018-04-13 07:55:19 - Initializing ExecutorService  'clientOutboundChannelExecutor'
+""2018-04-13 07:55:19 - Initializing ExecutorService  'messageBrokerTaskScheduler'
+""2018-04-13 07:55:19 - Mapped URL path [/register] onto handler of type [class org.springframework.web.socket.server.support.WebSocketHttpRequestHandler]
+""2018-04-13 07:55:19 - Initializing ExecutorService  'brokerChannelExecutor'
+""2018-04-13 07:55:19 - Mapped "{[/register],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.connect(server.ConnectMessage,java.lang.String)
+""2018-04-13 07:55:19 - Mapped "{[/playedCard],messageType=[MESSAGE]}" onto public void server.ServerMessageController.playCard(java.util.List<java.lang.Object>)
+""2018-04-13 07:55:19 - Mapped "{[/storyDraw],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.drawStoryCard(server.ConnectMessage)
+""2018-04-13 07:55:19 - Mapped "{[/startGame],messageType=[MESSAGE]}" onto public void server.ServerMessageController.startGame()
+""2018-04-13 07:55:19 - Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5ffead27: startup date [Fri Apr 13 07:55:17 EDT 2018]; root of context hierarchy
+""2018-04-13 07:55:19 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+""2018-04-13 07:55:19 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+""2018-04-13 07:55:19 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 07:55:19 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 07:55:19 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 07:55:19 - Registering beans for JMX exposure on startup
+""2018-04-13 07:55:19 - Starting beans in phase 2147483647
+""2018-04-13 07:55:19 - Starting...
+""2018-04-13 07:55:19 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 07:55:19 - Started.
+""2018-04-13 07:55:19 - Tomcat started on port(s): 8080 (http) with context path ''
+""2018-04-13 07:55:19 - Started QuestServer in 2.659 seconds (JVM running for 3.011)
+""2018-04-13 07:55:25 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+""2018-04-13 07:55:25 - FrameworkServlet 'dispatcherServlet': initialization started
+""2018-04-13 07:55:25 - FrameworkServlet 'dispatcherServlet': initialization completed in 13 ms
+""2018-04-13 07:55:40 - 12 card(s) drawn by JOn from Adventure Deck.
+""2018-04-13 07:55:41 - Adventure Deck Count: 113 Player Hand Count: 12
+""2018-04-13 07:55:41 - 12 card(s) drawn by Paul from Adventure Deck.
+""2018-04-13 07:55:41 - Adventure Deck Count: 101 Player Hand Count: 12
+""2018-04-13 07:55:45 - Story card drawn by JOn: york
+""2018-04-13 07:55:45 - Story Deck Count: 27 Story Discard Pile Count: 1
+""2018-04-13 07:55:46 - Story card drawn by JOn: slay_the_dragon
+""2018-04-13 07:55:46 - Story Deck Count: 26 Story Discard Pile Count: 2
+""2018-04-13 07:55:47 - Story card drawn by JOn: tintagel
+""2018-04-13 07:55:47 - Story Deck Count: 25 Story Discard Pile Count: 3
+""2018-04-13 07:55:47 - Story card drawn by JOn: vanquish_king_arthur's_enemies
+""2018-04-13 07:55:47 - Story Deck Count: 24 Story Discard Pile Count: 4
+""2018-04-13 07:56:19 - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 2 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 16, active threads = 0, queued tasks = 0, completed tasks = 132], outboundChannelpool size = 16, active threads = 0, queued tasks = 0, completed tasks = 29], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+""2018-04-13 08:26:19 - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 2 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 132], outboundChannelpool size = 0, active threads = 0, queued tasks = 0, completed tasks = 29], sockJsScheduler[pool size = 2, active threads = 1, queued tasks = 0, completed tasks = 1]
+""2018-04-13 10:13:12 - Starting QuestServer on DESKTOP-AOFMA06 with PID 27072 (started by FreeF in C:\Users\FreeF\git\QuestForTheRoundGit\Quests of the Round Table)
+""2018-04-13 10:13:12 - No active profile set, falling back to default profiles: default
+""2018-04-13 10:13:12 - Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@323b36e0: startup date [Fri Apr 13 10:13:12 EDT 2018]; root of context hierarchy
+""2018-04-13 10:13:13 - Tomcat initialized with port(s): 8080 (http)
+""2018-04-13 10:13:13 - Starting service [Tomcat]
+""2018-04-13 10:13:13 - Starting Servlet Engine: Apache Tomcat/9.0.7
+""2018-04-13 10:13:13 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_161\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_162/bin/server;C:/Program Files/Java/jre1.8.0_162/bin;C:/Program Files/Java/jre1.8.0_162/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\RogueKiller;C:\Program Files\Git\cmd;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\;C:\Users\FreeF\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Heroku\bin;C:\Users\FreeF\Documents\School-Related\COMP3004\Project Related\eciplseJ2EE\eclipse-jee-oxygen-3-win32-x86_64\eclipse;C:\Program Files (x86)\EaseUS\Todo Backup\bin\x64\;.]
+""2018-04-13 10:13:13 - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+""2018-04-13 10:13:13 - Initializing Spring embedded WebApplicationContext
+""2018-04-13 10:13:13 - Root WebApplicationContext: initialization completed in 1367 ms
+""2018-04-13 10:13:14 - Servlet dispatcherServlet mapped to [/]
+""2018-04-13 10:13:14 - Mapping filter: 'characterEncodingFilter' to: [/*]
+""2018-04-13 10:13:14 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+""2018-04-13 10:13:14 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+""2018-04-13 10:13:14 - Mapping filter: 'requestContextFilter' to: [/*]
+""2018-04-13 10:13:14 - Initializing ExecutorService  'clientInboundChannelExecutor'
+""2018-04-13 10:13:14 - Initializing ExecutorService  'clientOutboundChannelExecutor'
+""2018-04-13 10:13:14 - Initializing ExecutorService  'messageBrokerTaskScheduler'
+""2018-04-13 10:13:14 - Mapped URL path [/register] onto handler of type [class org.springframework.web.socket.server.support.WebSocketHttpRequestHandler]
+""2018-04-13 10:13:14 - Initializing ExecutorService  'brokerChannelExecutor'
+""2018-04-13 10:13:14 - Mapped "{[/register],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.connect(server.ConnectMessage,java.lang.String)
+""2018-04-13 10:13:14 - Mapped "{[/startGame],messageType=[MESSAGE]}" onto public void server.ServerMessageController.startGame()
+""2018-04-13 10:13:14 - Mapped "{[/storyDraw],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.drawStoryCard(server.ConnectMessage)
+""2018-04-13 10:13:14 - Mapped "{[/sponsorYes],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorYes(server.ConnectMessage)
+""2018-04-13 10:13:14 - Mapped "{[/sponsorNo],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorNo(server.ConnectMessage)
+""2018-04-13 10:13:14 - Mapped "{[/playedCard],messageType=[MESSAGE]}" onto public void server.ServerMessageController.playCard(java.util.List<java.lang.Object>)
+""2018-04-13 10:13:14 - Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@323b36e0: startup date [Fri Apr 13 10:13:12 EDT 2018]; root of context hierarchy
+""2018-04-13 10:13:14 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+""2018-04-13 10:13:14 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+""2018-04-13 10:13:14 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:13:14 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:13:14 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:13:14 - Registering beans for JMX exposure on startup
+""2018-04-13 10:13:14 - Starting beans in phase 2147483647
+""2018-04-13 10:13:14 - Starting...
+""2018-04-13 10:13:14 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 10:13:14 - Started.
+""2018-04-13 10:13:14 - Tomcat started on port(s): 8080 (http) with context path ''
+""2018-04-13 10:13:15 - Started QuestServer in 2.762 seconds (JVM running for 3.11)
+""2018-04-13 10:13:21 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+""2018-04-13 10:13:21 - FrameworkServlet 'dispatcherServlet': initialization started
+""2018-04-13 10:13:21 - FrameworkServlet 'dispatcherServlet': initialization completed in 16 ms
+""2018-04-13 10:13:35 - 12 card(s) drawn by Jon from Adventure Deck.
+""2018-04-13 10:13:35 - Adventure Deck Count: 113 Player Hand Count: 12
+""2018-04-13 10:13:37 - 12 card(s) drawn by Paul from Adventure Deck.
+""2018-04-13 10:13:37 - Adventure Deck Count: 101 Player Hand Count: 12
+""2018-04-13 10:14:14 - WebSocketSession[2 current WS(2)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 16, active threads = 0, queued tasks = 0, completed tasks = 30], outboundChannelpool size = 8, active threads = 0, queued tasks = 0, completed tasks = 8], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+""2018-04-13 10:14:39 - Starting QuestServer on DESKTOP-AOFMA06 with PID 23688 (started by FreeF in C:\Users\FreeF\git\QuestForTheRoundGit\Quests of the Round Table)
+""2018-04-13 10:14:39 - No active profile set, falling back to default profiles: default
+""2018-04-13 10:14:39 - Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5ffead27: startup date [Fri Apr 13 10:14:39 EDT 2018]; root of context hierarchy
+""2018-04-13 10:14:40 - Tomcat initialized with port(s): 8080 (http)
+""2018-04-13 10:14:40 - Starting service [Tomcat]
+""2018-04-13 10:14:40 - Starting Servlet Engine: Apache Tomcat/9.0.7
+""2018-04-13 10:14:40 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_161\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_162/bin/server;C:/Program Files/Java/jre1.8.0_162/bin;C:/Program Files/Java/jre1.8.0_162/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\RogueKiller;C:\Program Files\Git\cmd;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\;C:\Users\FreeF\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Heroku\bin;C:\Users\FreeF\Documents\School-Related\COMP3004\Project Related\eciplseJ2EE\eclipse-jee-oxygen-3-win32-x86_64\eclipse;C:\Program Files (x86)\EaseUS\Todo Backup\bin\x64\;.]
+""2018-04-13 10:14:40 - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+""2018-04-13 10:14:40 - Initializing Spring embedded WebApplicationContext
+""2018-04-13 10:14:40 - Root WebApplicationContext: initialization completed in 1364 ms
+""2018-04-13 10:14:40 - Servlet dispatcherServlet mapped to [/]
+""2018-04-13 10:14:40 - Mapping filter: 'characterEncodingFilter' to: [/*]
+""2018-04-13 10:14:40 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+""2018-04-13 10:14:40 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+""2018-04-13 10:14:40 - Mapping filter: 'requestContextFilter' to: [/*]
+""2018-04-13 10:14:40 - Initializing ExecutorService  'clientInboundChannelExecutor'
+""2018-04-13 10:14:40 - Initializing ExecutorService  'clientOutboundChannelExecutor'
+""2018-04-13 10:14:40 - Initializing ExecutorService  'messageBrokerTaskScheduler'
+""2018-04-13 10:14:40 - Mapped URL path [/register] onto handler of type [class org.springframework.web.socket.server.support.WebSocketHttpRequestHandler]
+""2018-04-13 10:14:41 - Initializing ExecutorService  'brokerChannelExecutor'
+""2018-04-13 10:14:41 - Mapped "{[/register],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.connect(server.ConnectMessage,java.lang.String)
+""2018-04-13 10:14:41 - Mapped "{[/startGame],messageType=[MESSAGE]}" onto public void server.ServerMessageController.startGame()
+""2018-04-13 10:14:41 - Mapped "{[/storyDraw],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.drawStoryCard(server.ConnectMessage)
+""2018-04-13 10:14:41 - Mapped "{[/sponsorNo],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorNo(server.ConnectMessage)
+""2018-04-13 10:14:41 - Mapped "{[/playedCard],messageType=[MESSAGE]}" onto public void server.ServerMessageController.playCard(java.util.List<java.lang.Object>)
+""2018-04-13 10:14:41 - Mapped "{[/sponsorYes],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorYes(server.ConnectMessage)
+""2018-04-13 10:14:41 - Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5ffead27: startup date [Fri Apr 13 10:14:39 EDT 2018]; root of context hierarchy
+""2018-04-13 10:14:41 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+""2018-04-13 10:14:41 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+""2018-04-13 10:14:41 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:14:41 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:14:41 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:14:41 - Registering beans for JMX exposure on startup
+""2018-04-13 10:14:41 - Starting beans in phase 2147483647
+""2018-04-13 10:14:41 - Starting...
+""2018-04-13 10:14:41 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 10:14:41 - Started.
+""2018-04-13 10:14:41 - Tomcat started on port(s): 8080 (http) with context path ''
+""2018-04-13 10:14:41 - Started QuestServer in 2.714 seconds (JVM running for 3.079)
+""2018-04-13 10:14:45 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+""2018-04-13 10:14:45 - FrameworkServlet 'dispatcherServlet': initialization started
+""2018-04-13 10:14:45 - FrameworkServlet 'dispatcherServlet': initialization completed in 13 ms
+""2018-04-13 10:15:00 - 12 card(s) drawn by Jon from Adventure Deck.
+""2018-04-13 10:15:00 - Adventure Deck Count: 113 Player Hand Count: 12
+""2018-04-13 10:15:01 - 12 card(s) drawn by Paul from Adventure Deck.
+""2018-04-13 10:15:01 - Adventure Deck Count: 101 Player Hand Count: 12
+""2018-04-13 10:15:22 - Story card drawn by Jon: tintagel
+""2018-04-13 10:15:22 - Story Deck Count: 27 Story Discard Pile Count: 1
+""2018-04-13 10:15:40 - WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 2 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 16, active threads = 0, queued tasks = 0, completed tasks = 117], outboundChannelpool size = 16, active threads = 0, queued tasks = 0, completed tasks = 17], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+""2018-04-13 10:23:08 - Starting QuestServer on DESKTOP-AOFMA06 with PID 28128 (started by FreeF in C:\Users\FreeF\git\QuestForTheRoundGit\Quests of the Round Table)
+""2018-04-13 10:23:08 - No active profile set, falling back to default profiles: default
+""2018-04-13 10:23:08 - Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@44ebcd03: startup date [Fri Apr 13 10:23:08 EDT 2018]; root of context hierarchy
+""2018-04-13 10:23:09 - Tomcat initialized with port(s): 8080 (http)
+""2018-04-13 10:23:09 - Starting service [Tomcat]
+""2018-04-13 10:23:09 - Starting Servlet Engine: Apache Tomcat/9.0.7
+""2018-04-13 10:23:09 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_161\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_162/bin/server;C:/Program Files/Java/jre1.8.0_162/bin;C:/Program Files/Java/jre1.8.0_162/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\RogueKiller;C:\Program Files\Git\cmd;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\;C:\Users\FreeF\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Heroku\bin;C:\Users\FreeF\Documents\School-Related\COMP3004\Project Related\eciplseJ2EE\eclipse-jee-oxygen-3-win32-x86_64\eclipse;C:\Program Files (x86)\EaseUS\Todo Backup\bin\x64\;.]
+""2018-04-13 10:23:09 - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+""2018-04-13 10:23:09 - Initializing Spring embedded WebApplicationContext
+""2018-04-13 10:23:09 - Root WebApplicationContext: initialization completed in 1316 ms
+""2018-04-13 10:23:09 - Servlet dispatcherServlet mapped to [/]
+""2018-04-13 10:23:09 - Mapping filter: 'characterEncodingFilter' to: [/*]
+""2018-04-13 10:23:09 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+""2018-04-13 10:23:09 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+""2018-04-13 10:23:09 - Mapping filter: 'requestContextFilter' to: [/*]
+""2018-04-13 10:23:09 - Initializing ExecutorService  'clientInboundChannelExecutor'
+""2018-04-13 10:23:09 - Initializing ExecutorService  'clientOutboundChannelExecutor'
+""2018-04-13 10:23:09 - Initializing ExecutorService  'messageBrokerTaskScheduler'
+""2018-04-13 10:23:09 - Mapped URL path [/register] onto handler of type [class org.springframework.web.socket.server.support.WebSocketHttpRequestHandler]
+""2018-04-13 10:23:09 - Initializing ExecutorService  'brokerChannelExecutor'
+""2018-04-13 10:23:10 - Mapped "{[/register],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.connect(server.ConnectMessage,java.lang.String)
+""2018-04-13 10:23:10 - Mapped "{[/sponsorYes],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorYes(server.ConnectMessage)
+""2018-04-13 10:23:10 - Mapped "{[/sponsorNo],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorNo(server.ConnectMessage)
+""2018-04-13 10:23:10 - Mapped "{[/storyDraw],messageType=[MESSAGE]}" onto public void server.ServerMessageController.drawStoryCard(server.ConnectMessage)
+""2018-04-13 10:23:10 - Mapped "{[/playedCard],messageType=[MESSAGE]}" onto public void server.ServerMessageController.playCard(java.util.List<java.lang.Object>)
+""2018-04-13 10:23:10 - Mapped "{[/startGame],messageType=[MESSAGE]}" onto public void server.ServerMessageController.startGame()
+""2018-04-13 10:23:10 - Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@44ebcd03: startup date [Fri Apr 13 10:23:08 EDT 2018]; root of context hierarchy
+""2018-04-13 10:23:10 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+""2018-04-13 10:23:10 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+""2018-04-13 10:23:10 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:23:10 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:23:10 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:23:10 - Registering beans for JMX exposure on startup
+""2018-04-13 10:23:10 - Starting beans in phase 2147483647
+""2018-04-13 10:23:10 - Starting...
+""2018-04-13 10:23:10 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 10:23:10 - Started.
+""2018-04-13 10:23:10 - Tomcat started on port(s): 8080 (http) with context path ''
+""2018-04-13 10:23:10 - Started QuestServer in 2.673 seconds (JVM running for 3.031)
+""2018-04-13 10:23:17 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+""2018-04-13 10:23:17 - FrameworkServlet 'dispatcherServlet': initialization started
+""2018-04-13 10:23:17 - FrameworkServlet 'dispatcherServlet': initialization completed in 14 ms
+""2018-04-13 10:23:31 - 12 card(s) drawn by Jon from Adventure Deck.
+""2018-04-13 10:23:31 - Adventure Deck Count: 113 Player Hand Count: 12
+""2018-04-13 10:23:34 - 12 card(s) drawn by Paul from Adventure Deck.
+""2018-04-13 10:23:34 - Adventure Deck Count: 101 Player Hand Count: 12
+""2018-04-13 10:23:43 - Story card drawn by Jon: search_for_the_holy_grail
+""2018-04-13 10:23:43 - Story Deck Count: 27 Story Discard Pile Count: 1
+""2018-04-13 10:24:09 - WebSocketSession[2 current WS(2)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 16, active threads = 0, queued tasks = 0, completed tasks = 111], outboundChannelpool size = 10, active threads = 0, queued tasks = 0, completed tasks = 10], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+""2018-04-13 10:24:20 - Error publishing SessionDisconnectEvent[sessionId=0, CloseStatus[code=1006, reason=An existing connection was forcibly closed by the remote host]]
+"java.lang.ArrayIndexOutOfBoundsException: -1
+	at java.util.ArrayList.elementData(Unknown Source)
+	at java.util.ArrayList.remove(Unknown Source)
+	at server.ServerMessageController.onApplicationEvent(ServerMessageController.java:225)
+	at server.ServerMessageController.onApplicationEvent(ServerMessageController.java:1)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:400)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:354)
+	at org.springframework.web.socket.messaging.StompSubProtocolHandler.publishEvent(StompSubProtocolHandler.java:379)
+	at org.springframework.web.socket.messaging.StompSubProtocolHandler.afterSessionEnded(StompSubProtocolHandler.java:610)
+	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.clearSession(SubProtocolWebSocketHandler.java:506)
+	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.afterConnectionClosed(SubProtocolWebSocketHandler.java:375)
+	at org.springframework.web.socket.handler.WebSocketHandlerDecorator.afterConnectionClosed(WebSocketHandlerDecorator.java:85)
+	at org.springframework.web.socket.handler.LoggingWebSocketHandlerDecorator.afterConnectionClosed(LoggingWebSocketHandlerDecorator.java:72)
+	at org.springframework.web.socket.handler.ExceptionWebSocketHandlerDecorator.afterConnectionClosed(ExceptionWebSocketHandlerDecorator.java:78)
+	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.onClose(StandardWebSocketHandlerAdapter.java:144)
+	at org.apache.tomcat.websocket.WsSession.fireEndpointOnClose(WsSession.java:535)
+	at org.apache.tomcat.websocket.WsSession.onClose(WsSession.java:513)
+	at org.apache.tomcat.websocket.server.WsHttpUpgradeHandler.close(WsHttpUpgradeHandler.java:240)
+	at org.apache.tomcat.websocket.server.WsHttpUpgradeHandler.upgradeDispatch(WsHttpUpgradeHandler.java:162)
+	at org.apache.coyote.http11.upgrade.UpgradeProcessorInternal.dispatch(UpgradeProcessorInternal.java:54)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:53)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:754)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1376)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+"2018-04-13 10:25:44 - Starting QuestServer on DESKTOP-AOFMA06 with PID 11020 (started by FreeF in C:\Users\FreeF\git\QuestForTheRoundGit\Quests of the Round Table)
+""2018-04-13 10:25:44 - No active profile set, falling back to default profiles: default
+""2018-04-13 10:25:44 - Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@6b927fb: startup date [Fri Apr 13 10:25:44 EDT 2018]; root of context hierarchy
+""2018-04-13 10:25:45 - Tomcat initialized with port(s): 8080 (http)
+""2018-04-13 10:25:45 - Starting service [Tomcat]
+""2018-04-13 10:25:45 - Starting Servlet Engine: Apache Tomcat/9.0.7
+""2018-04-13 10:25:45 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_161\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_162/bin/server;C:/Program Files/Java/jre1.8.0_162/bin;C:/Program Files/Java/jre1.8.0_162/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\RogueKiller;C:\Program Files\Git\cmd;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\;C:\Users\FreeF\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Heroku\bin;C:\Users\FreeF\Documents\School-Related\COMP3004\Project Related\eciplseJ2EE\eclipse-jee-oxygen-3-win32-x86_64\eclipse;C:\Program Files (x86)\EaseUS\Todo Backup\bin\x64\;.]
+""2018-04-13 10:25:45 - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+""2018-04-13 10:25:45 - Initializing Spring embedded WebApplicationContext
+""2018-04-13 10:25:45 - Root WebApplicationContext: initialization completed in 1331 ms
+""2018-04-13 10:25:45 - Servlet dispatcherServlet mapped to [/]
+""2018-04-13 10:25:45 - Mapping filter: 'characterEncodingFilter' to: [/*]
+""2018-04-13 10:25:45 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+""2018-04-13 10:25:45 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+""2018-04-13 10:25:45 - Mapping filter: 'requestContextFilter' to: [/*]
+""2018-04-13 10:25:46 - Initializing ExecutorService  'clientInboundChannelExecutor'
+""2018-04-13 10:25:46 - Initializing ExecutorService  'clientOutboundChannelExecutor'
+""2018-04-13 10:25:46 - Initializing ExecutorService  'messageBrokerTaskScheduler'
+""2018-04-13 10:25:46 - Mapped URL path [/register] onto handler of type [class org.springframework.web.socket.server.support.WebSocketHttpRequestHandler]
+""2018-04-13 10:25:46 - Initializing ExecutorService  'brokerChannelExecutor'
+""2018-04-13 10:25:46 - Mapped "{[/register],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.connect(server.ConnectMessage,java.lang.String)
+""2018-04-13 10:25:46 - Mapped "{[/storyDraw],messageType=[MESSAGE]}" onto public void server.ServerMessageController.drawStoryCard(server.ConnectMessage)
+""2018-04-13 10:25:46 - Mapped "{[/startGame],messageType=[MESSAGE]}" onto public void server.ServerMessageController.startGame()
+""2018-04-13 10:25:46 - Mapped "{[/sponsorYes],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorYes(server.ConnectMessage)
+""2018-04-13 10:25:46 - Mapped "{[/sponsorNo],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorNo(server.ConnectMessage)
+""2018-04-13 10:25:46 - Mapped "{[/playedCard],messageType=[MESSAGE]}" onto public void server.ServerMessageController.playCard(java.util.List<java.lang.Object>)
+""2018-04-13 10:25:46 - Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@6b927fb: startup date [Fri Apr 13 10:25:44 EDT 2018]; root of context hierarchy
+""2018-04-13 10:25:46 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+""2018-04-13 10:25:46 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+""2018-04-13 10:25:46 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:25:46 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:25:46 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:25:46 - Registering beans for JMX exposure on startup
+""2018-04-13 10:25:46 - Starting beans in phase 2147483647
+""2018-04-13 10:25:46 - Starting...
+""2018-04-13 10:25:46 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 10:25:46 - Started.
+""2018-04-13 10:25:46 - Failed to start component [Connector[HTTP/1.1-8080]]
+"org.apache.catalina.LifecycleException: Protocol handler start failed
+	at org.apache.catalina.connector.Connector.startInternal(Connector.java:960)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.addConnector(StandardService.java:225)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.addPreviouslyRemovedConnectors(TomcatWebServer.java:255)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.start(TomcatWebServer.java:197)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.startWebServer(ServletWebServerApplicationContext.java:300)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.finishRefresh(ServletWebServerApplicationContext.java:162)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:553)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:388)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:327)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1246)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1234)
+	at server.QuestServer.main(QuestServer.java:18)
+Caused by: java.net.BindException: Address already in use: bind
+	at sun.nio.ch.Net.bind0(Native Method)
+	at sun.nio.ch.Net.bind(Unknown Source)
+	at sun.nio.ch.Net.bind(Unknown Source)
+	at sun.nio.ch.ServerSocketChannelImpl.bind(Unknown Source)
+	at sun.nio.ch.ServerSocketAdaptor.bind(Unknown Source)
+	at org.apache.tomcat.util.net.NioEndpoint.initServerSocket(NioEndpoint.java:227)
+	at org.apache.tomcat.util.net.NioEndpoint.bind(NioEndpoint.java:202)
+	at org.apache.tomcat.util.net.AbstractEndpoint.start(AbstractEndpoint.java:1107)
+	at org.apache.coyote.AbstractProtocol.start(AbstractProtocol.java:550)
+	at org.apache.catalina.connector.Connector.startInternal(Connector.java:957)
+	... 14 common frames omitted
+"2018-04-13 10:25:46 - Stopping service [Tomcat]
+""2018-04-13 10:25:46 - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+""2018-04-13 10:25:46 - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The Tomcat connector configured to listen on port 8080 failed to start. The port may already be in use or the connector may be misconfigured.
+
+Action:
+
+Verify the connector's configuration, identify and stop any process that's listening on port 8080, or configure this application to listen on another port.
+
+""2018-04-13 10:25:46 - Closing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@6b927fb: startup date [Fri Apr 13 10:25:44 EDT 2018]; root of context hierarchy
+""2018-04-13 10:25:46 - Stopping beans in phase 2147483647
+""2018-04-13 10:25:46 - Stopping...
+""2018-04-13 10:25:46 - BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 10:25:46 - Stopped.
+""2018-04-13 10:25:46 - Unregistering JMX-exposed beans on shutdown
+""2018-04-13 10:25:46 - Shutting down ExecutorService 'brokerChannelExecutor'
+""2018-04-13 10:25:46 - Shutting down ExecutorService 'messageBrokerTaskScheduler'
+""2018-04-13 10:25:46 - Shutting down ExecutorService 'clientOutboundChannelExecutor'
+""2018-04-13 10:25:46 - Shutting down ExecutorService 'clientInboundChannelExecutor'
+""2018-04-13 10:26:06 - 12 card(s) drawn by Jon from Adventure Deck.
+""2018-04-13 10:26:06 - Adventure Deck Count: 89 Player Hand Count: 12
+""2018-04-13 10:26:09 - Error publishing SessionDisconnectEvent[sessionId=3, CloseStatus[code=1006, reason=An existing connection was forcibly closed by the remote host]]
+"java.lang.IndexOutOfBoundsException: Index: 2, Size: 2
+	at java.util.ArrayList.rangeCheck(Unknown Source)
+	at java.util.ArrayList.remove(Unknown Source)
+	at server.ServerMessageController.onApplicationEvent(ServerMessageController.java:225)
+	at server.ServerMessageController.onApplicationEvent(ServerMessageController.java:1)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:400)
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:354)
+	at org.springframework.web.socket.messaging.StompSubProtocolHandler.publishEvent(StompSubProtocolHandler.java:379)
+	at org.springframework.web.socket.messaging.StompSubProtocolHandler.afterSessionEnded(StompSubProtocolHandler.java:610)
+	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.clearSession(SubProtocolWebSocketHandler.java:506)
+	at org.springframework.web.socket.messaging.SubProtocolWebSocketHandler.afterConnectionClosed(SubProtocolWebSocketHandler.java:375)
+	at org.springframework.web.socket.handler.WebSocketHandlerDecorator.afterConnectionClosed(WebSocketHandlerDecorator.java:85)
+	at org.springframework.web.socket.handler.LoggingWebSocketHandlerDecorator.afterConnectionClosed(LoggingWebSocketHandlerDecorator.java:72)
+	at org.springframework.web.socket.handler.ExceptionWebSocketHandlerDecorator.afterConnectionClosed(ExceptionWebSocketHandlerDecorator.java:78)
+	at org.springframework.web.socket.adapter.standard.StandardWebSocketHandlerAdapter.onClose(StandardWebSocketHandlerAdapter.java:144)
+	at org.apache.tomcat.websocket.WsSession.fireEndpointOnClose(WsSession.java:535)
+	at org.apache.tomcat.websocket.WsSession.onClose(WsSession.java:513)
+	at org.apache.tomcat.websocket.server.WsHttpUpgradeHandler.close(WsHttpUpgradeHandler.java:240)
+	at org.apache.tomcat.websocket.server.WsHttpUpgradeHandler.upgradeDispatch(WsHttpUpgradeHandler.java:162)
+	at org.apache.coyote.http11.upgrade.UpgradeProcessorInternal.dispatch(UpgradeProcessorInternal.java:54)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:53)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:754)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1376)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Unknown Source)
+"2018-04-13 10:26:18 - Starting QuestServer on DESKTOP-AOFMA06 with PID 8848 (started by FreeF in C:\Users\FreeF\git\QuestForTheRoundGit\Quests of the Round Table)
+""2018-04-13 10:26:18 - No active profile set, falling back to default profiles: default
+""2018-04-13 10:26:18 - Refreshing org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5ffead27: startup date [Fri Apr 13 10:26:18 EDT 2018]; root of context hierarchy
+""2018-04-13 10:26:19 - Tomcat initialized with port(s): 8080 (http)
+""2018-04-13 10:26:19 - Starting service [Tomcat]
+""2018-04-13 10:26:19 - Starting Servlet Engine: Apache Tomcat/9.0.7
+""2018-04-13 10:26:19 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jre1.8.0_161\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jre1.8.0_162/bin/server;C:/Program Files/Java/jre1.8.0_162/bin;C:/Program Files/Java/jre1.8.0_162/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\bin;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0\libnvvp;C:\Program Files (x86)\Intel\iCLS Client\;C:\Program Files\Intel\iCLS Client\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\GtkSharp\2.12\bin;C:\Program Files\dotnet\;C:\Program Files\RogueKiller;C:\Program Files\Git\cmd;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\Scripts\;C:\Users\FreeF\AppData\Local\Programs\Python\Python36\;C:\Users\FreeF\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Heroku\bin;C:\Users\FreeF\Documents\School-Related\COMP3004\Project Related\eciplseJ2EE\eclipse-jee-oxygen-3-win32-x86_64\eclipse;C:\Program Files (x86)\EaseUS\Todo Backup\bin\x64\;.]
+""2018-04-13 10:26:19 - At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+""2018-04-13 10:26:19 - Initializing Spring embedded WebApplicationContext
+""2018-04-13 10:26:19 - Root WebApplicationContext: initialization completed in 1326 ms
+""2018-04-13 10:26:19 - Servlet dispatcherServlet mapped to [/]
+""2018-04-13 10:26:19 - Mapping filter: 'characterEncodingFilter' to: [/*]
+""2018-04-13 10:26:19 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+""2018-04-13 10:26:19 - Mapping filter: 'httpPutFormContentFilter' to: [/*]
+""2018-04-13 10:26:19 - Mapping filter: 'requestContextFilter' to: [/*]
+""2018-04-13 10:26:19 - Initializing ExecutorService  'clientInboundChannelExecutor'
+""2018-04-13 10:26:19 - Initializing ExecutorService  'clientOutboundChannelExecutor'
+""2018-04-13 10:26:19 - Initializing ExecutorService  'messageBrokerTaskScheduler'
+""2018-04-13 10:26:19 - Mapped URL path [/register] onto handler of type [class org.springframework.web.socket.server.support.WebSocketHttpRequestHandler]
+""2018-04-13 10:26:19 - Initializing ExecutorService  'brokerChannelExecutor'
+""2018-04-13 10:26:19 - Mapped "{[/register],messageType=[MESSAGE]}" onto public server.ServerMessage server.ServerMessageController.connect(server.ConnectMessage,java.lang.String)
+""2018-04-13 10:26:19 - Mapped "{[/startGame],messageType=[MESSAGE]}" onto public void server.ServerMessageController.startGame()
+""2018-04-13 10:26:19 - Mapped "{[/storyDraw],messageType=[MESSAGE]}" onto public void server.ServerMessageController.drawStoryCard(server.ConnectMessage)
+""2018-04-13 10:26:19 - Mapped "{[/sponsorNo],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorNo(server.ConnectMessage)
+""2018-04-13 10:26:19 - Mapped "{[/playedCard],messageType=[MESSAGE]}" onto public void server.ServerMessageController.playCard(java.util.List<java.lang.Object>)
+""2018-04-13 10:26:19 - Mapped "{[/sponsorYes],messageType=[MESSAGE]}" onto public void server.ServerMessageController.sponsorYes(server.ConnectMessage)
+""2018-04-13 10:26:20 - Looking for @ControllerAdvice: org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext@5ffead27: startup date [Fri Apr 13 10:26:18 EDT 2018]; root of context hierarchy
+""2018-04-13 10:26:20 - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+""2018-04-13 10:26:20 - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+""2018-04-13 10:26:20 - Mapped URL path [/webjars/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:26:20 - Mapped URL path [/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:26:20 - Mapped URL path [/**/favicon.ico] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+""2018-04-13 10:26:20 - Registering beans for JMX exposure on startup
+""2018-04-13 10:26:20 - Starting beans in phase 2147483647
+""2018-04-13 10:26:20 - Starting...
+""2018-04-13 10:26:20 - BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [DefaultSubscriptionRegistry[cache[0 destination(s)], registry[0 sessions]]]]
+""2018-04-13 10:26:20 - Started.
+""2018-04-13 10:26:20 - Tomcat started on port(s): 8080 (http) with context path ''
+""2018-04-13 10:26:20 - Started QuestServer in 2.713 seconds (JVM running for 3.056)
+""2018-04-13 10:26:24 - Initializing Spring FrameworkServlet 'dispatcherServlet'
+""2018-04-13 10:26:24 - FrameworkServlet 'dispatcherServlet': initialization started
+""2018-04-13 10:26:24 - FrameworkServlet 'dispatcherServlet': initialization completed in 14 ms
+""2018-04-13 10:26:37 - 12 card(s) drawn by Jon from Adventure Deck.
+""2018-04-13 10:26:37 - Adventure Deck Count: 113 Player Hand Count: 12
+""2018-04-13 10:26:40 - 12 card(s) drawn by Paul from Adventure Deck.
+""2018-04-13 10:26:40 - Adventure Deck Count: 101 Player Hand Count: 12
+""2018-04-13 10:26:53 - Story card drawn by Jon: vanquish_king_arthur's_enemies
+""2018-04-13 10:26:53 - Story Deck Count: 27 Story Discard Pile Count: 1
+""2018-04-13 10:27:19 - WebSocketSession[2 current WS(2)-HttpStream(0)-HttpPoll(0), 2 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(2)-CONNECTED(2)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 16, active threads = 0, queued tasks = 0, completed tasks = 111], outboundChannelpool size = 10, active threads = 0, queued tasks = 0, completed tasks = 10], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
 "
