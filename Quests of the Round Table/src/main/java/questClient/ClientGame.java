@@ -48,12 +48,14 @@ import view.View;
 
 public class ClientGame {
 	
-	private static View gameView ;
+	private static View gameView;
 	private static final Logger logger = LogManager.getLogger(ClientGame.class);
 	private static boolean isTournament;
 	private static boolean isTie; // tournament tie
 	private static boolean isQuest;
 	private static boolean isSettingUpStage;
+	private static boolean beingAskedToSponsor;
+	private static boolean sponsorAskResult;
 	private static boolean overflow;
 	private static boolean isFoe;
 	private static boolean isBidding;
@@ -61,7 +63,9 @@ public class ClientGame {
 	private static Players players;
 	private static StoryDeck storyDeck;
 	private static StoryDiscard storyDiscard;
-	private static String currentUser;
+	private static Player currentUser;
+	private static String currentUserString;
+	private static String jsonUser;
 	
 	public void startGame(String userName, Stage primStage) {
 		
@@ -80,9 +84,12 @@ public class ClientGame {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				currentUser = userName;
+				
+				currentUserString = userName;
+				jsonUser = "{\"name\": \"" + userName + "\"}";
 				
 				mapGameObjectsWithPlayers(payLoad);
+				currentUser = players.getPlayers().get(0);
 				
 				subscribeToServerMessages();
 				
@@ -121,7 +128,7 @@ public class ClientGame {
 					}
 				});
 			}
-			/*
+			
 			gameView.endButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
@@ -136,25 +143,33 @@ public class ClientGame {
 					isPlaying = false;
 					
 					if(isTournament) {
-						TournamentHandler th = TournamentHandler.getInstance();
-						th.onEnd();
+						//TournamentHandler th = TournamentHandler.getInstance();
+						//th.onEnd();
 					}
 					else if (isQuest) {
-						QuestHandler qh = QuestHandler.getInstance();
-						qh.onEnd();
+						if(beingAskedToSponsor) {
+							beingAskedToSponsor = false;
+							if(sponsorAskResult) {
+								QuestClient.session.send(ClientSendingEndpoints.SPONSOR_YES, jsonUser.getBytes());
+							} else {
+								QuestClient.session.send(ClientSendingEndpoints.SPONSOR_NO, jsonUser.getBytes());
+							}
+						}
+						//QuestHandler qh = QuestHandler.getInstance();
+						//qh.onEnd();
 					}
 					else {
 					}
 				}
-			});*/
+			});
 			
 			//QuestHandler qh = QuestHandler.getInstance();
 			if(storyDeck.size() > 0) {
 				gameView.getStoryCards().getChildren().get(gameView.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
-						String name = "{\"name\": \"" + currentUser + "\"}";
-						QuestClient.session.send(ClientSendingEndpoints.STORY_DRAW, name.getBytes());
+						logger.info(currentUserString + " draw a story card, notifying the server.");
+						QuestClient.session.send(ClientSendingEndpoints.STORY_DRAW, jsonUser.getBytes());
 						/*gameView.notifyStoryCardClicked(arg0, sDeck.get(gameView.getCurrentTopStoryCardIndex()));
 						
 						if(winners.size() == 1) {
@@ -206,7 +221,6 @@ public class ClientGame {
 	public void subscribeToServerMessages() {
 		subscribeToStoryCardDraw();
 		subscribeToCardPlayed();
-		subscribeToAdventureCardsDrawn();
 		subscribeToCardDiscarded();
 		subscribeToParticipantAsk();
 		subscribeToOverflow();
@@ -221,7 +235,7 @@ public class ClientGame {
 	}
 
 	public void subscribeToOverflow() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.OVERFLOW + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.OVERFLOW + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -245,27 +259,13 @@ public class ClientGame {
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
 				System.out.println("GOT REPLY!");
-				mapGameObjectsWithoutPlayers(payload);
-			}
-		});
-	}
-	
-	public void subscribeToCardPlayed() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.PLAYED_CARD + currentUser, new StompFrameHandler() {
-			@Override
-			public Type getPayloadType(StompHeaders headers) {
-				return ServerMessage.class;
-			}
-
-			@Override
-			public void handleFrame(StompHeaders headers, Object payload) {
 				mapGameObjectsWithPlayers(payload);
 			}
 		});
 	}
 	
-	public void subscribeToAdventureCardsDrawn() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.PLAYED_CARD + currentUser, new StompFrameHandler() {
+	public void subscribeToCardPlayed() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.PLAYED_CARD + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -279,7 +279,7 @@ public class ClientGame {
 	}
 	
 	public void subscribeToCardDiscarded() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.DISCARDED_CARD + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.DISCARDED_CARD + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -293,7 +293,7 @@ public class ClientGame {
 	}
 	
 	public void subscribeToParticipantAsk() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.PARTICIPANT_ASK + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.PARTICIPANT_ASK + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -322,7 +322,7 @@ public class ClientGame {
 	}
 	
 	public void subscribeToSponsorAsk() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSOR_ASK + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSOR_ASK + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -330,13 +330,14 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
-				
+				beingAskedToSponsor = true;
+				sponsorAskResult = gameView.sponsorPrompt();
 			}
 		});
 	}
 	
 	private void subscribeToSponsoringStart() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSORING_START + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSORING_START + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -350,7 +351,7 @@ public class ClientGame {
 	}
 
 	private void subscribeToSponsoringEnd() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSORING_END + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.SPONSORING_END + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -407,7 +408,7 @@ public class ClientGame {
 	}
 	
 	public void subscribeToEventTrigger() {
-		QuestClient.session.subscribe(ServerSubscribeEndpoints.EVENT_TRIGGERED + currentUser, new StompFrameHandler() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.EVENT_TRIGGERED + currentUserString, new StompFrameHandler() {
 			@Override
 			public Type getPayloadType(StompHeaders headers) {
 				return ServerMessage.class;
@@ -415,7 +416,7 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
-				System.out.println("Event Triggered");
+				logger.info(currentUserString + " let know that event was triggered.");
 				mapGameObjectsWithPlayers(payload);
 			}
 		});
@@ -636,6 +637,7 @@ public class ClientGame {
 	}
 	
 	public void mapGameObjectsWithPlayers(Object payload) {
+		System.out.println("GOT HERE");
 		List<Object> gameObjects = (List<Object>) ((ServerMessage)payload).getMessage();
 		ObjectMapper mapper = new ObjectMapper();
 		StoryDeck sDeck = mapper.convertValue(gameObjects.get(0), StoryDeck.class);
@@ -650,7 +652,7 @@ public class ClientGame {
 			PlayerPOJO pojo = mapper.convertValue(receivedMap.get(i), PlayerPOJO.class);
 			Player player = new Person();
 			player = player.fromPOJO(pojo);
-			if(!currentUser.equals(player.getName())) {
+			if(!currentUserString.equals(player.getName())) {
 				player.setHandState(CardStates.FACE_DOWN);
 			} else {
 				player.setHandState(CardStates.FACE_UP);

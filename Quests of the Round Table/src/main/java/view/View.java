@@ -120,7 +120,7 @@ public class View extends Application {
 		verticalPlayerSpace = new VBox();
 		thirdPlayerSpace = new HBox();
 		fourthPlayerSpace = new HBox();
-		
+		endButton = new Button();
 		
 		
 		firstTime = true;

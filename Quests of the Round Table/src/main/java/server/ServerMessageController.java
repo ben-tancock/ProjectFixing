@@ -73,7 +73,10 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	private AdventureDiscard aDiscard;
 	private StoryDiscard sDiscard;
 	private ConnectMessage connectMessage;
+	private List<Player> potentialSponsors;
 	private SubscriptionRegistry registry;
+	private Quest currentQuest;
+	private int currentFocusIndex;
 	private int numUsersLeft;
 	
 	public ServerMessageController(SimpMessageSendingOperations template) {
@@ -88,6 +91,9 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		sDeck = new StoryDeck();
 		sDeck.shuffle();
 		sDiscard = new StoryDiscard();
+		potentialSponsors = new ArrayList<>();
+		currentFocusIndex = 0;
+		currentQuest = null;
 		numUsersLeft = 0;
 	}
 	
@@ -96,6 +102,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	public ServerMessage connect(ConnectMessage message, @Header("simpSessionId") String sessionId) {
 		System.out.println(message.getName() + " connected.");
 		players.addHuman();
+		players.getPlayers().get(currentFocusIndex).setFocused(true);
 		players.getPlayers().get(userCounter).setName(message.getName());
 		players.getPlayers().get(userCounter).setShieldName("shield_" + (userCounter + 1));
 		players.getPlayers().get(userCounter).drawCard(12, aDeck);
@@ -104,6 +111,15 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		userCounter++;
 		connectMessage = message;
 		return serverMessage;
+	}
+	
+	public Player fetchPlayer(String name) {
+		for(Player p : players.getPlayers()) {
+			if(p.getName().equals(name)) {
+				return p;
+			}
+		}
+		return null;
 	}
 	
 	/*
@@ -130,31 +146,36 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 	}
 	
 	@MessageMapping(ServerMaps.STORY_DRAW)
-	@SendTo(ServerSubscribeEndpoints.STORY_DRAW)
-	public ServerMessage drawStoryCard(ConnectMessage message) {
-		Player storyCardDrawer = null;
-		for(Player p : players.getPlayers()) {
-			if(p.getName().equals(message.getName())) {
-				storyCardDrawer = p;
-				p.drawCard(sDeck, sDiscard);
-				break;
-			}
-		}
+	public void drawStoryCard(ConnectMessage message) {
+		Player storyCardDrawer = fetchPlayer(message.getName());
+		Player nextPlayer = players.getPlayers().get((players.getPlayers().indexOf(storyCardDrawer) + 1) % players.getPlayers().size());
+		storyCardDrawer.setFocused(false);
+		nextPlayer.setFocused(true);
+		storyCardDrawer.drawCard(sDeck, sDiscard);
+		
+		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.STORY_DRAW);
+		
 		Story topDiscardCard = sDiscard.get(sDiscard.size() - 1);
 		System.out.println(topDiscardCard.getClass());
 		ServerMessage serverMessage = new ServerMessage("");
 		if(topDiscardCard instanceof Quest) {
+			logger.info(storyCardDrawer + " drew a quest! Initiating sequence...");
 			System.out.println("sending quest start");
+			currentQuest = (Quest)topDiscardCard;
 			template.convertAndSend(ServerSubscribeEndpoints.QUEST_START, serverMessage);
+			potentialSponsors.clear();
+			potentialSponsors.addAll(players.getPlayers());
 			askingForSponsor(storyCardDrawer);
 		} else if (topDiscardCard instanceof Tournament) {
 			System.out.println("sending tournament start");
+			logger.info(storyCardDrawer + " drew a Tournament! Initiating sequence...");
 			template.convertAndSend(ServerSubscribeEndpoints.TOURNAMENT_START, serverMessage);
 		} else if (topDiscardCard instanceof Event) {
+			logger.info(storyCardDrawer + " drew an event! Triggering...");
 			eventTriggerResponse(topDiscardCard.getName(), storyCardDrawer);
 		}
 		
-		return mapGameStuffWithoutPlayers();
+		
 	}
 	
 	@MessageMapping(ServerMaps.PLAYED_CARD)
@@ -175,6 +196,31 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 			}
 		}
 		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.PLAYED_CARD);
+	}
+	
+	public void askingForSponsor(Player p) {
+		ServerMessage serverMessage = new ServerMessage("");
+		template.convertAndSend(ServerSubscribeEndpoints.SPONSOR_ASK, serverMessage);
+	}
+	
+	@MessageMapping(ServerMaps.SPONSOR_YES)
+	public void sponsorYes(ConnectMessage message) {
+		potentialSponsors.clear();
+		Player sponsor = fetchPlayer(message.getName());
+		
+	}
+	
+	@MessageMapping(ServerMaps.SPONSOR_NO)
+	public void sponsorNo(ConnectMessage message) {
+		Player currentAsk = fetchPlayer(message.getName());
+		Player nextPlayer = players.getPlayers().get((players.getPlayers().indexOf(currentAsk) + 1) % players.getPlayers().size());
+		potentialSponsors.remove(currentAsk);
+		if(potentialSponsors.isEmpty()) {
+			ServerMessage serverMessage = new ServerMessage("");
+			template.convertAndSend(ServerSubscribeEndpoints.QUEST_END, serverMessage);
+		} else {
+			askingForSponsor(nextPlayer);
+		}
 	}
 
 	@Override
@@ -385,8 +431,5 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		}	
 	}
 	
-	public void askingForSponsor(Player p) {
-		ServerMessage serverMessage = new ServerMessage("");
-		template.convertAndSend(ServerSubscribeEndpoints.SPONSOR_ASK, serverMessage);
-	}
+	
 }

@@ -7,4 +7,6 @@ public class ClientSendingEndpoints {
 	public static final String STORY_DRAW = APP + "/storyDraw";
 	public static final String PLAYED_CARD = APP + "/playedCard";
 	public static final String DISCARDED_CARD = APP + "/discardedCard";
+	public static final String SPONSOR_YES = APP + "/sponsorYes";
+	public static final String SPONSOR_NO = APP + "/sponsorNo";
 }
