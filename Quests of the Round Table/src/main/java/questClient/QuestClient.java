@@ -69,6 +69,8 @@ public class QuestClient extends Application {
         WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
        
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+        System.setProperty("javax.net.ssl.keyStore", "/src/main/resources/keystore.cer");
+        System.setProperty("javax.net.ssl.keyStorePassword", "questfor");
  
         String url = "wss://localhost:8443/register";
         sessionHandler = new SessionHandler(); 
