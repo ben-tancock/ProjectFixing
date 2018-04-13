@@ -2,6 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>Quests_of_the_Round_Table</groupId>
   <artifactId>Quests_of_the_Round_Table</artifactId>
+  <packaging>war</packaging>
   <version>0.0.1-SNAPSHOT</version>
   <build>
     <plugins>

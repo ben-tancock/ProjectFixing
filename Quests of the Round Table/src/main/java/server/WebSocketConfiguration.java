@@ -19,7 +19,6 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Configuration
-@EnableAutoConfiguration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer{
 	
@@ -57,9 +56,11 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer{
 	
 	@Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/register");
-		registry.addEndpoint("/selectShield");
-		registry.addEndpoint("/storyDraw");
+		registry.addEndpoint(ServerMaps.REGISTER);
+		//registry.addEndpoint(ServerMaps.START_GAME);
+		//registry.addEndpoint(ServerMaps.STORY_DRAW);
+		//registry.addEndpoint(ServerMaps.PLAYED_CARD);
+		//registry.addEndpoint(ServerMaps.DISCARDED_CARD);
     }
 	
 	@Bean
