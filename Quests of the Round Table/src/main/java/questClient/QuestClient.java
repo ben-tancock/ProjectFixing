@@ -1,12 +1,26 @@
 package questClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
+import java.security.KeyStore;
+import java.security.SecureRandom;
+
+import org.apache.tomcat.websocket.WsWebSocketContainer;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -16,6 +30,8 @@ import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
+import org.springframework.web.socket.sockjs.client.Transport;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -47,19 +63,22 @@ public class QuestClient extends Application {
     static QuestUserLobby lobby = new QuestUserLobby();
 	
     public static void main(String... argv) {
+
         WebSocketClient webSocketClient = new StandardWebSocketClient();
-        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
-        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-    
-        String url = "ws://127.0.0.1:8080/register";
-        sessionHandler = new SessionHandler();
         
-        try {
+        WebSocketStompClient stompClient = new WebSocketStompClient(webSocketClient);
+       
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+ 
+        String url = "wss://localhost:8443/register";
+        sessionHandler = new SessionHandler(); 
+        
+		try {
+			
 			session = stompClient.connect(url, sessionHandler).get();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        
         stompClient.start();
        // System.out.println("session id: " + session.getSessionId());
         //new Scanner(System.in).nextLine(); //Don't close immediately.

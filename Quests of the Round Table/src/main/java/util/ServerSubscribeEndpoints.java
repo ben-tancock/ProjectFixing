@@ -16,6 +16,5 @@ public class ServerSubscribeEndpoints {
 	public static final String QUEST_END = USERS + "/questEnd";
 	public static final String TOURNAMENT_START = USERS + "/tournamentStart";
 	public static final String TOURNAMENT_END = USERS + "/tournamentEnd";
-	public static final String EVENT_START = USERS + "/eventStart";
-	public static final String EVENT_END = USERS + "/eventEnd";
+	public static final String EVENT_TRIGGERED = USERS + "/eventTriggered-";
 }

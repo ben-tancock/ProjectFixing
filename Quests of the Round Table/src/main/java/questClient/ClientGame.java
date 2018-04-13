@@ -367,6 +367,7 @@ public class ClientGame {
 		subscribeToQuestEnd();
 		subscribeToTournamentStart();
 		subscribeToTournamentEnd();
+		subscribeToEventTrigger();
 	}
 
 	public void subscribeToOverflow() {
@@ -549,6 +550,20 @@ public class ClientGame {
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
 				isTournament = false;
+			}
+		});
+	}
+	
+	public void subscribeToEventTrigger() {
+		QuestClient.session.subscribe(ServerSubscribeEndpoints.EVENT_TRIGGERED + currentUser, new StompFrameHandler() {
+			@Override
+			public Type getPayloadType(StompHeaders headers) {
+				return ServerMessage.class;
+			}
+
+			@Override
+			public void handleFrame(StompHeaders headers, Object payload) {
+				
 			}
 		});
 	}
