@@ -300,6 +300,14 @@ public class PlayGame extends Application{
 		return isFoe;
 	}
 	
+	public void setPlaying(boolean b) {
+		isPlaying = b;
+	}
+	
+	public boolean getPlaying() {
+		return isPlaying;
+	}
+	
 	
 	public static void setTournament(boolean b) {
 		isTournament = b;
@@ -346,13 +354,13 @@ public class PlayGame extends Application{
 		view.update(null, players, sDeck, sDiscard, null);
 		
 		
-		boolean seeCards = view.seeCardPrompt(p);
+		/*boolean seeCards = view.seeCardPrompt(p);
 		if(seeCards) {
 			p.setHandState(CardStates.FACE_UP);
 			logger.info("setting " + p.getName() + "'s cards to face up.");
 		} else {
 			doTurn(p);
-		}
+		}*/
 		for(Player pr : players.getPlayers()) {
 			logger.info(pr.getName() + "'s number of cards: " + pr.getHand().size());
 			logger.info(pr.getName() + "'s rank: " + pr.getRankString());

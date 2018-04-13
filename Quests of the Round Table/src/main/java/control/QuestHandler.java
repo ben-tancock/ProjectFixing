@@ -48,6 +48,7 @@ public class QuestHandler {
 	private static int numFoughtFoe;
 	private static int numBid; // number of players bid so far
 	private static int minBid; // the minimum bid a player has to make when they encounter a test
+	private static int numParticipants;
 	private boolean questUnderway;
 	
 	public QuestHandler(Quest c, Players p, Player pr, PlayGame game, AdventureDeck d, AdventureDiscard di) {
@@ -112,15 +113,51 @@ public class QuestHandler {
 		else if(isAskingForParticipants) {
 			askForParticipant();
 		}
+		else if(pg.getSettingUpStage()) {
+			pg.getView().setupPrompt(currentStage, getCard().getNumStages());
+		}
 		else if (getCard().getStages().get(currentStage).getFoe() != null) { // fighting foe
-			pg.setFoe(true);
+			pg.setPlaying(true);
 			numFoughtFoe++;
 			pg.getView().fightingFoePrompt();
 		}
 		else if (getCard().getStages().get(currentStage).getTest() != null) { // bidding
+			System.out.println("TEST PQ BIDDING");
+			Test t = getCard().getStages().get(currentStage).getTest();
 			pg.setBidding(true);
-			int minBid = 0;
-			pg.getView().bidPrompt(minBid, currPlayer.getMaxBid());
+			
+			if(getCard().getParticipants().size() == 1 && numBid == 0) { // if the last player in the quest encounters a test...
+				if(t.getMinBid() == 0) { // if no min bid is specified on card, min bid is 3
+					minBid = 3;
+				}
+				else {
+					minBid = t.getMinBid();
+				}
+			}
+			else if(minBid == 0) { // iff this is the first bid, set min to value specified on card
+				minBid = t.getMinBid();
+			}
+			
+			
+			int newBid = pg.getView().bidPrompt(minBid, currPlayer.getMaxBid());
+			
+			if(newBid > minBid && newBid <= currPlayer.getMaxBid()) { // if the bid submitted was greater than the previous bid...
+				System.out.println("TEST BID SUCCESS");
+				if(numBid != 0) { // and this was NOT the first bidder
+					getCard().getParticipants().remove(0); // previous bidder drops out
+				}
+				minBid = newBid + 1; // set the new min bid
+			}
+			else { // if the bid was insufficient to stay in the quest...
+				System.out.println("TEST BID INSUFFICIENT");
+				if(numBid == 0) { // and this WAS the first bidder
+					getCard().getParticipants().remove(0); // current bidder drops out
+				}
+				else { // this was NOT the first bidder
+					getCard().getParticipants().remove(1); // current bidder drops out
+				}
+				
+			}
 			numBid++;
 		}
 		
@@ -205,6 +242,8 @@ public class QuestHandler {
 				selectedFoe = null;
 				selectedWeapons = new ArrayList<>();
 				if(currentStage < getCard().getNumStages()-1) {
+					numBid = 0;
+					numFoughtFoe = 0;
 					currentStage++;	
 				}
 				else { // if the sponsor has set up the last stage, begin asking to join
@@ -217,21 +256,53 @@ public class QuestHandler {
 				}
 			}
 		}
-		else if(questUnderway) {
+		else if(questUnderway) { // either bidding or fighting foe
+			currentStage++;
 			if(numFoughtFoe >= getCard().getParticipants().size() || numBid >= getCard().getParticipants().size()) {
-				currentStage++;
+				System.out.println("CURRENT STAGE: " + currentStage + " NUM STAGES: " + getCard().getNumStages() );
+				if(currentStage == getCard().getNumStages()) { // Quest OVER: announce and distribute shields
+					resolveQuest(getCard().getParticipants());
+				}
+				System.out.println("TEST QUEST UNDERWAY: NUM FOUGHT FOE: " + numFoughtFoe + " NUM BIDDED: " + numBid + " NUM PARTICIPANTS: " + getCard().getParticipants().size());
+				
+				numFoughtFoe = 0;
+				numBid = 0;
+				pg.setBidding(false);
+				pg.setPlaying(false);
 			}
-			pg.getView().rotate(pg);
-			while(getCard().getSponsor().getName().equals(pg.getPlayers().getPlayers().get(0).getName())) {
-				pg.getView().rotate(pg);
+			else if(pg.getBidding()) {
+				if(numBid > 1) {
+					System.out.println("TEST BID");
+					while(!(getCard().getParticipants().get(1).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // when bidding always rotate to participants[1] as next unless first bid
+						pg.getView().rotate(pg);
+					}
+				}
+				else {
+					System.out.println("TEST FIRST BID");
+					while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // if first bid, just rotate to first participant
+						pg.getView().rotate(pg);
+					}
+				}
+				
 			}
+			else if (pg.getPlaying()) {
+				while(!(getCard().getParticipants().get(numFoughtFoe).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // when fighting foe always rotate to participants[numFoughtFoe]
+					pg.getView().rotate(pg);
+				}
+			}
+			else {
+				while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))){ // if not bidding or foe, beginning new stage, rotate to first participant
+					pg.getView().rotate(pg);
+				}
+			}
+			
 		}
 		else if(numAsked >= pg.getPlayers().getPlayers().size() - 1) { // all players have been asked to join the quest, being quest, determine if bidding or fighting foe
 			questUnderway = true;
 			isAskingForParticipants = false;
 			
 			pg.getView().rotate(pg);
-			while(getCard().getSponsor().getName().equals(pg.getPlayers().getPlayers().get(0).getName())) {
+			while(!(getCard().getParticipants().get(0).getName().equals(pg.getPlayers().getPlayers().get(0).getName()))) {
 				pg.getView().rotate(pg);
 			}
 			System.out.println("TEST PARTICIPANTS DOING QUEST");
@@ -377,18 +448,32 @@ public class QuestHandler {
 		if(join) {
 			System.out.println(players.getPlayers().get(0) + " has joined the quest.");
 			getCard().addParticipant(players.getPlayers().get(0));
+			numParticipants++;
 		} else {
 			System.out.println(players.getPlayers().get(0) + " does not join the quest.");
 		}
 	}
+	
+	 public void calculateMaxStages(Player p) {
+		 int strongestFoe;
+		 int strongestWeapons;
+		 ArrayList<Weapon> weps = new ArrayList<Weapon>();
+		 for(Adventure a : p.getHand()) {
+			 if(a instanceof Weapon) {
+				 weps.add((Weapon)a);
+			 }
+		 }
+		 
+	 }
 	
 	 public void askForSponsor(Player p){ 
 	    	numAsked += 1;
 	    	System.out.println("test ask " + numAsked);
 	        boolean sponsor = this.pg.getView().prompt("Quest Sponsor"); 
 	        if(sponsor && isValid(p, quest)) {
-	        	
+	        		pg.getView().setupPrompt(currentStage, getCard().getNumStages());
 		            System.out.println(pg.getPlayers().getPlayers().get(0).getName() + " sponsors the Quest");
+		         //   calculateMaxStages();
 		            //players.getPlayers().get(0).drawCard(1, deck);
 		            //playCards(players.getPlayers().get(0));
 		            //isSponsored = true;
@@ -442,57 +527,7 @@ public class QuestHandler {
 	public Stage setupStage(Player sponsor) {
 		currentStage = 0;
 		
-		//addedCards = new ArrayList<>();
-		/*
-		boolean finished = pg.getView().promptAddCardToStage(sponsor);
 		
-		if(finished) {
-			if(addedCards.get(0) instanceof Test) {
-				addedCards.get(0).setState(CardStates.FACE_DOWN);
-				return new Stage((Test)addedCards.get(0));
-			}
-			else if(addedCards.get(0) instanceof Foe) {
-				ArrayList<Weapon> weapons = new ArrayList<Weapon>();
-				boolean fChoosingWeapons = pg.getView().promptAddWeaponsToFoe(sponsor, new ArrayList<Weapon>());
-				if(fChoosingWeapons) {
-					for(Adventure a : addedCards) {
-						if(a instanceof Weapon) {
-							weapons.add((Weapon)a); 
-						}
-					}
-					Stage stage = new Stage((Foe)addedCards.get(0), weapons);
-					
-					boolean enoughBP = true;
-					if(stage.getFoe() != null) {
-						setStageBP(stage, quest.getSpecialFoes());
-						for(Stage s :  quest.getStages()) {
-							if(s.getFoe() != null && s.getBattlePoints() >= stage.getBattlePoints()) {
-								enoughBP = false;
-								logger.info("battle points not high enough detected!");
-							}
-							
-						}
-						
-					}
-					if(enoughBP) {
-						System.out.println(stage.getBattlePoints());
-						return stage;
-					} else {
-						for(Adventure a : addedCards) {
-							a.setState(CardStates.FACE_UP);
-						}
-						sponsor.getHand().addAll(addedCards);
-						addedCards.removeAll(addedCards);
-						pg.getView().update(null, players, pg.getSDeck(), pg.getSDiscard(), quest);
-						pg.getView().promptNotEnoughBP();
-						setupStage(sponsor);
-						return null;
-					}
-				} 
-				return null;
-			}
-		} else {
-		}*/
 		return null;
 	}
 	
@@ -528,24 +563,47 @@ public class QuestHandler {
 		return false;
 	}
 	
-	public void weaponCleanup() {
-		for(Player p : pg.getPlayers().getPlayers()) {
-			for(Weapon w : p.getWeapons()) {
-				p.remove(p.getWeapons(), discard, w);
-			}
-			
-			for(Ally a : p.getAllies()) {
-				a.setState(CardStates.FACE_UP);
-			}
-			
-			for(Amour a : p.getAmour()) {
-				a.setState(CardStates.FACE_UP);
-			}
-		}
+	public void cardCleanup(Player p) {
+        System.out.println("TEST CLEANUP");
+        for(Iterator<Weapon> weaponsIterator = p.getWeapons().iterator(); weaponsIterator.hasNext();) {
+            Weapon w = weaponsIterator.next();
+            weaponsIterator.remove();
+            discard.add(w);
+        }
+        
+        for(Iterator<Ally> allyIterator = p.getAllies().iterator(); allyIterator.hasNext();) {
+        	//Allies are not discarded during a tournament, explained in game rules.
+            Ally a = allyIterator.next();
+            a.setState(CardStates.FACE_UP);
+        }
+        
+        for(Iterator<Amour> amourIterator = p.getAmour().iterator(); amourIterator.hasNext();) {
+            Amour a = amourIterator.next();
+            amourIterator.remove();
+            discard.add(a);
+        }
+    }
+	
+	public void awardShields(Player p, int i) {
+		p.setShields(p.getShields() + i);
+		System.out.println(p.getName() + " AWARDED " + i + " SHIELDS");
 	}
 
-	public void resolveQuest() {
-		
+	public void resolveQuest(ArrayList<Player> p) {
+		System.out.println("TEST QUEST RESOLUTION");
+		for(Player q : p) {
+			cardCleanup(q);
+			awardShields(q, getCard().getNumStages());
+		}
+		int numDraw = 0;
+		for(Stage s: getCard().getStages()) {
+			if(s.getFoe() != null && s.getFoe().getWeapons() != null) {
+				numDraw += s.getFoe().getWeapons().size();
+			}
+			numDraw++;
+		}
+		numDraw += getCard().getNumStages();
+		getCard().getSponsor().drawCard(numDraw, pg.getADeck());
 	}
 		
 	public static class QuestControlHandler extends ControlHandler {

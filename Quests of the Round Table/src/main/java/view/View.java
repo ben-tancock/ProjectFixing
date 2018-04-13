@@ -847,7 +847,7 @@ public class View extends Application {
 		TextInputDialog dialog = new TextInputDialog("Bid Request");
 		dialog.setTitle("Maximum amount you can bid (including played ally cards): " + maxBid);
 		//dialog.setHeaderText("Look, a Text Input Dialog");
-		dialog.setContentText("Please enter the amount of cards you'd like to bid: " + "(max " + maxBid + ")");
+		dialog.setContentText("Please enter the amount of cards you'd like to bid: " + "(max " + maxBid + ", min: " + (minBid+1) + ")");
 
 		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
@@ -1585,6 +1585,13 @@ public class View extends Application {
 		alert.setHeaderText("Error: Test already added.");
 		alert.setContentText("There already exists a test in this quest, please try again!");
 
+		alert.showAndWait();
+	}
+	
+	public void setupPrompt(int numStage, int totalStages) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Setup Stage");
+		alert.setContentText("Please select the cards you'd like to play for stage " + numStage + "/" + totalStages);
 		alert.showAndWait();
 	}
 	
