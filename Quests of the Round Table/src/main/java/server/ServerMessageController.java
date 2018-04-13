@@ -149,6 +149,11 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		}
 		mapGameStuffWithPlayersAndSend(ServerSubscribeEndpoints.PLAYED_CARD);
 	}
+	
+	@SendTo(ServerSubscribeEndpoints.QUEST_START)
+	public void startQuest() {
+		
+	}
 
 	@Override
 	public void onApplicationEvent(SessionDisconnectEvent disconnectEvent) {
