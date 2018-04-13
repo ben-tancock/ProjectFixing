@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
