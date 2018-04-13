@@ -164,10 +164,11 @@ public class ClientGame {
 			});
 			
 			//QuestHandler qh = QuestHandler.getInstance();
-			if(storyDeck.size() > 0 && currentUser.isFocused() && !isQuest && !overflow) {
+			if(storyDeck.size() > 0) {
 				gameView.getStoryCards().getChildren().get(gameView.getCurrentTopStoryCardIndex()).setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent arg0) {
+						logger.info(currentUserString + " draw a story card, notifying the server.");
 						QuestClient.session.send(ClientSendingEndpoints.STORY_DRAW, jsonUser.getBytes());
 						/*gameView.notifyStoryCardClicked(arg0, sDeck.get(gameView.getCurrentTopStoryCardIndex()));
 						
@@ -415,7 +416,7 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
-				System.out.println("Event Triggered");
+				logger.info(currentUserString + " let know that event was triggered.");
 				mapGameObjectsWithPlayers(payload);
 			}
 		});

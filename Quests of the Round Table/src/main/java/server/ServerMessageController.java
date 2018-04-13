@@ -159,6 +159,7 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 		System.out.println(topDiscardCard.getClass());
 		ServerMessage serverMessage = new ServerMessage("");
 		if(topDiscardCard instanceof Quest) {
+			logger.info(storyCardDrawer + " drew a quest! Initiating sequence...");
 			System.out.println("sending quest start");
 			currentQuest = (Quest)topDiscardCard;
 			template.convertAndSend(ServerSubscribeEndpoints.QUEST_START, serverMessage);
@@ -167,8 +168,10 @@ public class ServerMessageController implements ApplicationListener<SessionDisco
 			askingForSponsor(storyCardDrawer);
 		} else if (topDiscardCard instanceof Tournament) {
 			System.out.println("sending tournament start");
+			logger.info(storyCardDrawer + " drew a Tournament! Initiating sequence...");
 			template.convertAndSend(ServerSubscribeEndpoints.TOURNAMENT_START, serverMessage);
 		} else if (topDiscardCard instanceof Event) {
+			logger.info(storyCardDrawer + " drew an event! Triggering...");
 			eventTriggerResponse(topDiscardCard.getName(), storyCardDrawer);
 		}
 		
