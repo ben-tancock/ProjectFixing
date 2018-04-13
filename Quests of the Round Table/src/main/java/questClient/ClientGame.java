@@ -101,152 +101,6 @@ public class ClientGame {
 		public void onCardOverflow(Player p) {
 			overflow = true;
 		}
-		/*
-		@Override
-		public void onPlayerVictory(Player p) {
-			System.out.println(p.getName() + " has become knight of the round table!");
-			winners.add(p);
-		}
-		
-		@Override
-		public void onMordredPicked(Player perp, Foe mordred) {
-		//	perp.discard(mordred, discardPile, onPlaySurface);
-			onDiscardCard(perp, mordred, false);
-			gameView.promptToKillAlly(players, perp);
-		}*/
-		/*
-		@Override
-		public void onStoryDeckEmpty() {
-			QuestHandler qh = QuestHandler.getInstance();
-			Story topCard = sDiscard.get(sDiscard.size() - 1);
-			sDeck = new StoryDeck();
-			sDiscard = new StoryDiscard();
-			sDiscard.add(topCard);
-			sDeck.shuffle();
-			if(qh != null && qh.getCard() != null) {
-				gameView.update(null, players, sDeck, sDiscard, qh.getCard());
-			} else { 
-				gameView.update(null, players, sDeck, sDiscard, null);
-			}
-		}
-		
-		@Override
-		public void onAdventureDeckEmpty(Player p, int cardsLeftToDraw) {
-			if(aDiscard.size() > 0) {
-				aDeck.addAll(aDiscard);
-				aDeck.shuffle();
-				aDiscard.removeAll(aDiscard);
-				
-				System.out.println("Adventure Deck emptied, cards left to draw: " + cardsLeftToDraw);
-				p.drawCard(cardsLeftToDraw, aDeck);
-			}
-			else {
-				/* For Testing only
-				int allyCount = 0;
-				for(Adventure a : p.getHand()) {
-					if(a instanceof Ally) {
-						allyCount++;
-						System.out.println(a.getName());
-					}
-				}
-				System.out.println("number of allies in " + p.getName() + "'s hand: " + allyCount);
-				//--------------------------------------------------------------------------------*/
-			/*	
-				gameView.promptNoAdventureCardsLeft();
-			}
-		}*/
-		/*
-		@Override
-		public void onQuestCardDraw(Player p) {
-			isQuest = true;
-			Story topCard = sDiscard.get(sDiscard.size() - 1);
-			QuestHandler questHandler = new QuestHandler((Quest)topCard, players, p, PlayGame.getInstance(), aDeck, aDiscard);
-			gameView.update(null, players, sDeck, sDiscard, (Quest) topCard);
-			System.out.println("Quest: " + topCard.getName());
-			try {
-				questHandler.playQuest();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		@Override
-		public void onEventCardDraw(Player p) {
-			PlayGame pg = PlayGame.getInstance();
-			Story topCard = sDiscard.get(sDiscard.size() - 1);
-			EventHandler eventHandler = new EventHandler((Event)topCard, p, players, aDeck, aDiscard);
-			gameView.update(null, players, sDeck, sDiscard, null);
-			System.out.println("Event: " + topCard.getName());
-			//so that the view rotates back to the player who drew the tournament card for the game to resume to the player on the left.
-			while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
-				pg.getView().rotate(pg);
-			}
-		}
-		
-		@Override
-		public void onTournamentCardDraw(Player p) {
-			//System.out.println("test tourn draw");
-			isTournament = true;
-			PlayGame pg = PlayGame.getInstance();
-			gameView.update(null, players, sDeck, sDiscard, null);
-			Story topCard = sDiscard.get(sDiscard.size() - 1);
-			TournamentHandler tourneyHandler = new TournamentHandler((Tournament)topCard, PlayGame.getInstance(), p);
-			System.out.println("Tournament: " + topCard.getName());
-			try {
-				tourneyHandler.playTournament();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//so that the view rotates back to the player who drew the tournament card for the game to resume to the player on the left.
-			/*while(!pg.getPlayers().getPlayers().get(0).equals(p)) {
-				pg.getView().rotate(pg);
-			}*/
-			//isTournament = false;
-		/*}
-		
-		@Override
-		public void onDiscardCard(Player p, Adventure card, boolean onPlayingSurface) {
-			QuestHandler qh = QuestHandler.getInstance();
-			if(onPlayingSurface) {
-				if(card instanceof Ally) {
-					p.remove(p.getAllies(), aDiscard, card);
-				} else if(card instanceof Amour) {
-					p.remove(p.getAmour(), aDiscard, card);
-				} else if(card instanceof Weapon) {
-					p.remove(p.getWeapons(), aDiscard, card);
-				}
-			} else {
-				p.remove(p.getHand(), aDiscard, card);
-			}
-			card.setState(CardStates.FACE_DOWN);
-			p.setHandState(CardStates.FACE_DOWN);
-			if(qh != null && qh.getCard() != null) {
-				gameView.update(null, players, sDeck, sDiscard, qh.getCard());
-			} else {
-				gameView.update(null, players, sDeck, sDiscard, null);
-			}
-			logger.info(p.getName() + " discarded a card.");
-			logger.info(p.getName() + "'s hand count: " + p.getHand().size() + " Adventure Deck Count: " + aDeck.size() + " Adventure Discard Count: " + aDiscard.size());
-		}
-		
-		
-		@Override
-		public void onRankSet(Player p) {
-			QuestClient.session.send("/app/rankset", p);
-		}
-		
-		@Override
-		public void onKingsRecognition() {
-			logger.info("King's Recognition set by controller to true, the next player to finish a quest will receive 2 bonus shields.");
-			PlayGame.setKingsRecognition(true);
-		}
-		
-		public void onPlaying() {
-			System.out.println("test playing");
-			isPlaying = true;
-		}*/
 		
 		@Override
 		public void onUpdate() {
@@ -268,7 +122,7 @@ public class ClientGame {
 				});
 			}
 			/*
-			view.endButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
+			gameView.endButton.setOnMouseClicked(new javafx.event.EventHandler<MouseEvent>() {
 				@Override
 				public void handle(MouseEvent arg0) {
 					// TODO Auto-generated method stub
@@ -290,11 +144,7 @@ public class ClientGame {
 						qh.onEnd();
 					}
 					else {
-						System.out.println("NORMAL ROTATE");
-						view.rotate(PlayGame.getInstance());
-						//doTurn(players.getPlayers().get(0));
 					}
-					doTurn(players.getPlayers().get(0));
 				}
 			});*/
 			
@@ -465,6 +315,7 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
+				System.out.println("Client received quest start");
 				isQuest = true;
 			}
 		});
@@ -535,6 +386,7 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
+				System.out.println("Client received tournament start");
 				isTournament = true;
 			}
 		});
@@ -563,7 +415,8 @@ public class ClientGame {
 
 			@Override
 			public void handleFrame(StompHeaders headers, Object payload) {
-				
+				System.out.println("Event Triggered");
+				mapGameObjectsWithPlayers(payload);
 			}
 		});
 	}
@@ -603,7 +456,6 @@ public class ClientGame {
 				else if (isBidding) {
 					
 				}
-				//doTurn(p);
 			}
 		}
 		else if(a.getName().equals("mordred")) {
@@ -792,6 +644,7 @@ public class ClientGame {
 		storyDiscard = sDiscard;
 		List<HashMap<String, String>> receivedMap = (List<HashMap<String, String>>)gameObjects.get(2);
 		List<Player> playersList = new ArrayList<>();
+		
 		for(int i = 0; i < receivedMap.size(); i++) {
 			System.out.println(receivedMap.get(i));
 			PlayerPOJO pojo = mapper.convertValue(receivedMap.get(i), PlayerPOJO.class);
@@ -799,6 +652,8 @@ public class ClientGame {
 			player = player.fromPOJO(pojo);
 			if(!currentUser.equals(player.getName())) {
 				player.setHandState(CardStates.FACE_DOWN);
+			} else {
+				player.setHandState(CardStates.FACE_UP);
 			}
 			playersList.add(player);
 		}
@@ -818,6 +673,7 @@ public class ClientGame {
 		StoryDiscard sDiscard = mapper.convertValue(gameObjects.get(1), StoryDiscard.class);
 		System.out.println("storyDiscard: " + sDiscard);
 		storyDiscard = sDiscard;
+		resizeStoryDeck(sDeck, players.getPlayers().size());
 		updateView();
 	}
 	

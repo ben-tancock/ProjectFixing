@@ -535,10 +535,10 @@ public abstract class Player implements Serializable {
 			logger.info(j + " card(s) drawn by " + getName() + " from Adventure Deck.");
 			logger.info("Adventure Deck Count: " + deck.size() + " Player Hand Count: " + getHand().size());
 			
-			if(hand.size() > 12) {
+			/*if(hand.size() > 12) {
 				logger.info(name + " has too many cards! Notifying the controller!");
 				Players.notifyListeners("card overflow", this);
-			}
+			}*/
 		}
 	}
 	
@@ -576,7 +576,7 @@ public abstract class Player implements Serializable {
 		}
 		logger.info("Story card drawn by " + getName() + ": " + storyDiscard.get(current).getName());
 		logger.info("Story Deck Count: " + storyDeck.size() + " Story Discard Pile Count: " + storyDiscard.size());
-		if (storyDiscard.get(current) instanceof Quest) {
+		/*if (storyDiscard.get(current) instanceof Quest) {
 			Players.notifyListeners("quest drawn", this);
 		}
 		else if (storyDiscard.get(current) instanceof Event) {
@@ -584,7 +584,7 @@ public abstract class Player implements Serializable {
 		}
 		else if (storyDiscard.get(current) instanceof Tournament) {
 			Players.notifyListeners("tournament drawn", this);
-		}
+		}*/
 	}
 	
 	public void drawCard(StoryDeck storyDeck, StoryDiscard storyDiscard) {
