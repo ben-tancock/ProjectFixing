@@ -20,6 +20,8 @@ import java.lang.reflect.Type;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.tomcat.websocket.WsWebSocketContainer;
 import org.springframework.lang.Nullable;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -53,6 +55,7 @@ import model.Player;
 import util.ServerSubscribeEndpoints;
 
 public class QuestClient extends Application {
+	private static final Logger logger = LogManager.getLogger(ClientGame.class);
 	static StompSession session = null;
 	static SessionHandler sessionHandler = null;
 	
@@ -72,12 +75,13 @@ public class QuestClient extends Application {
         //System.setProperty("javax.net.ssl.keyStore", "/src/main/resources/keystore.cer");
         //System.setProperty("javax.net.ssl.keyStorePassword", "questfor");
  
-        String url = "ws://localhost:8080/register";
+        String url = "ws://192.168.1.103:8080/register";
+       
         sessionHandler = new SessionHandler(); 
         
 		try {
-			
 			session = stompClient.connect(url, sessionHandler).get();
+			logger.info("Client connected to server at: " + url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
