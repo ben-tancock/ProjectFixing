@@ -75,7 +75,7 @@ public class QuestClient extends Application {
         //System.setProperty("javax.net.ssl.keyStore", "/src/main/resources/keystore.cer");
         //System.setProperty("javax.net.ssl.keyStorePassword", "questfor");
  
-        String url = "ws://172.17.159.195:8080/register";
+        String url = "ws://192.168.1.103:8080/register";
        
         sessionHandler = new SessionHandler(); 
         
